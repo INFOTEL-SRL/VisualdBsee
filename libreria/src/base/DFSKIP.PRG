@@ -15,18 +15,22 @@
 //#define __LOG__
 //#define __LOG_SKIP__
 
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* 
 FUNCTION dfSkip( n2Skip, bFilter, bBreak ) // dbSkip
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* 
 LOCAL nSkipped := 0, nActRec := IF(EOF(),0,RECNO())
 LOCAL nAlias := SELECT()
+LOCAL nPgBrW
 
 DEFAULT n2Skip     TO 1
 #ifdef __LOG_SKIP__
    __Log("skip10 "+alltrim(str(n2skip))+" "+alltrim(str(nSkipped))+" "+alltrim(str(nActRec)), NIL, bFilter, bBreak)
 #endif
 DO CASE
-   CASE (LastRec() == 0) .OR. (n2Skip == 0)
+   // PGDBE: LastRec() puo' essere 0 anche con righe (nessun conteggio fisico); il ramo
+   // sotto impediva dfReportSKIP di avanzare -> report vuoti ("nulla da stampare").
+   CASE (n2Skip == 0) .OR. ;
+        (LastRec() == 0 .AND. !( dfPgRddIs( (nAlias)->( RDDNAME() ) ) .AND. n2Skip != 0 ))
 #ifdef __LOG_SKIP__
    __Log("skip20 "+alltrim(str(n2skip))+" "+alltrim(str(nSkipped))+" "+alltrim(str(nActRec)), NIL, bFilter, bBreak)
 #endif
@@ -50,17 +54,40 @@ DO CASE
            // simone 21/1/2010
            // XL 1709
            // salvo e ripristino alias in caso il codeblock lo cambi
-           IF Eof() .OR. (nAlias)->( EVAL( bBreak ) )
+           IF (nAlias)->( Eof() )
               dbGoto( nActRec )
               // Simone 02/11/09
               // mantis 0002106: problema con ADS e set filter 
-              // FIX perchè con ADS se c'è SET FILTER attivo
+              // FIX perch con ADS se c' SET FILTER attivo
               // il dbgoto() non resetta il flag di EOF()
               IF EOF()
                  dbSkip(-1) // fa reset del EOF()
                  dbGoto( nActRec )
               ENDIF
               EXIT
+           ENDIF
+
+           // PGDBE: dopo dbSkip(1) il cursore puo' finire su record fuori relazione (W_BREAK)
+           // pur esistendo altre righe valide; tbEval interrompe la listbox al primo dfSkip=0.
+           // Cammino aggiuntivo finche' break o EOF. Opt-out: dfSet XbasePgDfSkipWalkPastBreak=NO
+           IF (nAlias)->( EVAL( bBreak ) )
+              IF dfPgRddIs( (nAlias)->( RDDNAME() ) ) .AND. ;
+                    !( dfSet( "XbasePgDfSkipWalkPastBreak" ) == "NO" )
+                 nPgBrW := 0
+                 DO WHILE (nAlias)->( EVAL( bBreak ) ) .AND. ;
+                       !(nAlias)->( Eof() ) .AND. nPgBrW < 100000
+                    (nAlias)->( DbSkip( 1 ) )
+                    nPgBrW++
+                 ENDDO
+              ENDIF
+              IF (nAlias)->( Eof() ) .OR. (nAlias)->( EVAL( bBreak ) )
+                 dbGoto( nActRec )
+                 IF EOF()
+                    dbSkip(-1) // fa reset del EOF()
+                    dbGoto( nActRec )
+                 ENDIF
+                 EXIT
+              ENDIF
            ENDIF
 
 #ifdef __LOG_SKIP__
@@ -104,7 +131,7 @@ DO CASE
               dbGoto( nActRec )
               // Simone 02/11/09
               // mantis 0002106: problema con ADS e set filter 
-              // FIX perchè con ADS se c'è SET FILTER attivo
+              // FIX perch con ADS se c' SET FILTER attivo
               // il dbgoto() non resetta il flag di BOF()
               IF BOF()
                  dbSkip(1) // fa reset del BOF()
@@ -139,11 +166,12 @@ ENDCASE
 #endif
 
 RETURN nSkipped
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* 
 PROCEDURE dfTop( bKey, bFilter, bBreak ) // GoTop
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* 
 LOCAL lEof := .F.
 LOCAL nAlias := SELECT()
+LOCAL uSeekVal, lSeekOk, cFld, cWaPad, nPgTopW
 
 #ifdef __LOG__
    __Log("top10", bKey, bFilter, bBreak)
@@ -155,8 +183,44 @@ ELSE
    // simone 21/1/2010
    // XL 1709
    // salvo e ripristino alias in caso il codeblock lo cambi
-   DBSEEK((nAlias)->(EVAL( bKey )), .T. )   // cerco la chiave in modo SOFT
-   lEof := EOF()
+   uSeekVal := (nAlias)->( EVAL( bKey ) )
+   lSeekOk  := (nAlias)->( DBSEEK( uSeekVal, .T. ) )
+   lEof     := (nAlias)->( EOF() )
+
+   // PGDBE: DBSEEK soft puo' lasciare fuori chiave / EOF (stampe: dfReportTOP -> dfTop).
+   IF nAlias > 0 .AND. dfPgRddIs( (nAlias)->( RDDNAME() ) )
+      IF VALTYPE( uSeekVal ) == "C" .AND. !EMPTY( RTRIM( uSeekVal ) )
+         cFld := dfPgOrdKeySingleField( ALLTRIM( (nAlias)->( ORDKEY() ) ) )
+         IF !EMPTY( cFld )
+            cWaPad := PADR( UPPER( (nAlias)->( ALIAS() ) ), 8 )
+            lSeekOk := dfPgSeekAfterDbSeek( cWaPad, cFld, uSeekVal, .T., lSeekOk )
+            lEof    := (nAlias)->( EOF() )
+         ELSEIF (nAlias)->( EOF() ) .OR. !lSeekOk
+            // Ordine su chiave composta: niente campo singolo -> riparti da testa e filtra
+            (nAlias)->( DbGoTop() )
+            lEof := (nAlias)->( EOF() )
+         ENDIF
+      ELSEIF (nAlias)->( EOF() ) .OR. !lSeekOk
+         (nAlias)->( DbGoTop() )
+         lEof := (nAlias)->( EOF() )
+      ENDIF
+   ENDIF
+ENDIF
+
+// PGDBE: con bKey, DBSEEK + verify possono lasciare EOF pur esistendo righe (cambio master 1:n);
+// senza questo lEof resta .T. e non si entra nel blocco !lEof -> listbox vuota.
+IF bKey != NIL .AND. nAlias > 0 .AND. dfPgRddIs( (nAlias)->( RDDNAME() ) ) .AND. ;
+      ( (nAlias)->( Eof() ) .OR. lEof )
+   IF VALTYPE( uSeekVal ) == "C" .AND. !EMPTY( RTRIM( uSeekVal ) )
+      cFld := dfPgOrdKeySingleField( ALLTRIM( (nAlias)->( ORDKEY() ) ) )
+      IF !EMPTY( cFld )
+         cWaPad := PADR( UPPER( (nAlias)->( ALIAS() ) ), 8 )
+         IF dfPgSeekFallbackScan( cWaPad, cFld, uSeekVal )
+            lSeekOk := .T.
+            lEof    := .F.
+         ENDIF
+      ENDIF
+   ENDIF
 ENDIF
 
 #ifdef __LOG__
@@ -174,6 +238,22 @@ IF !lEof // Solo se non sono a EOF
       dfSkip( 1, bFilter, bBreak )   // Skippo di 1
    ENDIF
 
+   // PGDBE: cambio master (bKey) puo' lasciare il cursore su riga ancora con break .T.
+   // (es. record dipendente precedente); il ramo DBGOTO(0) sotto svuotava la listbox 1:n.
+   // Stesso cammino di dfSkip. Opt-out: dfSet XbasePgDfSkipWalkPastBreak=NO
+   IF bKey != NIL .AND. dfPgRddIs( (nAlias)->( RDDNAME() ) ) .AND. ;
+         !( dfSet( "XbasePgDfSkipWalkPastBreak" ) == "NO" ) .AND. ;
+         !(nAlias)->( Eof() ) .AND. ;
+         (nAlias)->( EVAL( bFilter ) ) .AND. ;
+         (nAlias)->( EVAL( bBreak ) )
+      nPgTopW := 0
+      DO WHILE (nAlias)->( EVAL( bBreak ) ) .AND. ;
+            !(nAlias)->( Eof() ) .AND. nPgTopW < 100000
+         (nAlias)->( DbSkip( 1 ) )
+         nPgTopW++
+      ENDDO
+   ENDIF
+
 #ifdef __LOG__
    __Log("top40", bKey, bFilter, bBreak)
 #endif
@@ -183,7 +263,19 @@ IF !lEof // Solo se non sono a EOF
    // salvo e ripristino alias in caso il codeblock lo cambi
    // Se Break o Filtro NON verificato
    IF (nAlias)->(EVAL( bBreak )) .OR. !(nAlias)->(EVAL( bFilter ))
-      DBGOTO(0)
+      // PGDBE: il guard storico (solo con dfSet) evitava DBGOTO(0) quando PG+!EOF+filtro+break
+      // erano tutti .T. (VR_BREAK falso positivo su stampe); su filtro .T. e break 1:n, break .T.
+      // indica fuori relazione e serve sempre DBGOTO(0) -> default senza dfSet.
+      IF dfPgRddIs( (nAlias)->( RDDNAME() ) ) .AND. ;
+            dfSet( "XbasePgDfTopDeferDbgoto0OnBreak" ) == "YES"
+         IF !( !(nAlias)->( EOF() ) .AND. ;
+               (nAlias)->( EVAL( bFilter ) ) .AND. ;
+               (nAlias)->( EVAL( bBreak ) ) )
+            DBGOTO(0)
+         ENDIF
+      ELSE
+         DBGOTO(0)
+      ENDIF
    ENDIF
 ENDIF
 
@@ -193,9 +285,9 @@ ENDIF
 
 RETURN
 
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* 
 PROCEDURE dfBottom( bKey, bFilter, bBreak ) // GoBottom
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* 
 LOCAL nActRec, uKey
 LOCAL nAlias := SELECT()
 
