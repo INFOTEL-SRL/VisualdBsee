@@ -6,13 +6,14 @@
 #INCLUDE "Common.ch"
 #INCLUDE "dfReport.ch" // Struttura Report e Virtual record
 
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* 
 FUNCTION dfUpdQryRep(aVRec, aQuery, nIndex, bKey, bFilter, bBreak )
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* 
 LOCAL nNewOrd   
 LOCAL bNewKey   
 LOCAL bNewFilter
-LOCAL bNewBreak 
+LOCAL bNewBreak
+LOCAL cMs, nSv
 
    IF ! dfSet("XbaseDisableSetReportFilterinQuery") == "YES"
 
@@ -51,6 +52,20 @@ LOCAL bNewBreak
       ////////////////////////////////////////////////
       ////////////////////////////////////////////////
 
+      // KEY/BREAK in aQuery sono calcolati da dfQryOpt() per l'INDEXORD()
+      // del master al momento della query. Se il report usa un ordine
+      // diverso (dfUpdVR -> ORDSETFOCUS(nNewOrd)), DBSEEK sulla KEY sbagliata
+      // (PGDBE in particolare) lascia fuori tutti i record validi per REP_QRY_*.
+      IF VALTYPE( nNewOrd ) == "N" .AND. nNewOrd > 0 .AND. ;
+            VALTYPE( aQuery[QRY_OPT_INDEX] ) == "N" .AND. aQuery[QRY_OPT_INDEX] > 0 .AND. ;
+            nNewOrd != aQuery[QRY_OPT_INDEX]
+         IF EMPTY( bKey )
+            bNewKey := NIL
+         ENDIF
+         IF EMPTY( bBreak )
+            bNewBreak := {|| .F. }
+         ENDIF
+      ENDIF
 
    ELSE
       nNewOrd    := aQuery[QRY_OPT_INDEX ]
@@ -92,6 +107,25 @@ LOCAL bNewBreak
    ENDIF
 
 #endif
+
+   // PGDBE: la KEY (e spesso il BREAK) prodotti da dfQryOpt()/dbdd mirano a DBSEEK
+   // sul master. Su PG il seek puo' finire in EOF o fuori range pur esistendo
+   // record che soddisfano REP_QRY_* -> stampa vuota ("nulla da stampare").
+   // Senza KEY, dfTop fa DbGoTop + skip su VR_FILTER; dfPrnAllign applica
+   // REP_QRY_BLOCK fino al primo record utile.
+   // Per il comportamento precedente: dfSet("XbasePgReportKeepQueryKeyOpt","YES")
+   nSv := SELECT()
+   cMs := RTRIM( aVRec[1][VR_NAME] )
+   IF ! EMPTY( cMs ) .AND. SELECT( cMs ) > 0 .AND. ;
+         dfPgRddIs( ( cMs )->( RDDNAME() ) ) .AND. ;
+         !( dfSet( "XbasePgReportKeepQueryKeyOpt" ) == "YES" )
+      bNewKey   := NIL
+      bNewBreak := {|| .F. }
+   ENDIF
+   IF nSv > 0
+      SELECT( nSv )
+   ENDIF
+
   dfUpdVR( aVRec, nNewOrd, bNewKey, bNewFilter, bNewBreak )
 
 RETURN .T.

@@ -73,7 +73,7 @@ STATIC _RDD := NIL // inizializzato nella dfCRWRDD()
 
 
 //Gerr. 3666 Luca 13/11/03
-//Creata la classe dfCRWGES per gestire pió bande di stampa contemporaneamente
+//Creata la classe dfCRWGES per gestire più bande di stampa contemporaneamente
 CLASS dfCRWGes
    EXPORTED:
    VAR aCRWObj
@@ -212,7 +212,7 @@ METHOD dfCRWGes:Create(cDBFName)
      // Scelgo di mettere l'alias C_
      cAlias :=  Alltrim(LEFT("C_"+cDBFName, 10))
    ELSE
-     // si ä deciso di utilizzare in ogni caso il nome della banda
+     // si ù deciso di utilizzare in ogni caso il nome della banda
      // Prima creava il file temporaneo dbf con il nome del report.
      //cFname :=  dfCRWTemp()+cDBFName+dfDbfExt(::cRDD) //::cFName
      cFname :=  dfReportTemp()+cDBFName+dfDbfExt(::cRDD) //::cFName
@@ -506,12 +506,12 @@ FUNCTION dfReportTemp(xNew)
    ENDIF
    IF cPath == NIL
       DEFAULT cPath TO dfSet("XbaseReportTemp")
-      DEFAULT cPath TO dfCRWTemp(xNew)// Per compatibilitÖ con prima
+      DEFAULT cPath TO dfCRWTemp(xNew)// Per compatibilitù con prima
       cPath := dfPathChk(cPath)
    ENDIF
 RETURN cPath
 
-//TO Do: non ä ancora utilizzata nelle librerie,  si deve analizzare ä inserire dove necessario
+//TO Do: non ù ancora utilizzata nelle librerie,  si deve analizzare ù inserire dove necessario
 FUNCTION dfReportManagerTemp(xNew)
    STATIC cPath := NIL
 
@@ -542,7 +542,7 @@ FUNCTION dfCRWTemp(xNew)
    ENDIF
 RETURN cPath
 
-// Torna se ä in modailtÖ DESIGN (non cancella il DBF creato)
+// Torna se ù in modailtù DESIGN (non cancella il DBF creato)
 
 // Cerca /CRWDESIGN o /CRWDESIGN=percorso
 // Esempio /CRWDESIGN:c:\ imposta il DBF su C:\
@@ -584,7 +584,7 @@ CLASS dfCRWOut
       VAR lNOTConv
       ///////////////////////////////////////////
       //VAR cRpt
-      //Gerr. 3438 30/10/03 Luca: Aggiunta la possibilitÖ di non cancellare il file
+      //Gerr. 3438 30/10/03 Luca: Aggiunta la possibilitù di non cancellare il file
       // dbf temporaneo creato.
       VAR lEraseCRW_dbf_File
       VAR aIndex
@@ -637,7 +637,7 @@ METHOD dfCRWOut:init(cFName, cAlias, cRDD,oTableGes )
    ::aDB        := {}
    ::aDBMap     := {}
    ::cFileNtx   := ""
-   //Gerr. 3438 30/10/03 Luca: Aggiunta la possibilitÖ di non cancellare il file
+   //Gerr. 3438 30/10/03 Luca: Aggiunta la possibilitù di non cancellare il file
    // dbf temporaneo creato.
    ::lEraseCRW_dbf_File := .T.
 
@@ -713,21 +713,37 @@ METHOD dfCRWOut:closeDBF()
 RETURN lRet
 
 // Salva in una cache (aRecord) il record che sta scrivendo
-// se ä un record nuovo (in base a nRow o nCol) scrive il record
+// se ù un record nuovo (in base a nRow o nCol) scrive il record
 // in cache e reinizia
 METHOD dfCRWOut:output(nRow, nCol, uVar, aFie)
-   LOCAL nPos, xVal
+   LOCAL nPos, xVal, cFieTyp
+
+   // PGDBE: campi SQL NULL -> NIL in lettura; su DBF tipicamente 0 / data vuota / .F.
+   // Senza normalizzazione, Crystal/temp DBF possono mostrare 0 o celle vuote errate.
+   IF VALTYPE( aFie ) == "A" .AND. LEN( aFie ) >= 2 .AND. ( uVar == NIL .OR. VALTYPE( uVar ) == "U" )
+      cFieTyp := UPPER( LEFT( ALLTRIM( aFie[2] ), 1 ) )
+      DO CASE
+      CASE cFieTyp == DBS_TYPE_NUMBER
+         uVar := 0
+      CASE cFieTyp == DBS_TYPE_DATE
+         uVar := CTOD( SPACE( 8 ) )
+      CASE cFieTyp == DBS_TYPE_LOGIC
+         uVar := .F.
+      OTHERWISE
+         uVar := ""
+      ENDCASE
+   ENDIF
 
    IF ::nLastRow == NIL
       // Prima riga azzero array cache record
       ::aRecord  := {}
    ELSEIF nRow <0 .OR. nCol <0
       // Gerr. 3581 Luca 13/11/03
-      // quando due campi sono erroniamente inseriti da dbsee con coordinate negative vi ä un Runtime Error
+      // quando due campi sono erroniamente inseriti da dbsee con coordinate negative vi ù un Runtime Error
       RETURN self
    ELSEIF  (nRow == ::nLastRow .AND. nCol == ::nLastCol .AND. (aFie[FIE_FNAME] == ::cLastField .AND. LEN(::aDB)>1))
       // Gerr. 3581 Luca 13/11/03
-      // quando due campi vengono sovraposti allora vi ä un runtime Error
+      // quando due campi vengono sovraposti allora vi ù un runtime Error
       RETURN self
    ELSEIF ( (nRow < ::nLastRow) .OR. (nRow == ::nLastRow .AND. nCol < ::nLastCol))
       // Cambio riga: scrivo il record in cache e riazzero
@@ -750,7 +766,7 @@ METHOD dfCRWOut:output(nRow, nCol, uVar, aFie)
    ///////////////////////////////////////////
 
    // Gerr. 3581 Luca 13/11/03
-   // quando due campi vengono sovraposti allora vi ä un runtime Error
+   // quando due campi vengono sovraposti allora vi ù un runtime Error
    // nPos := ASCAN(::aRecord, {|x|x[REC_ROW] == nRow .AND. x[REC_COLUMN] == nCol  })
    nPos := ASCAN(::aRecord, {|x|x[REC_ROW] == nRow .AND. x[REC_COLUMN] == nCol .AND. (x[REC_STRUCT][FIE_FNAME]== ::cLastField )  })
    IF nPos == 0
@@ -902,7 +918,7 @@ METHOD dfCRWOut:create()
 RETURN self
 
 // Prende le dimensioni del campo dalla PICTURE che
-// puï essere una picture vera e propria oppure
+// puù essere una picture vera e propria oppure
 // una definizione di struttura del tipo
 // N10,2 o C200 o C,200 (identica a C200)
 
@@ -950,7 +966,7 @@ METHOD dfCRWOut:GetFromPict(aRec, aFie)
          cCh := SUBSTR(cPict, nInd, 1)
          IF cCh $ "9."
             nLen++
-            IF lDec // Ho giÖ passato punto decimale incremento anche i decimali
+            IF lDec // Ho giù passato punto decimale incremento anche i decimali
                nDec++
             ENDIF
             IF cCh == "."
@@ -1129,7 +1145,7 @@ METHOD DBFGes:WriteRecord(oCrw)
   LOCAL nLen
   oCrw:oTableGes:DBAPPEND()
   FOR nInd := 1 TO LEN(oCrw:aRecord)
-      // Guardo se la colonna corrente ä stata
+      // Guardo se la colonna corrente ù stata
       // effettivamente creata
       nPos:= oCrw:aDbMap[nInd]
       IF nPos > 0
@@ -1243,7 +1259,7 @@ METHOD XMLGes:WriteRecord(oCrw)
 
   IF nHandle>0
      FOR nInd := 1 TO LEN(oCrw:aRecord)
-         // Guardo se la colonna corrente ä stata
+         // Guardo se la colonna corrente ù stata
          // effettivamente creata
          IF !EMPTY(oCrw:aDbMap) .AND. LEN(oCrw:aDbMap)>=nInd
             nPos:= oCrw:aDbMap[nInd]
@@ -1372,7 +1388,7 @@ RETURN nHandle
 METHOD XMLGes:str2Xml(cString)
 /* ==========================================================
    ATTENZIONE: SE SI MODIFICA QUESTO METODO MODIFICARE ANCHE
-   dfRepOutXMLTable:str2Xml() che ä simile
+   dfRepOutXMLTable:str2Xml() che ù simile
    ==========================================================*/
 
    //E' da migliorare

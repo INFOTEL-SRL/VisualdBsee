@@ -6,9 +6,12 @@ Programmer  : Baccan Matteo
 #include "dfreport.ch"
 #include "dfstd.ch"
 
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+//******************************************************************************
 PROCEDURE dfPrnConfig( aBuf )
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+//******************************************************************************
+
+   // PG/dfS: tra una stampa e l'altra azzera cache recno + contesto campo indice
+   dfSPgSeekCacheFlush()
 
 aBuf[REP_QRY_BLOCK] := NIL
 

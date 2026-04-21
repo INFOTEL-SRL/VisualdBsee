@@ -7,8 +7,16 @@
 FUNCTION dfAny2Str( uPar, cPic )
 * ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 LOCAL cRet := uPar
-LOCAL cTip := VALTYPE( uPar )
+LOCAL cTip
 LOCAL nPos
+
+   // PGDBE: campi NULL restituiscono NIL; VALTYPE/STR senza gestione escludono
+   // righe dai filtri query (stampe "nulla da stampare") o falsano totali.
+   IF uPar == NIL
+      RETURN ""
+   ENDIF
+
+cTip := VALTYPE( uPar )
 
 DO CASE
    CASE cTip == "U"; cRet := ""

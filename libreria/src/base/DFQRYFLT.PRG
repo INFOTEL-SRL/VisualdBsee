@@ -9,19 +9,32 @@
 #define QUERY_DES  1
 #define QUERY_EXP  2
 
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* 
+* GET data non usabile nel filtro (EMPTY() .F. ma Y/M/D a 0): evita DTOS/CTOD che escludono tutto.
+STATIC FUNCTION _dfQryFltOmitDate( u, cType )
+IF UPPER( cType ) != "D"
+   RETURN .F.
+ENDIF
+IF VALTYPE( u ) != "D" .OR. EMPTY( u )
+   RETURN .T.
+ENDIF
+IF YEAR( u ) < 1 .OR. MONTH( u ) < 1 .OR. DAY( u ) < 1
+   RETURN .T.
+ENDIF
+RETURN .F.
+
 FUNCTION dfQryFltDes( aQuery, aSeq ) // Espressione della query Descrizione
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* 
 RETURN dfQryFlt( aQuery, aSeq, QUERY_DES )
 
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* 
 FUNCTION dfQryFltExp( aQuery, aSeq ) // Espressione della query espressione
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* 
 RETURN dfQryFlt( aQuery, aSeq, QUERY_EXP )
 
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* 
 STATIC FUNCTION dfQryFlt( aQuery, aSeq, nMode )
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* 
 LOCAL nQryLen, nField, cType, nError:=0
 LOCAL nSeqLen
 LOCAL cQryExp, cLocalExp
@@ -29,6 +42,7 @@ LOCAL cQryDes
 LOCAL i, j
 LOCAL cFie, cDes, lEmptyBef, lEmptyAft
 LOCAL cFieNam, cFieCon
+LOCAL cStrCmp
 LOCAL c2Ret := "", lFilter
 
 nQryLen := LEN(aQuery)
@@ -56,7 +70,7 @@ FOR i := 1 TO nSeqLen
                EXIT                    // esco con errore = 2
             ENDIF
 
-            IF EMPTY(aQuery[nField][3]) // se il campo e' vuoto
+            IF EMPTY(aQuery[nField][3]) .OR. _dfQryFltOmitDate( aQuery[nField][3], aQuery[nField][5] ) // vuoto o data D non valida
                lEmptyBef := .T.         // attivo il campo vuoto prima
                cQryExp += ".T."         // nella espressione di query metto comunque
                LOOP                     // un valore TRUE
@@ -144,9 +158,43 @@ FOR i := 1 TO nSeqLen
                     ENDIF
 
                OTHERWISE              // tutti gli altri casi
-                    cLocalExp := cFieNam+cFieCon+cFie
-                    IF EMPTY(aQuery[nField][4]) // se l'alias e' vuoto
-                       cLocalExp := cFie+cFieCon+cFieNam
+                    IF cType == "D"
+                       // PGDBE/ODBC: confronto campo Data con CTOD() puo' dare sempre .F. nel filtro
+                       // stampe (dfPrnAllign); DTOS() confronta come stringa YYYYMMDD.
+                       cLocalExp := "DTOS(" + cFieNam + ")" + cFieCon + "DTOS(" + cFie + ")"
+                       IF EMPTY(aQuery[nField][4]) // se l'alias e' vuoto
+                          cLocalExp := "DTOS(" + cFie + ")" + cFieCon + "DTOS(" + cFieNam + ")"
+                       ENDIF
+                    ELSEIF cType == "C"
+                       // PGDBE/CHAR(n): RTRIM + dfAny2Str per NULL/U.
+                       // "==" (es. nominativo da lookup DIPE vs presenze.nome): case-sensitive
+                       // esclude tutto se maiuscole differiscono -> "nulla da stampare".
+                       IF cFieCon == "=="
+                          // ALLTRIM: spazi iniziali/finali; CHR(160): NBSP (spesso da import/Excel).
+                          // RTRIM+UPPER da soli non bastano se presenze.nome e letterale DIPE differiscono cosi'.
+                          cLocalExp := "UPPER(ALLTRIM(STRTRAN(dfAny2Str(" + cFieNam + "),CHR(160),' ')))==UPPER(ALLTRIM(STRTRAN(dfAny2Str(" + cFie + "),CHR(160),' ')))"
+                          IF EMPTY(aQuery[nField][4])
+                             cLocalExp := "UPPER(ALLTRIM(STRTRAN(dfAny2Str(" + cFie + "),CHR(160),' ')))==UPPER(ALLTRIM(STRTRAN(dfAny2Str(" + cFieNam + "),CHR(160),' ')))"
+                          ENDIF
+                       ELSE
+                       // Uguaglianza con "=": in Xbase/Clipper "=" tra stringhe e' fuzzy
+                       // (padding); per filtri stampe serve "==" dopo RTRIM.
+                       // PGDBE: codici corti (es. m_codice/p_codice) spesso NULL, CHAR con
+                       // spazio, o case diversa (c0 vs C0) -> RTRIM da solo lascia "nulla da stampare".
+                       cStrCmp := cFieCon
+                       IF cStrCmp == "="
+                          cStrCmp := "=="
+                       ENDIF
+                       cLocalExp := "UPPER(RTRIM(STRTRAN(dfAny2Str(" + cFieNam + "),CHR(160),' ')))" + cStrCmp + "UPPER(RTRIM(STRTRAN(dfAny2Str(" + cFie + "),CHR(160),' ')))"
+                       IF EMPTY(aQuery[nField][4])
+                          cLocalExp := "UPPER(RTRIM(STRTRAN(dfAny2Str(" + cFie + "),CHR(160),' ')))" + cStrCmp + "UPPER(RTRIM(STRTRAN(dfAny2Str(" + cFieNam + "),CHR(160),' ')))"
+                       ENDIF
+                       ENDIF
+                    ELSE
+                       cLocalExp := cFieNam+cFieCon+cFie
+                       IF EMPTY(aQuery[nField][4]) // se l'alias e' vuoto
+                          cLocalExp := cFie+cFieCon+cFieNam
+                       ENDIF
                     ENDIF
 
             ENDCASE
@@ -268,9 +316,9 @@ ENDIF
 
 RETURN c2Ret
 
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* 
 STATIC FUNCTION ChkStr(cStr, cDelim)
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* 
 IF cDelim = "[" .and. !( "[" $ cStr .or. "]" $ cStr)
    RETURN cStr
 ELSE
