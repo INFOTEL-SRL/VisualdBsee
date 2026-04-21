@@ -13,10 +13,10 @@
    #xtranslate DBGOTO(<x>) => DBGOTO_XPP(<x>)
 #endif
 
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* ???????????????????????????????????????????????????????????????????????????
 FUNCTION dbLook(        ; // Auto-LookUp function
                  aLook  ) // Parameters array
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* ???????????????????????????????????????????????????????????????????????????
 // LK_ORDER  aLook[1]  := Order                 (Number)
 // LK_SEEK   aLook[2]  := Prim.Position.Key     (CODEBLOCK)
 // LK_VAL    aLook[3]  := Inherited fields      (Array)
@@ -46,6 +46,7 @@ LOCAL cAlias    := PADR(UPPER(ALIAS()),8)
 LOCAL cOldState := ""
 LOCAL lCase2    := .F.
 LOCAL cKey
+LOCAL nPgSavRec := 0
 
 IF Act $ "uar-esc-Stb"         // These actions transform a LookUp
    RETURN .T.                  // to a free LookUp
@@ -59,7 +60,7 @@ DEFAULT aLook[LK_WINDOWORDER]  TO aLook[LK_ORDER]
 DEFAULT aLook[LK_INS]          TO dfSet(AI_LOOKINSERTCB)  
 
 cOldState := dfUsrState()      // Save current state
-SET ORDER TO aLook[LK_ORDER]
+(cAlias)->( ORDSETFOCUS( aLook[LK_ORDER] ) )
 
 // ------------------------------------------------------
 // simone 9/6/2006 
@@ -70,7 +71,7 @@ SET ORDER TO aLook[LK_ORDER]
 // modifica al template VALIDSTD.TMP
 /*
    // Aggiunto S2000 Standard per LookUp con chiave vuota
-   IF Empty(ÛAllTrim(dd_sym->SYM_NAM)Û)
+   IF Empty(?AllTrim(dd_sym->SYM_NAM)?)
       aDbl[LK_SEEK] := Space(Len(aDbl[LK_SEEK]))
    ENDIF
 
@@ -121,7 +122,10 @@ DO CASE
           aLook[LK_TYPE]==LT_MANDATORY )
 
         IF !EMPTY(aLook[LK_SEEK])
-           (cAlias)->(DBSEEK( aLook[LK_SEEK], .T. ))
+           _dbLookSeekOnOrder( cAlias, aLook, aLook[LK_ORDER] )
+           IF aLook[LK_WINDOWORDER] != aLook[LK_ORDER]
+              _dbLookSeekOnOrder( cAlias, aLook, aLook[LK_WINDOWORDER] )
+           ENDIF
         ENDIF
         IF aLook[LK_WIN] # NIL     // Window name
            // Generated window
@@ -158,11 +162,28 @@ DO CASE
 ENDCASE
 
 IF (!EMPTY(aLook[LK_SEEK]) .OR. !lFound) .AND. !lEsc  // Positioning
-   IF !lFound
-      lFound:=(cAlias)->(DBSEEK( aLook[LK_SEEK] ))
+   (cAlias)->( ORDSETFOCUS( aLook[LK_ORDER] ) )
+   IF !EMPTY( aLook[LK_SEEK] )
+      IF dfPgRddIs( (cAlias)->( RDDNAME() ) )
+         lFound := (cAlias)->( DBSEEK( aLook[LK_SEEK] ) )
+      ELSE
+         lFound := (cAlias)->( DBSEEK( aLook[LK_SEEK], .T. ) )
+      ENDIF
+   ELSEIF !lFound
+      lFound := (cAlias)->( DBSEEK( aLook[LK_SEEK] ) )
    ENDIF
    IF (cAlias)->(EOF())
       lFound := .F.
+   ENDIF
+   IF lFound .AND. !lEsc
+      IF !_dbLookPgSeekVerify( cAlias, aLook )
+         lFound := .F.
+      ENDIF
+   ENDIF
+   IF !lFound .AND. !lEsc
+      IF _dbLookPgSeekFallback( cAlias, aLook )
+         lFound := .T.
+      ENDIF
    ENDIF
 ENDIF
 
@@ -274,7 +295,148 @@ IF (cAct == "Cda" .OR. cAct == "Ada") .AND. lFound
    ENDIF
 ENDIF
 
-(cAlias)->(ORDSETFOCUS( nInd ))  // Restoring index
+// PGDBE: ORDSETFOCUS(nInd) puo' spostare il record corrente; il codice chiamante
+// legge ancora alias->campo (es. codici->codice). Salva RECNO() e DBGOTO dopo restore.
+IF lFound .AND. !lEsc .AND. dfPgRddIs( ( cAlias )->( RDDNAME() ) ) .AND. ;
+      !( cAlias )->( EOF() ) .AND. !( cAlias )->( BOF() )
+   nPgSavRec := ( cAlias )->( RECNO() )
+ENDIF
+
+( cAlias )->( ORDSETFOCUS( nInd ) )  // Restoring index
+
+IF nPgSavRec > 0 .AND. dfPgRddIs( ( cAlias )->( RDDNAME() ) )
+   ( cAlias )->( DBGOTO( nPgSavRec ) )
+ENDIF
+
 dfUsrState( cOldState  )         // Restore old state
 
 RETURN lFound
+
+*******************************************************************************
+STATIC FUNCTION _dbLookPgFieldFromAlook( aLook )
+//*******************************************************************************
+LOCAL cF, aSub
+
+   IF VALTYPE( aLook ) != "A" .OR. LEN( aLook ) < LK_FIELD
+      RETURN ""
+   ENDIF
+
+   cF := aLook[LK_FIELD]
+   IF VALTYPE( cF ) == "C" .AND. !EMPTY( RTRIM( cF ) )
+      RETURN RTRIM( cF )
+   ENDIF
+
+   IF LEN( aLook ) >= LK_VAL .AND. VALTYPE( aLook[LK_VAL] ) == "A" .AND. LEN( aLook[LK_VAL] ) >= 1
+      aSub := aLook[LK_VAL][1]
+      IF VALTYPE( aSub ) == "A" .AND. LEN( aSub ) >= 1 .AND. VALTYPE( aSub[1] ) == "C" .AND. !EMPTY( RTRIM( aSub[1] ) )
+         RETURN RTRIM( aSub[1] )
+      ENDIF
+   ENDIF
+
+RETURN ""
+
+*******************************************************************************
+STATIC FUNCTION _dbLookPgSeekField( cAliasPad, aLook )
+//*******************************************************************************
+LOCAL cWa, cF
+
+   cWa := RTRIM( cAliasPad )
+   cF  := ""
+   IF SELECT( cWa ) >= 1
+      cF := dfPgOrdKeySingleField( ALLTRIM( ( cWa )->( ORDKEY() ) ) )
+   ENDIF
+   IF EMPTY( cF )
+      cF := _dbLookPgFieldFromAlook( aLook )
+   ENDIF
+
+RETURN cF
+
+*******************************************************************************
+STATIC FUNCTION _dbLookPgSeekVerify( cAliasPad, aLook )
+//*******************************************************************************
+LOCAL cWa, cField
+
+   cWa := RTRIM( cAliasPad )
+   IF SELECT( cWa ) < 1
+      RETURN .T.
+   ENDIF
+
+   IF !dfPgRddIs( ( cWa )->( RDDNAME() ) )
+      RETURN .T.
+   ENDIF
+
+   IF VALTYPE( aLook ) != "A" .OR. LEN( aLook ) < LK_ORDER
+      RETURN .T.
+   ENDIF
+
+   IF VALTYPE( aLook[LK_SEEK] ) != "C" .OR. EMPTY( RTRIM( aLook[LK_SEEK] ) )
+      RETURN .T.
+   ENDIF
+
+   cField := _dbLookPgSeekField( cAliasPad, aLook )
+   IF EMPTY( cField )
+      RETURN .T.
+   ENDIF
+
+RETURN dfPgSeekVerifyRow( cWa, cField, aLook[LK_SEEK] )
+
+*******************************************************************************
+STATIC FUNCTION _dbLookPgSeekFallback( cAliasPad, aLook )
+//*******************************************************************************
+LOCAL cWa, cField
+
+   cWa := RTRIM( cAliasPad )
+   IF SELECT( cWa ) < 1
+      RETURN .F.
+   ENDIF
+
+   IF !dfPgRddIs( ( cWa )->( RDDNAME() ) )
+      RETURN .F.
+   ENDIF
+
+   IF VALTYPE( aLook ) != "A" .OR. LEN( aLook ) < LK_ORDER
+      RETURN .F.
+   ENDIF
+
+   IF VALTYPE( aLook[LK_SEEK] ) != "C" .OR. EMPTY( RTRIM( aLook[LK_SEEK] ) )
+      RETURN .F.
+   ENDIF
+
+   cField := _dbLookPgSeekField( cAliasPad, aLook )
+   IF EMPTY( cField )
+      RETURN .F.
+   ENDIF
+
+RETURN dfPgSeekFallbackScan( cWa, cField, aLook[LK_SEEK] )
+
+*******************************************************************************
+STATIC PROCEDURE _dbLookSeekOnOrder( cAliasPad, aLook, nOrd )
+//*******************************************************************************
+LOCAL cWa, lPg, xSeek
+
+   cWa := RTRIM( cAliasPad )
+   IF SELECT( cWa ) < 1 .OR. VALTYPE( nOrd ) != "N"
+      RETURN
+   ENDIF
+
+   (cWa)->( ORDSETFOCUS( nOrd ) )
+
+   xSeek := aLook[LK_SEEK]
+   IF EMPTY( xSeek )
+      RETURN
+   ENDIF
+
+   lPg := dfPgRddIs( (cWa)->( RDDNAME() ) )
+   IF lPg
+      (cWa)->( DBSEEK( xSeek ) )
+      IF VALTYPE( xSeek ) == "C" .AND. !EMPTY( RTRIM( xSeek ) )
+         IF !_dbLookPgSeekVerify( cAliasPad, aLook )
+            _dbLookPgSeekFallback( cAliasPad, aLook )
+         ENDIF
+      ENDIF
+   ELSE
+      (cWa)->( DBSEEK( xSeek, .T. ) )
+   ENDIF
+
+RETURN
+
