@@ -1,3 +1,10 @@
 /libreria/output/lib190/rel/obj
 /libreria/output/lib200-832/rel/obj
+/libreria/output/lib200-2598/rel/obj
+/libreria/output/lib190/output/
+/libreria/output/lib200-2598/output/
+/libreria/output/lib200-832/output/
+/libreria/output/lib190/rel/omf/*.exp
+/libreria/output/lib200-2598/rel/omf/*.exp
+/libreria/output/lib200-832/rel/omf/*.exp
 /libreria/src/log.log

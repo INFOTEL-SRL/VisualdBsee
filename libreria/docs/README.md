@@ -2,12 +2,45 @@
 
 ## Adattamenti PostgreSQL (PGDBE)
 
-| Documento | Contenuto |
-|-----------|-----------|
-| [PGDBE-interventi-libreria.md](./PGDBE-interventi-libreria.md) | Indice, riepilogo, dettaglio per file (§2.6.x `DFSKIP`/`dfTop`/`dfSkip`, browse 1:n, `TBSKIP.PRG`), DIPE, cache, **§6 diagnostica** (sintomi, mermaid, prestazioni) |
-| [PGDBE-dfSet-riferimento-rapido.md](./PGDBE-dfSet-riferimento-rapido.md) | Tabella + **sezione per chiave** (default PG, `YES`/`NO`, rischi, interazioni), esempi `dbstart.ini` |
-| [PGDBE-checklist-riapplicazione.md](./PGDBE-checklist-riapplicazione.md) | Checklist 0→13; **§6** esteso su `DFSKIP` (LOCAL, LastRec, cammino break, fallback scan, DBGOTO, test) |
+Questa cartella documenta gli interventi PostgreSQL applicati alla libreria `libreria\src\` nel branch `pg`.
 
-Ordine di lettura consigliato: **interventi** (perché) → **dfSet** (cosa impostare) → **checklist** (come portare il codice).
+La documentazione e' organizzata per rispecchiare i 5 commit applicati nel fork:
 
-Sorgenti di riferimento: `libreria\src\` (branch base, xpp, s2).
+| Commit | Titolo | Documento principale |
+|---|---|---|
+| `3a0e5ef` | Add PostgreSQL runtime infrastructure | `PGDBE-interventi-libreria.md` |
+| `ce3cfc2` | Fix PostgreSQL seek and lookup flow | `PGDBE-interventi-libreria.md` |
+| `0fe8fe6` | Fix PostgreSQL report and query handling | `PGDBE-interventi-libreria.md`, `PGDBE-dfSet-riferimento-rapido.md` |
+| `cda7aec` | Adjust PostgreSQL browse and list navigation | `PGDBE-interventi-libreria.md`, `PGDBE-dfSet-riferimento-rapido.md` |
+| `4e37315` | Add PGDBE documentation | tutti i file di questa cartella |
+
+## File disponibili
+
+| Documento | Scopo |
+|---|---|
+| [PGDBE-interventi-libreria.md](./PGDBE-interventi-libreria.md) | Vista completa e ordinata per commit: obiettivi, file toccati, comportamento introdotto e note operative. |
+| [PGDBE-dfSet-riferimento-rapido.md](./PGDBE-dfSet-riferimento-rapido.md) | Riferimento rapido delle chiavi `dfSet` che modulano il comportamento PG. |
+| [PGDBE-checklist-riapplicazione.md](./PGDBE-checklist-riapplicazione.md) | Checklist per riapplicare o verificare gli interventi su un fork pulito, seguendo l'ordine dei commit. |
+
+## Ordine di lettura consigliato
+
+1. `PGDBE-interventi-libreria.md`
+2. `PGDBE-dfSet-riferimento-rapido.md`
+3. `PGDBE-checklist-riapplicazione.md`
+
+## Ambito
+
+- Questa documentazione copre il codice libreria in `libreria\src\`.
+- Non descrive in dettaglio le personalizzazioni applicative esterne alla libreria.
+- I riferimenti ai commit usano gli hash presenti nel fork `C:\src\VisualdBsee`.
+
+## Nota build
+
+Il fork supporta anche varianti di build separate per diverse versioni di Xbase++.
+
+In particolare, oltre ai percorsi storici `lib190` e `lib200-832`, e' stato introdotto il percorso `libreria/output/lib200-2598/` con gli script:
+
+- `build200-2598.bat`
+- `libreria/src/gotutto200-2598.bat`
+
+Questa separazione serve a evitare che una build locale con toolchain diversa sovrascriva gli artefatti storici gia presenti nel repository.
