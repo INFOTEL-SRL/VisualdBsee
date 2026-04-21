@@ -122,6 +122,21 @@ Percorsi attualmente presenti o supportati:
 
 La variante `2.00.2598` e' stata introdotta per permettere build locali senza sporcare gli artefatti della vecchia `lib200-832`.
 
+## Template IDE rilevanti
+
+Oltre alla libreria, il comportamento del progetto generato dall'IDE dipende anche da alcuni template in `ide/tmp/xbase/`.
+
+Per l'integrazione PostgreSQL/PGDBE sono rilevanti in particolare:
+
+- `ide/tmp/xbase/INITPROC.TMP`
+  Template di inizializzazione del progetto generato. Qui possono vivere i blocchi di bootstrap runtime PG.
+- `ide/tmp/xbase/RMAKEX1.TMP`
+- `ide/tmp/xbase/RMAKEX2.TMP`
+- `ide/tmp/xbase/rmakex3.tmp`
+  Template collegati alla generazione del progetto di build/link del main.
+
+Nel fork questi file sono stati riallineati alla variante funzionante presente in `C:\src\PRESENZE\VisualdBsee`, per evitare che il supporto PG resti limitato alla sola libreria o alle sole DLL copiate.
+
 ## Prerequisiti
 
 Per usare gli script di build e' necessario avere gia impostato l'ambiente di **Alaska Xbase++** prima di eseguirli.

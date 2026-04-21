@@ -82,10 +82,10 @@
 Û"   "+cPath+alltrim(oo_obj->PRG)Û.obj
    .endif
 .next
-   dblang.lib
+   ..\lib\dblang.lib
 .if toExeEnv("linker")=="8"
-   vdbsee1o.lib
-   vdbsee1s.lib
+   ..\lib\vdbsee1o.lib
+   ..\lib\vdbsee1s.lib
 .else
    kernel32.LIB
    user32.lib
@@ -106,6 +106,10 @@
 .foreach make oo_bld->EXT=="arc"
 Û"   "+alltrim(oo_obj->PRG)Û.ARC
 .next
+
+   // #COD OIRMK4 // #END In coda ai programmi in compilazione. (Lasciare una riga vuota!!)
+   // Coda manuale: la rigenerazione progetto non riscrive le righe sotto.
+   // Runtime PG (pgVdbIni..pgDacSession) e in vdbsee1o/vdbsee1s da VisualdBsee\libreria\src\PG (gotutto).
 
    .inj RMK4 In coda ai programmi in compilazione. (Lasciare una riga vuota!!)
 

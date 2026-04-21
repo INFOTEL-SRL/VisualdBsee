@@ -4,16 +4,16 @@
 .* VERSION      :
 .* DESCRIZIONE  : Inizializzazioni dell'oggetto di startup
 .* ----------------------------------------------------------------------------
-dfSetMain( "ÛcTprgÛ" )
-dfSetApplicationName("ÛAlltrim(oo_exe->exedes)Û")
-IF dfSetMain() == "ÛcTprgÛ"
+dfSetMain( "ï¿½cTprgï¿½" )
+dfSetApplicationName("ï¿½Alltrim(oo_exe->exedes)ï¿½")
+IF dfSetMain() == "ï¿½cTprgï¿½"
    .M->cHlp := tHlpId()
    .if Len( cHlp ) > 0
-   dfHlpSet("ÛcHlpÛ")                ð   // Predispone settaggio id dell' help
+   dfHlpSet("ï¿½cHlpï¿½")                ï¿½   // Predispone settaggio id dell' help
    .endif
    .if type("OS()")=="C"    
    .* Visual dBsee 
-   dfSet( "XbaseApplication", ÛtGenInfo()Û)
+   dfSet( "XbaseApplication", ï¿½tGenInfo()ï¿½)
    .* In Visual dBsee disable work around on S2Static:create()
    dfSet( "XbaseS2StaticCreateWorkAround", "NO")
    dfSet( AI_XBASEDDKEYMODE, AI_DDKEYMODE_ENH)
@@ -49,11 +49,11 @@ IF dfSetMain() == "ÛcTprgÛ"
    .if toExeEnv("xbtoolbarstyle") == "1"
    dfSet( AI_XBASETOOLBARSTYLE, AI_TOOLBARSTYLE_RIGHT)
      .if ! EMPTY(toExeEnv("xbtoolbarwidth"))
-   dfSet( AI_XBASETOOLBAROPTIONS, {{AI_TOOLBARRIGHT_WIDTH, ÛVAL(toExeEnv("xbtoolbarwidth"))Û}})
+   dfSet( AI_XBASETOOLBAROPTIONS, {{AI_TOOLBARRIGHT_WIDTH, ï¿½VAL(toExeEnv("xbtoolbarwidth"))ï¿½}})
      .endif
    .else
      .if ! EMPTY(toExeEnv("xbtoolbarheight"))
-   dfSet( AI_XBASETOOLBAROPTIONS, {{AI_TOOLBAR_HEIGHT, ÛVAL(toExeEnv("xbtoolbarheight"))Û}})
+   dfSet( AI_XBASETOOLBAROPTIONS, {{AI_TOOLBAR_HEIGHT, ï¿½VAL(toExeEnv("xbtoolbarheight"))ï¿½}})
      .endif
    .endif
    .if toExeEnv("xbstatusstyle") == "1"
@@ -63,7 +63,7 @@ IF dfSetMain() == "ÛcTprgÛ"
    dfSet( AI_XBASEMULTIPAGESTYLE, AI_MULTIPAGESTYLE_FLAT)
    .endif
    .if ! EMPTY(toProject("xbgrpboxfont"))
-   dfSet( AI_XBASEGRPBOXFONT, ÛtExpCast(toProject("xbgrpboxfont"))Û )
+   dfSet( AI_XBASEGRPBOXFONT, ï¿½tExpCast(toProject("xbgrpboxfont"))ï¿½ )
    .endif
    .if toExeEnv("xbgrpboxstyle") == "1"
    dfSet( AI_XBASEGRPBOXSTYLE, BOX_PS_FLAT)
@@ -90,7 +90,7 @@ IF dfSetMain() == "ÛcTprgÛ"
    dfSet( AI_XBASERADSTYLE, RAD_PS_FLAT)
    .endif
    .if toExeEnv("background")!="0"
-   dfSet( "XbaseBackgroundBmp", dfGetBkg( ÛtoExeEnv("background")Û ) )
+   dfSet( "XbaseBackgroundBmp", dfGetBkg( ï¿½toExeEnv("background")ï¿½ ) )
    .endif
    .if toExeEnv("printmenutype")!="0"
    dfSet( AI_XBASEPRNMENUNEW, .T. )
@@ -132,12 +132,12 @@ IF dfSetMain() == "ÛcTprgÛ"
    dfTooltipMagicHelpON()
    .endif
    .if !EMPTY(toExeEnv("mandatorytype")) 
-   dfSet("XbaseMandatoryFieldsMode","ÛtoExeEnv("mandatorytype")Û" )
+   dfSet("XbaseMandatoryFieldsMode","ï¿½toExeEnv("mandatorytype")ï¿½" )
    .endif
    .if toExeEnv("helpformat")=="1"
-   dfHlpSetCB({ NIL, Û";"Û
-                {|cForm,cID| UPPER(ALLTRIM(cForm))+".HTM"}, Û";"Û
-                dbCfgPath("HelpPath")+"Ûalltrim(oo_exe->ExeName)Û.chm" })
+   dfHlpSetCB({ NIL, ï¿½";"ï¿½
+                {|cForm,cID| UPPER(ALLTRIM(cForm))+".HTM"}, ï¿½";"ï¿½
+                dbCfgPath("HelpPath")+"ï¿½alltrim(oo_exe->ExeName)ï¿½.chm" })
    .endif
    .if tNetWork()
    dfSet( AI_NET ,.T.)                  // Programma in rete
@@ -147,7 +147,7 @@ IF dfSetMain() == "ÛcTprgÛ"
    .endif
    .if toExeEnv("userstate")=="1"
    dfSet( AI_WINDOWINFO, .T. )
-   .* Commentato perche non pi— usato. 
+   .* Commentato perche non piâ€” usato. 
    .*if toExeEnv("userstate")=="0"
    .*dfSet( AI_USRSTATE, .F. )
    .endif
@@ -182,9 +182,9 @@ IF dfSetMain() == "ÛcTprgÛ"
    SET CENTURY ON
    .endif
    .if !(toExeEnv("setepoch")=="1900")
-   SET EPOCH TO ÛtoExeEnv("setepoch")Û
+   SET EPOCH TO ï¿½toExeEnv("setepoch")ï¿½
    .endif
-   SET DATE ÛtoExeEnv("setdate",.T.)Û ð   // Predispone formato presentazione date
+   SET DATE ï¿½toExeEnv("setdate",.T.)ï¿½ ï¿½   // Predispone formato presentazione date
    .if toExeEnv("resetaltc")=="1"
    SETCANCEL( .F. )
    .endif
@@ -197,23 +197,27 @@ IF dfSetMain() == "ÛcTprgÛ"
    .endif
    .inj exe4 Prima della Gestione Login
    .if toExeEnv("password")=="1"
-   dfLogin()                         ð   // Gestione password
-   IF dfSet(AI_USERLEVEL)==0         ð   // Se password inesistente
-      df2Quit()                      ð   // chiude il programma
+   dfLogin()                         ï¿½   // Gestione password
+   IF dfSet(AI_USERLEVEL)==0         ï¿½   // Se password inesistente
+      df2Quit()                      ï¿½   // chiude il programma
    END
    .endif
    dfInitScreenOn()
    .if !tEmptyDbf()
       .if toExeEnv("noupdgen")=="0"
-   IF dfChkPar("/UPD")               ð   // Attivazione dell'aggiornamento archivi
+   IF dfChkPar("/UPD")               ï¿½   // Attivazione dell'aggiornamento archivi
       ddUpdDbf()
    ENDIF
       .endif
       .if toExeEnv("nodbfgen")=="0"
-   ddIndex( IDX_CHECK )              ð   // Ricostruzione indici e creazione archivi
+   ddIndex( IDX_CHECK )              ï¿½   // Ricostruzione indici e creazione archivi
       .endif
    .endif
    .inj exe6 // Dopo la Gestione Login
+   IF dfPgRuntimeUsePostgres()
+      dfPgSessionInit()
+      dfPgCloseDbfWorkareas()
+   ENDIF
    dfInitScreenOff()
    .if oo_obj->TYP != "brw"
    IF !(cMode$DE_STATE_INK +DE_STATE_ADD +DE_STATE_MOD)

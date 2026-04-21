@@ -201,7 +201,25 @@ Questo commit affronta i casi in cui `DBSEEK` su PG posiziona il cursore in modo
   - configurazioni `dfSet`
   - checklist di verifica o porting
 
-## 6. Chiavi `dfSet` collegate
+## 6. Integrazione fuori da `libreria/src`
+
+Nel confronto con `C:\src\PRESENZE\VisualdBsee` e' emerso che il supporto PostgreSQL funzionante non dipende solo dai sorgenti della libreria e dalle DLL prodotte.
+
+Sono rilevanti anche questi template IDE:
+
+- `ide/tmp/xbase/INITPROC.TMP`
+- `ide/tmp/xbase/RMAKEX1.TMP`
+- `ide/tmp/xbase/RMAKEX2.TMP`
+- `ide/tmp/xbase/rmakex3.tmp`
+
+Ruolo operativo:
+
+- `INITPROC.TMP` contribuisce all'inizializzazione del progetto generato e puo contenere il bootstrap del runtime PG.
+- `RMAKEX*.TMP` governano la generazione dei file di build/link del main.
+
+Questi file sono stati riallineati alla variante `PRESENZE` per mantenere coerente l'integrazione PG anche lato progetto host, non solo lato libreria.
+
+## 7. Chiavi `dfSet` collegate
 
 Le modifiche PG introdotte dai commit `0fe8fe6` e `cda7aec` possono essere modulate tramite alcune chiavi `dfSet`.
 
@@ -216,7 +234,7 @@ Le principali sono:
 
 Il dettaglio operativo e' documentato in `PGDBE-dfSet-riferimento-rapido.md`.
 
-## 7. Mappa rapida file -> commit
+## 8. Mappa rapida file -> commit
 
 | File | Commit principale |
 |---|---|
@@ -234,7 +252,7 @@ Il dettaglio operativo e' documentato in `PGDBE-dfSet-riferimento-rapido.md`.
 | `src/s2/S2BROWSE.prg` | `cda7aec` |
 | `src/s2/S2BRW.prg` | `cda7aec` |
 
-## 8. Uso consigliato di questa documentazione
+## 9. Uso consigliato di questa documentazione
 
 1. Leggere questo file per capire la storia tecnica dei commit.
 2. Consultare `PGDBE-dfSet-riferimento-rapido.md` se serve modulare il comportamento runtime.

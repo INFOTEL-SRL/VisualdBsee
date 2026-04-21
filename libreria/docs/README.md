@@ -44,3 +44,16 @@ In particolare, oltre ai percorsi storici `lib190` e `lib200-832`, e' stato intr
 - `libreria/src/gotutto200-2598.bat`
 
 Questa separazione serve a evitare che una build locale con toolchain diversa sovrascriva gli artefatti storici gia presenti nel repository.
+
+## Nota template IDE
+
+Il supporto PostgreSQL nel fork non dipende solo dai file in `libreria/src/`.
+
+Una parte dell'integrazione vive anche nei template IDE sotto `ide/tmp/xbase/`, in particolare:
+
+- `INITPROC.TMP`
+- `RMAKEX1.TMP`
+- `RMAKEX2.TMP`
+- `rmakex3.tmp`
+
+Questi template influenzano l'inizializzazione del main e la generazione dei file di build del progetto host. Per questo sono stati riallineati alla variante funzionante di `C:\src\PRESENZE\VisualdBsee`.
