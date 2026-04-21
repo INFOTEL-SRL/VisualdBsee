@@ -34,6 +34,7 @@
    <<FILELIST("%CUR%CFUNC\*.prg")>>
    <<FILELIST("%CUR%BASE\*.prg")>>
    <<FILELIST("%CUR%VDB\*.prg")>>
+   <<FILELIST("%CUR%PG\*.prg")>>
 
 [VDBSEE1S.DLL]
    // non cambiare l'ordine di queste LIB senno' non funziona bene!

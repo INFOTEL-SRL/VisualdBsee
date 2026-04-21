@@ -29,13 +29,38 @@
   STATIC cADSDDAutoFile
 #endif
 
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+//*******************************************************************************
+// PGDBE: routing DacSession PostgreSQL (come ddUsePg). Moduli PG in libreria\src\PG.
+// Solo funzione STATIC (no CLASS): evita problemi di factory CLASS da unita' in .lib con Xbase++/ALINK.
+// Opt-in: PgUpsize.ini [UPSIZE] PgActivateDbeSys (dfPgRuntimeUsePostgres) - se .F. non si usa DacSession PG.
+//*******************************************************************************
+
+STATIC FUNCTION _dfPgDdRoutedSession( cStemUpper )
+LOCAL oS
+
+   IF ! dfPgRuntimeUsePostgres()
+      RETURN NIL
+   ENDIF
+
+   oS := dfPgGetDacSession()
+   IF oS == NIL
+      RETURN NIL
+   ENDIF
+   IF ValType( cStemUpper ) != "C" .OR. Empty( cStemUpper )
+      RETURN oS
+   ENDIF
+   IF dfPgIsSystemDictionaryStem( cStemUpper )
+      RETURN NIL
+   ENDIF
+RETURN oS
+
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 FUNCTION ddUse( cFName ,; // Nome del file da aprire
                 cAlias ,; // Alias
                 nNdx   ,; // Numero di indice da aprire
                 cMode  ,; // Modalita' d'apertura
-                cRDD    ) // RDD da—sare
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+                cRDD    ) // RDD daï¿½sare
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 LOCAL aNdx := {}, cFNdx, cPath, cVarName, nNdxNum, cDriver, lRet, cDate, cTime
 LOCAL oSession := NIL, cConnID
 LOCAL lOpenNdx := .T.
@@ -43,7 +68,7 @@ LOCAL lOpenNdx := .T.
 DEFAULT cAlias TO ""
 DEFAULT nNdx   TO 1
 
-// simone 27/11/08 possibilit… di NON aprire gli indici
+// simone 27/11/08 possibilitï¿½ di NON aprire gli indici
 // passando .F. come numero indice da aprire
 IF VALTYPE(nNdx) == "L" 
    lOpenNdx := nNdx
@@ -59,9 +84,21 @@ nNdx   := MAX( nNdx, 0 )
 
 // in questo momento ho caricato il NOME e l'ALIAS
 IF DFISSELECT( cAlias )               // Se il file e' aperto
-   SELECT ( cAlias )                  // viene selezionato
-   SET ORDER TO nNdx                  // messo sull'indice passato
-   RETURN .T.
+   oSession := _dfPgDdRoutedSession( UPPER( RTRIM( cAlias ) ) )
+   IF oSession != NIL
+      IF UPPER( (cAlias)->(RDDNAME()) ) != "PGDBE"
+         (cAlias)->(DBCLOSEAREA())
+      ELSE
+         SELECT ( cAlias )
+         SET ORDER TO nNdx
+         RETURN .T.
+      ENDIF
+   ELSE
+      SELECT ( cAlias )
+      SET ORDER TO nNdx
+      RETURN .T.
+   ENDIF
+   oSession := NIL
 ENDIF
 
 IF !dbCfgOpen( "dbDD" )         // Apro il dizionario
@@ -96,15 +133,6 @@ IF VALTYPE(dfSet("XbaseMT_ddUse"))=="B"
 ENDIF
 #endif
 
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-////Mantis 953
-IF dfSet("XbaseUserPathChk") != "NO" .AND. !dfRDDFile(cPath +cFName +dfDbfExt( cDriver ), cDriver)
-   dbMsgErr( dfStdMsg(MSG_DDUSE01) +"//"+ cPath +cFName +dfDbfExt( cDriver ))
-   RETURN .F.
-ENDIF
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-
 #ifdef _ENABLE_ADS_DD_
 
 // prendo l'ID di connessione DAC della tabella corrente
@@ -138,13 +166,26 @@ IF ! EMPTY(cConnID)
    ENDIF
 
    IF ! EMPTY(cConnID)
-      // se Š registrato fra le connessioni DAC prendo o creo la connessione
+      // se ï¿½ registrato fra le connessioni DAC prendo o creo la connessione
       // per il thread corrente
       oSession := dfDACConnIDGetSession(cConnID, .T., .T.)
    ENDIF
 ENDIF
 
 #endif
+
+// PGDBE: sessione DAC se ADS non ha gia fornito oSession (o _ENABLE_ADS_DD_ assente)
+IF oSession == NIL
+   oSession := _dfPgDdRoutedSession( UPPER( TRIM( cFName ) ) )
+ENDIF
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+////Mantis 953: verifica file su disco solo se non si apre via DAC (PostgreSQL)
+IF oSession == NIL .AND. dfSet("XbaseUserPathChk") != "NO" .AND. !dfRDDFile(cPath +cFName +dfDbfExt( cDriver ), cDriver)
+   dbMsgErr( dfStdMsg(MSG_DDUSE01) +"//"+ cPath +cFName +dfDbfExt( cDriver ))
+   RETURN .F.
+ENDIF
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 DO CASE
@@ -203,7 +244,7 @@ ENDIF
 
 RETURN lRet
 
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 STATIC FUNCTION dbfopen( cPath   ,;
                          cFName  ,;
                          cAlias  ,;
@@ -212,7 +253,7 @@ STATIC FUNCTION dbfopen( cPath   ,;
                          aNdx    ,;
                          cDriver ,;
                          oSession )
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 LOCAL nSecond   := 0
 LOCAL lRet      := .T.
 LOCAL lActive   := .F.
@@ -232,9 +273,9 @@ IF dfSet( AI_DBTMAXSIZE )>0
    ENDIF
 ENDIF
 
-// ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
-// ³CONTROLLO TIMEOUT ³
-// ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½?
+// ï¿½CONTROLLO TIMEOUT ï¿½
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 IF EMPTY( nTimeOut := dfSet(AI_LOCKREPEATTIME) ) // SE 0 DEFAULT a 5
    nTimeOut := 5
@@ -264,10 +305,11 @@ bErr := ERRORBLOCK()
    oOpenErr := NIL
    ERRORBLOCK( {|e| oOpenErr := e, dfErrBreak(e, "//", .T.)} )
    BEGIN SEQUENCE
-      IF EMPTY(oSession)
+      IF ValType( oSession ) != "O"
          lOpen := dfUseFile( cPath +cFName, cAlias, cMode!=USE_SHARED, cDriver )
       ELSE
-         // apertura da connessione DAC (es DIZ.DATI ADS)
+         // PGDBE / DAC: compound default PGDBE richiesto da Alaska per DBUSEAREA con DacSession
+         dfPgDbeActivateDefault()
          lOpen := dfUseFile( cFName, cAlias, cMode!=USE_SHARED, oSession )
       ENDIF
    END SEQUENCE
@@ -305,12 +347,12 @@ bErr := ERRORBLOCK()
 
       ERRORBLOCK( {|e| dfErrBreak(e, "//", .T.)} )
       BEGIN SEQUENCE
-         IF oSession == NIL
+         IF ValType( oSession ) != "O"
 
             // Simone 20/11/09
             // correzione per utilizzo CDX
             // se il driver sul DBDD="DBFNTX" ma apro con ADS configurato per i CDX
-            // allora non funziona il controllo se il file esiste perchè 
+            // allora non funziona il controllo se il file esiste perchï¿½ 
             // controlla estensione NTX invece di CDX
             cDriver := (cAlias)->(RDDNAME()) // imposto il DRIVER utilizzato realmente
 
@@ -398,7 +440,7 @@ ENDIF
 IF lOpen .AND. ! lRet
    // simone 5/12/07
    // mantis 0001686: su errore in apertura indice tabella, la tabella rimane aperta
-   // se l'errore Š in apertura degli indici la tabella rimane aperta!
+   // se l'errore ï¿½ in apertura degli indici la tabella rimane aperta!
    // invece va chiusa
    IF DFISSELECT(cAlias)
       (cAlias)->(DBCLOSEAREA())

@@ -24,7 +24,8 @@ strtran dblang.base dblang.xpj rel=%rel% defines=%defines% cur=%cur%
 pbuild dblang.xpj %2 %3 %4 >> %DMMLOG%
 if ERRORLEVEL 1 GOTO :error
 del dblang.xpj > nul
-aimplib %REL%\DBLANGIT.DEF /omf /o%REL%\omf\dblang.lib
+:: COFF: ALINK (Menu.exe OBJ_FORMAT=COFF) rifiuta .lib OMF da /omf — ALK4002 invalid or corrupt
+aimplib %REL%\DBLANGIT.DEF /coff /o%REL%\omf\dblang.lib
 
 if "%1" == "/DYNAMIC" goto :dynamic
 if "%1" == "/STATIC"  goto :static
@@ -48,8 +49,8 @@ del %cur%%rel%\%DMMLOG%
 del %cur%%rel%\dynamic.xpj
 del dynamic.xpj
 @echo on
-aimplib %REL%\VDBSEE1S.DEF /omf /o%REL%\omf\VDBSEE1S.lib
-aimplib %REL%\VDBSEE1O.DEF /omf /o%REL%\omf\VDBSEE1O.lib
+aimplib %REL%\VDBSEE1S.DEF /coff /o%REL%\omf\VDBSEE1S.lib
+aimplib %REL%\VDBSEE1O.DEF /coff /o%REL%\omf\VDBSEE1O.lib
 del uuid.lib
 goto exit
 

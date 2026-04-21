@@ -5,21 +5,21 @@
     LINK_FLAGS    =
     RC_COMPILE    = ARC
     RC_FLAGS      = /v
-    OBJ_DIR       = %CUR%%REL%\obj
+    OBJ_DIR       = %REL%\obj
     DEBUG         = no
     GUI           = yes
     PROJECT.XPJ
 
 [PROJECT.XPJ]
-    %CUR%%REL%\DBLANG.DLL
-    %CUR%%REL%\DBLANGIT.DLL
-    %CUR%%REL%\DBLANGBR.DLL
-    %CUR%%REL%\DBLANGEN.DLL
-    %CUR%%REL%\DBLANGES.DLL
+    %REL%\DBLANG.DLL
+    %REL%\DBLANGIT.DLL
+    %REL%\DBLANGBR.DLL
+    %REL%\DBLANGEN.DLL
+    %REL%\DBLANGES.DLL
 //    %REL%\DBLANGDE.DLL
 
 
-[%CUR%%REL%\DBLANG.DLL]
+[%REL%\DBLANG.DLL]
    XppRt0.lib
    XppRt1.lib
    XppUi2.lib
@@ -27,7 +27,7 @@
    %CUR%MESSAGGI\ITALIANO.PRG
    %CUR%MESSAGGI\ITALIAN1.PRG
 
-[%CUR%%REL%\DBLANGIT.DLL]
+[%REL%\DBLANGIT.DLL]
    XppRt0.lib
    XppRt1.lib
    XppUi2.lib
@@ -35,7 +35,7 @@
    %CUR%MESSAGGI\ITALIANO.PRG
    %CUR%MESSAGGI\ITALIAN1.PRG
 
-[%CUR%%REL%\DBLANGBR.DLL]
+[%REL%\DBLANGBR.DLL]
    XppRt0.lib
    XppRt1.lib
    XppUi2.lib
@@ -43,7 +43,7 @@
    %CUR%MESSAGGI\BRASIL.PRG
    %CUR%MESSAGGI\BRASIL1.PRG
 
-[%CUR%%REL%\DBLANGEN.DLL]
+[%REL%\DBLANGEN.DLL]
    XppRt0.lib
    XppRt1.lib
    XppUi2.lib
@@ -51,7 +51,7 @@
    %CUR%MESSAGGI\ENGLISH.PRG
    %CUR%MESSAGGI\ENGLISH1.PRG
 
-[%CUR%%REL%\DBLANGES.DLL]
+[%REL%\DBLANGES.DLL]
    XppRt0.lib
    XppRt1.lib
    XppUi2.lib
@@ -59,7 +59,7 @@
    %CUR%MESSAGGI\ESPANOL.PRG
    %CUR%MESSAGGI\Espanol1.prg
 
-//[%CUR%%REL%\DBLANGDE.DLL]
+//[%REL%\DBLANGDE.DLL]
 //   XppRt0.lib
 //   XppRt1.lib
 //   XppUi2.lib

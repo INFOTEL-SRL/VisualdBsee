@@ -5,16 +5,16 @@
     LINK_FLAGS    =
     RC_COMPILE    = ARC
     RC_FLAGS      = /v
-    OBJ_DIR       = %CUR%%REL%\obj
+    OBJ_DIR       = %REL%\obj
     DEBUG         = no
     GUI           = yes
     PROJECT.XPJ
 
 [PROJECT.XPJ]
-    // Š .exe invece che .lib altrimenti pbuild la ignora
-    %CUR%%REL%\VDBSEE1X.exe
+    // ? .exe invece che .lib altrimenti pbuild la ignora
+    %REL%\VDBSEE1X.exe
 
-[%CUR%%REL%\VDBSEE1X.exe]
+[%REL%\VDBSEE1X.exe]
     LINKER        = %CUR%makelib.bat
 //english.obj
 //english1.obj
@@ -34,4 +34,5 @@
    <<FILELIST("%CUR%SUPPORT\*.prg")>>
    <<FILELIST("%CUR%CLIPSUPP\*.prg")>>
    <<FILELIST("%CUR%XML\*.prg")>>
+   <<FILELIST("%CUR%PG\*.prg")>>
 
