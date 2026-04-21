@@ -56,4 +56,14 @@ Una parte dell'integrazione vive anche nei template IDE sotto `ide/tmp/xbase/`, 
 - `RMAKEX2.TMP`
 - `rmakex3.tmp`
 
-Questi template influenzano l'inizializzazione del main e la generazione dei file di build del progetto host. Per questo sono stati riallineati alla variante funzionante di `C:\src\PRESENZE\VisualdBsee`.
+Questi template influenzano l'inizializzazione del main e la generazione dei file di build del progetto host. Per questo sono stati riallineati alla variante funzionante di riferimento.
+
+## Nota distribuzione artefatti
+
+Per copiare DLL e LIB verso un progetto host non si usa piu uno script locale specifico di un singolo progetto.
+
+Il fork usa invece lo script generico:
+
+- `copy-build-artifacts.bat`
+
+Lo script richiede la variante di build e una cartella destinazione esplicita, cosi resta riutilizzabile anche fuori da ambienti locali specifici.

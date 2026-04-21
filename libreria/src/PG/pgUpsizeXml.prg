@@ -682,7 +682,7 @@ RETURN cBlock
 
 //*******************************************************************************
 //* path.ini accanto a Menu.exe (EXE): chiavi UserPath01, UserPath02, ...
-//* Valori = directory dei dati applicativi (es. PRESENZE2024). Solo da li' si elencano i .DBF per UPSIZE.runtime.upsize.
+//* Valori = directory dei dati applicativi (es. APPDATA2024). Solo da li' si elencano i .DBF per UPSIZE.runtime.upsize.
 STATIC FUNCTION dfPgUpsizePathIniFullPath()
 //*******************************************************************************
 LOCAL cExe

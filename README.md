@@ -20,6 +20,8 @@ Le aree principali del progetto sono:
   Prepara l'ambiente e compila la libreria per la toolchain Xbase++ 2.00 / build 832.
 - `build200-2598.bat`
   Prepara l'ambiente e compila la libreria per la toolchain Xbase++ 2.00.2598 in un output separato.
+- `copy-build-artifacts.bat`
+  Copia DLL e LIB generate verso una destinazione esplicita, senza dipendere da un progetto locale specifico.
 
 ## Struttura principale
 
@@ -122,6 +124,27 @@ Percorsi attualmente presenti o supportati:
 
 La variante `2.00.2598` e' stata introdotta per permettere build locali senza sporcare gli artefatti della vecchia `lib200-832`.
 
+## Copia degli artefatti
+
+Per copiare DLL e LIB generate verso un progetto host o una cartella di distribuzione, il repository include lo script:
+
+- `copy-build-artifacts.bat`
+
+Uso:
+
+```bat
+copy-build-artifacts.bat <variante-build> <destinazione-dll> [destinazione-lib]
+```
+
+Esempi:
+
+```bat
+copy-build-artifacts.bat lib200-2598 C:\dest\bin
+copy-build-artifacts.bat lib200-2598 C:\dest\exe C:\dest\lib
+```
+
+Se la destinazione LIB non viene passata, DLL e LIB vengono copiate nella stessa cartella.
+
 ## Template IDE rilevanti
 
 Oltre alla libreria, il comportamento del progetto generato dall'IDE dipende anche da alcuni template in `ide/tmp/xbase/`.
@@ -135,7 +158,7 @@ Per l'integrazione PostgreSQL/PGDBE sono rilevanti in particolare:
 - `ide/tmp/xbase/rmakex3.tmp`
   Template collegati alla generazione del progetto di build/link del main.
 
-Nel fork questi file sono stati riallineati alla variante funzionante presente in `C:\src\PRESENZE\VisualdBsee`, per evitare che il supporto PG resti limitato alla sola libreria o alle sole DLL copiate.
+Nel fork questi file sono stati riallineati alla variante funzionante di riferimento, per evitare che il supporto PG resti limitato alla sola libreria o alle sole DLL copiate.
 
 ## Prerequisiti
 

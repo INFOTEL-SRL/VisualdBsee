@@ -34,7 +34,7 @@ Portare la libreria Visual dBsee a lavorare in modo piu prevedibile con `PGDBE`,
 - `libreria/src/base/DBCFGOPE.PRG`
 - `libreria/src/base/DDUSE.PRG`
 - `libreria/src/base/PGSEEK.PRG`
-- `libreria/src/copy-dll-presenze-exe.bat`
+- `copy-build-artifacts.bat`
 - `libreria/src/dblang.base`
 - `libreria/src/dynamic.base`
 - `libreria/src/static.base`
@@ -46,6 +46,7 @@ Portare la libreria Visual dBsee a lavorare in modo piu prevedibile con `PGDBE`,
 - Aggiornamenti ai file base di build per includere i moduli PG nella compilazione della libreria.
 - Adattamento di `DBCFGOPE.PRG` per aprire i dizionari locali con `DBFCDX` anche quando il driver di default e' PG.
 - Adattamento di `DDUSE.PRG` per instradare la sessione solo quando il runtime PG e' davvero attivo.
+- Presenza di uno script generico per copiare gli artefatti build verso una destinazione scelta esplicitamente, senza riferimenti rigidi a un progetto locale.
 
 ### Effetto pratico
 
@@ -203,7 +204,7 @@ Questo commit affronta i casi in cui `DBSEEK` su PG posiziona il cursore in modo
 
 ## 6. Integrazione fuori da `libreria/src`
 
-Nel confronto con `C:\src\PRESENZE\VisualdBsee` e' emerso che il supporto PostgreSQL funzionante non dipende solo dai sorgenti della libreria e dalle DLL prodotte.
+Nel confronto con una variante funzionante di riferimento e' emerso che il supporto PostgreSQL non dipende solo dai sorgenti della libreria e dalle DLL prodotte.
 
 Sono rilevanti anche questi template IDE:
 
@@ -217,7 +218,7 @@ Ruolo operativo:
 - `INITPROC.TMP` contribuisce all'inizializzazione del progetto generato e puo contenere il bootstrap del runtime PG.
 - `RMAKEX*.TMP` governano la generazione dei file di build/link del main.
 
-Questi file sono stati riallineati alla variante `PRESENZE` per mantenere coerente l'integrazione PG anche lato progetto host, non solo lato libreria.
+Questi file sono stati riallineati alla variante funzionante di riferimento per mantenere coerente l'integrazione PG anche lato progetto host, non solo lato libreria.
 
 ## 7. Chiavi `dfSet` collegate
 
