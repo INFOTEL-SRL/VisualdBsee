@@ -39,6 +39,7 @@
 .if ! file( M->ExePath+"dbStart.ini" )
 .do dbstart
 .endif
+.do pgupsize
 .if ! file( M->ExePath+"dbLogin.dbf" )
    .msg [Genera il file dbLogin.dbf]
    .tCopyFile( dfExeTmp()+"dbLogin.dbf" ,M->ExePath+"dbLogin.dbf" )

@@ -99,6 +99,16 @@ FontRedefinition=YES
 ; Messaggi durante la lettura dell'ini
 IniMessage=ÛIF(toProject("inimessage")=="0","NO","YES")Û
 
+; Parametri PostgreSQL da proprieta' progetto
+XbasePgActivateDbeSys=ÛIF(toProject("pgactdbesys")=="0","NO","YES")Û
+XbasePgServer=ÛtoProject("pgserver")Û
+XbasePgUid=ÛtoProject("pguserid")Û
+XbasePgPwd=ÛtoProject("pgpasswd")Û
+XbasePgDatabase=ÛtoProject("pgdbname")Û
+XbasePgLicenseKey=ÛtoProject("pglickey")Û
+XbasePgLicensee=ÛtoProject("pglicensee")Û
+
+
 ; Enable automatic application exit
 ;EXITAPPS=YES
 
