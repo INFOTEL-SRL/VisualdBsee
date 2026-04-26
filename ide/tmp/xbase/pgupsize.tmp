@@ -1,0 +1,27 @@
+.* ----------------------------------------------------------------------------
+.* TEMPLATE     : PGUPSIZE
+.* RELEASE      : 1.0
+.* VERSION      :
+.* DESCRIZIONE  : File di configurazione PostgreSQL / Upsize
+.* ----------------------------------------------------------------------------
+.msg [Genera il file pgupsize.ini]
+.out ÛtExePath()+"\"Ûpgupsize.ini
+; File generato da Visual dBsee.
+; I valori della sezione [UPSIZE] vengono usati dal runtime PostgreSQL
+; e dalla procedura di upsize verso PGDBE.
+
+[UPSIZE]
+; Connessione PostgreSQL
+PgActivateDbeSys=ÛIF(toProject("pgactdbesys")=="0","NO","YES")Û
+ServerName=ÛtoProject("pgserver")Û
+UserID=ÛtoProject("pguserid")Û
+Password=ÛtoProject("pgpasswd")Û
+Database=ÛtoProject("pgdbname")Û
+PgDbeLicenseKey=ÛtoProject("pglickey")Û
+PgDbeLicensee=ÛtoProject("pglicensee")Û
+
+; Parametri upsize
+PgUpsizeExcludeTables=ÛtoProject("pgupexclude")Û
+PgUpsizeTableSource=ÛIF(toProject("pgupsrc")=="DD","DBDD",IF(toProject("pgupsrc")=="EX","DIRECTORY",""))Û
+PgUpsizeExtraDbfDir=ÛtoProject("pgupdbfdir")Û
+PgUpsizeIgnorePathIni=ÛIF(toProject("pgupignpath")=="0","NO","YES")Û
