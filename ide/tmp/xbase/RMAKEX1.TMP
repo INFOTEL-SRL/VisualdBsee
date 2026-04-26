@@ -82,10 +82,10 @@
 Û"   "+cPath+alltrim(oo_obj->PRG)Û.obj
    .endif
 .next
-   ..\lib\dblang.lib
+   dblang.lib
 .if toExeEnv("linker")=="8"
-   ..\lib\vdbsee1o.lib
-   ..\lib\vdbsee1s.lib
+   vdbsee1o.lib
+   vdbsee1s.lib
 .else
    kernel32.LIB
    user32.lib

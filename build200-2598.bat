@@ -21,6 +21,7 @@ echo Ambiente impostato correttamente su %VDBLIB_MAINDIR%
 
 if not exist "%CD%\ide\Lib200-2598" mkdir "%CD%\ide\Lib200-2598"
 if not exist "%CD%\ide\Lib200-2598\omf" mkdir "%CD%\ide\Lib200-2598\omf"
+if not exist "%CD%\ide\LIB" mkdir "%CD%\ide\LIB"
 
 cd libreria\src\
 
@@ -29,5 +30,8 @@ if errorlevel 1 goto exit
 
 copy ..\..\libreria\output\lib200-2598\rel     ..\..\ide\Lib200-2598
 copy ..\..\libreria\output\lib200-2598\rel\omf ..\..\ide\Lib200-2598\omf
+copy /Y ..\..\libreria\output\lib200-2598\rel\omf\DBLANG.lib   ..\..\ide\LIB >nul
+copy /Y ..\..\libreria\output\lib200-2598\rel\omf\VDBSEE1O.lib ..\..\ide\LIB >nul
+copy /Y ..\..\libreria\output\lib200-2598\rel\omf\VDBSEE1S.lib ..\..\ide\LIB >nul
 
 :exit

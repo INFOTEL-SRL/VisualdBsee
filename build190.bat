@@ -19,9 +19,16 @@ set lib=%VDBLIB_MAINDIR%\output\lib190\rel;%lib%
 
 echo Ambiente impostato correttamente su %VDBLIB_MAINDIR%
 
+if not exist "%CD%\ide\lib190" mkdir "%CD%\ide\lib190"
+if not exist "%CD%\ide\lib190\omf" mkdir "%CD%\ide\lib190\omf"
+if not exist "%CD%\ide\LIB" mkdir "%CD%\ide\LIB"
+
 cd libreria\src\
 
 call gotutto190.bat
 
 copy ..\..\libreria\output\lib190\rel     ..\..\ide\lib190
 copy ..\..\libreria\output\lib190\rel\omf ..\..\ide\lib190\omf
+copy /Y ..\..\libreria\output\lib190\rel\omf\DBLANG.LIB   ..\..\ide\LIB >nul
+copy /Y ..\..\libreria\output\lib190\rel\omf\VDBSEE1O.LIB ..\..\ide\LIB >nul
+copy /Y ..\..\libreria\output\lib190\rel\omf\VDBSEE1S.LIB ..\..\ide\LIB >nul

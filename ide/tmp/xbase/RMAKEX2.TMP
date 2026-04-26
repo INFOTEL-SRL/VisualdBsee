@@ -79,9 +79,9 @@
 Û"   "+alltrim(oo_obj->PRG)Û.ARC
 .next
 
-   ..\lib\dblang.lib
-   ..\lib\vdbsee1o.lib
-   ..\lib\vdbsee1s.lib
+   dblang.lib
+   vdbsee1o.lib
+   vdbsee1s.lib
 
 .foreach make oo_bld->EXT=="prg"
    .M->cTprg := AllTrim(oo_obj->PRG)
@@ -122,9 +122,9 @@
    .M->nTCnt := nTCnt+1
 .enddo
 
-   ..\lib\dblang.lib
-   ..\lib\vdbsee1o.lib
-   ..\lib\vdbsee1s.lib
+   dblang.lib
+   vdbsee1o.lib
+   vdbsee1s.lib
 
 .next
 
@@ -153,9 +153,9 @@
    .M->nTCnt := nTCnt+1
 .enddo
 
-   ..\lib\dblang.lib
-   ..\lib\vdbsee1o.lib
-   ..\lib\vdbsee1s.lib
+   dblang.lib
+   vdbsee1o.lib
+   vdbsee1s.lib
 .endif
 
    .inj RMK4 Let a Empty Row

@@ -102,9 +102,9 @@
    .M->nTCnt := nTCnt+1
 .enddo
     €cLoader€.lib
-    ..\lib\dblang.lib
-    ..\lib\vdbsee1o.lib
-    ..\lib\vdbsee1s.lib
+    dblang.lib
+    vdbsee1o.lib
+    vdbsee1s.lib
 
    .endif
 .next
@@ -126,9 +126,9 @@
 .enddo
     €cLoader€.lib
     // Visual dBsee Lib
-    ..\lib\dblang.lib
-    ..\lib\vdbsee1o.lib
-    ..\lib\vdbsee1s.lib
+    dblang.lib
+    vdbsee1o.lib
+    vdbsee1s.lib
 .endif
 
 [€cLoader€.DLL]
@@ -170,9 +170,9 @@
 .next
 
     // Visual dBsee Lib
-    ..\lib\dblang.lib
-    ..\lib\vdbsee1o.lib
-    ..\lib\vdbsee1s.lib
+    dblang.lib
+    vdbsee1o.lib
+    vdbsee1s.lib
 
 [€cTini€.EXE]
     COMPILE_FLAGS = €toExeEnv("compileroption")€ /ES/Q/PRE/O:noncb
@@ -190,9 +190,9 @@
 .next
     €cLoader€.lib
     // Visual dBsee Lib
-    ..\lib\dblang.lib
-    ..\lib\vdbsee1o.lib
-    ..\lib\vdbsee1s.lib
+    dblang.lib
+    vdbsee1o.lib
+    vdbsee1s.lib
 
    .inj RMK4 Let a Empty Row 
 
