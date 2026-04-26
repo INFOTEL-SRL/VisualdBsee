@@ -64,6 +64,6 @@ Per copiare DLL e LIB verso un progetto host non si usa piu uno script locale sp
 
 Il fork usa invece lo script generico:
 
-- `copy-build-artifacts.bat`
+- `scripts/copy-build-artifacts.bat`
 
 Lo script richiede la variante di build e una cartella destinazione esplicita, cosi resta riutilizzabile anche fuori da ambienti locali specifici.

@@ -2,7 +2,8 @@
 xppload version
 
 :: build dedicata per Alaska Xbase++ 2.00.2598
-strtran _gotutto.base  _gotutto.bat rel=..\output\lib200-2598\rel   setreldate=reldate.exe defines="/d_XBASE200_" cur=%cd%\ lib="<<'XppRt0.lib'+chr(13)+chr(10)+'XppRt1.lib'+chr(13)+chr(10)+'XppUi2.lib'+chr(13)+chr(10)+'xppsys.lib'+chr(13)+chr(10)+'xppdui.lib'>>" xpprel="C:\Program Files (x86)\Alaska Software\xpp20\lib\"
+if not defined XPPREL set "XPPREL="
+strtran _gotutto.base  _gotutto.bat rel=..\output\lib200-2598\rel   setreldate=reldate.exe defines="/d_XBASE200_" cur=%cd%\ lib="<<'XppRt0.lib'+chr(13)+chr(10)+'XppRt1.lib'+chr(13)+chr(10)+'XppUi2.lib'+chr(13)+chr(10)+'xppsys.lib'+chr(13)+chr(10)+'xppdui.lib'>>" xpprel="%XPPREL%"
 
 echo "--- STATIC LIB ---"
 call _gotutto.bat /STATIC %1 %2 %3

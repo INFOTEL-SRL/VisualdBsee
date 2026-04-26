@@ -20,8 +20,8 @@ Le aree principali del progetto sono:
   Prepara l'ambiente e compila la libreria per la toolchain Xbase++ 2.00 / build 832.
 - `build200-2598.bat`
   Prepara l'ambiente e compila la libreria per la toolchain Xbase++ 2.00.2598 in un output separato.
-- `copy-build-artifacts.bat`
-  Copia DLL e LIB generate verso una destinazione esplicita, senza dipendere da un progetto locale specifico.
+- `scripts/`
+  Utility di supporto per copia artefatti, import file locali IDE e manutenzione di progetto.
 
 ## Struttura principale
 
@@ -128,19 +128,19 @@ La variante `2.00.2598` e' stata introdotta per permettere build locali senza sp
 
 Per copiare DLL e LIB generate verso un progetto host o una cartella di distribuzione, il repository include lo script:
 
-- `copy-build-artifacts.bat`
+- `scripts/copy-build-artifacts.bat`
 
 Uso:
 
 ```bat
-copy-build-artifacts.bat <variante-build> <destinazione-dll> [destinazione-lib]
+scripts\copy-build-artifacts.bat <variante-build> <destinazione-dll> [destinazione-lib]
 ```
 
 Esempi:
 
 ```bat
-copy-build-artifacts.bat lib200-2598 C:\dest\bin
-copy-build-artifacts.bat lib200-2598 C:\dest\exe C:\dest\lib
+scripts\copy-build-artifacts.bat lib200-2598 C:\dest\bin
+scripts\copy-build-artifacts.bat lib200-2598 C:\dest\exe C:\dest\lib
 ```
 
 Se la destinazione LIB non viene passata, DLL e LIB vengono copiate nella stessa cartella.
@@ -159,6 +159,40 @@ Per l'integrazione PostgreSQL/PGDBE sono rilevanti in particolare:
   Template collegati alla generazione del progetto di build/link del main.
 
 Nel fork questi file sono stati riallineati alla variante funzionante di riferimento, per evitare che il supporto PG resti limitato alla sola libreria o alle sole DLL copiate.
+
+## Avvio dell'IDE
+
+Per avviare correttamente `ide/BIN/vDbsee.exe` servono alcuni file locali che in genere arrivano da una propria installazione gia funzionante di Visual dBsee.
+
+I file tipici da importare in `ide/BIN/` sono:
+
+- `dbsee.ini`
+- `dbseeusr.dbf`
+- `VDBSEE.qos`
+- `dbsee.bak`
+
+Questi file contengono configurazioni macchina-specifiche e non vanno versionati.
+
+Se mancano, l'IDE puo non partire oppure segnalare errori simili a:
+
+- `File non trovato ...\BIN\DBSEEUSR`
+- `Controllare le impostazioni del file dbsee.ini alla voce [Environment]`
+
+Per copiarli dalla propria installazione locale al repository e' disponibile lo script:
+
+- [import-ide-local-files.ps1](./scripts/import-ide-local-files.ps1)
+
+Esempio:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\import-ide-local-files.ps1 "C:\Program Files (x86)\VisualdBsee"
+```
+
+Lo script:
+
+- copia solo i file locali noti dell'IDE
+- crea un backup `.bak` se nel repository esiste gia un file con lo stesso nome
+- non tocca i file versionati del repository fuori da `ide/BIN`
 
 ## Prerequisiti
 

@@ -34,7 +34,7 @@ Portare la libreria Visual dBsee a lavorare in modo piu prevedibile con `PGDBE`,
 - `libreria/src/base/DBCFGOPE.PRG`
 - `libreria/src/base/DDUSE.PRG`
 - `libreria/src/base/PGSEEK.PRG`
-- `copy-build-artifacts.bat`
+- `scripts/copy-build-artifacts.bat`
 - `libreria/src/dblang.base`
 - `libreria/src/dynamic.base`
 - `libreria/src/static.base`

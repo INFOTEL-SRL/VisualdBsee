@@ -8,3 +8,9 @@
 /libreria/output/lib200-2598/rel/omf/*.exp
 /libreria/output/lib200-832/rel/omf/*.exp
 /libreria/src/log.log
+
+# File locali dell'IDE con percorsi/preferenze macchina-specifici
+/ide/BIN/dbsee.ini
+/ide/BIN/dbseeusr.dbf
+/ide/BIN/VDBSEE.qos
+/ide/BIN/dbsee.bak
