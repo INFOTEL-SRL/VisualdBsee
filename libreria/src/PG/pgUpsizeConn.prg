@@ -237,7 +237,7 @@ LOCAL cDb, cTry, cDir, aRel, i, cEnv
       RETURN cEnv
    ENDIF
 
-   //* Check basato su AppName(.T.) â€” funziona anche in dbeSys() prima del framework.
+   //* Check basato su AppName(.T.) — funziona anche in dbeSys() prima del framework.
    cTry := dfPgFindPgUpsizeIniEarly()
    IF !Empty( cTry )
       RETURN cTry
@@ -595,7 +595,7 @@ LOCAL aPaths, i, cExeDir, cTry
 RETURN ""
 
 *******************************************************************************
-//* Directory dell'eseguibile (con trailing backslash) â€” disponibile subito, anche in dbeSys().
+//* Directory dell'eseguibile (con trailing backslash) — disponibile subito, anche in dbeSys().
 FUNCTION dfPgExeDirectory()
 *******************************************************************************
 LOCAL cFull, nPos

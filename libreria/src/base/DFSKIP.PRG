@@ -127,7 +127,30 @@ DO CASE
            // simone 21/1/2010
            // XL 1709
            // salvo e ripristino alias in caso il codeblock lo cambi
-           IF Bof() .OR. (nAlias)->(Eval( bBreak ))
+           IF (nAlias)->(Eval( bBreak ))
+              IF dfPgRddIs( (nAlias)->( RDDNAME() ) ) .AND. ;
+                    !( dfSet( "XbasePgDfSkipWalkPastBreak" ) == "NO" )
+                 nPgBrW := 0
+                 DO WHILE (nAlias)->( Eval( bBreak ) ) .AND. ;
+                       !(nAlias)->( Bof() ) .AND. nPgBrW < 100000
+                    (nAlias)->( DbSkip( -1 ) )
+                    nPgBrW++
+                 ENDDO
+              ENDIF
+              IF (nAlias)->( Bof() ) .OR. (nAlias)->( Eval( bBreak ) )
+                 dbGoto( nActRec )
+                 // Simone 02/11/09
+                 // mantis 0002106: problema con ADS e set filter 
+                 // FIX perchù con ADS se c'ù SET FILTER attivo
+                 // il dbgoto() non resetta il flag di BOF()
+                 IF BOF()
+                    dbSkip(1) // fa reset del BOF()
+                    dbGoto( nActRec )
+                 ENDIF
+
+                 EXIT
+              ENDIF
+           ELSEIF Bof()
               dbGoto( nActRec )
               // Simone 02/11/09
               // mantis 0002106: problema con ADS e set filter 

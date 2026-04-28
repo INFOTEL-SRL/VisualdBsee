@@ -194,6 +194,16 @@ Lo script:
 - crea un backup `.bak` se nel repository esiste gia un file con lo stesso nome
 - non tocca i file versionati del repository fuori da `ide/BIN`
 
+### Refresh indici property grid
+
+Se dopo una modifica a `ide/BIN/dbseeopt.dbf` o `ide/BIN/dbseetab.dbf` l'IDE non mostra i nuovi campi nella sidebar, prima di riaprire `vDbsee.exe` e' necessario cancellare gli indici locali:
+
+- `ide/BIN/dbseeOp1.ntx`
+- `ide/BIN/dbseeOp2.ntx`
+- `ide/BIN/dbseeTab.ntx`
+
+Questo e' particolarmente importante per i campi PostgreSQL: senza la rigenerazione di questi `.ntx`, la property grid puo continuare a mostrare la versione vecchia e quindi non far vedere i campi aggiunti.
+
 ## Prerequisiti
 
 Per usare gli script di build e' necessario avere gia impostato l'ambiente di **Alaska Xbase++** prima di eseguirli.

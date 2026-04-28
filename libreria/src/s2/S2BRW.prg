@@ -475,11 +475,17 @@ EXPORTED:
    INLINE METHOD tbDown(n)
       LOCAL x
       n := IIF(n==NIL,1,n)
-      ::navigate(XBPBRW_Navigate_Skip, n)
-      ///////////////////////
-      //Mantis 1059
-      ::Forcestable()
-      ///////////////////////
+      IF ::cMes == "DDKEY_PG_SAFE_NAV" .AND. !EMPTY( ::W_ALIAS ) .AND. ;
+         dfPgRddIs( ( ::W_ALIAS )->( RDDNAME() ) )
+         EVAL( ::SkipBlock, n )
+         tbStab( self, .T. )
+      ELSE
+         ::navigate(XBPBRW_Navigate_Skip, n)
+         ///////////////////////
+         //Mantis 1059
+         ::Forcestable()
+         ///////////////////////
+      ENDIF
 //      DEFAULT n TO 1
 //      FOR x := 1 TO n
 //         ::down()
@@ -489,11 +495,17 @@ EXPORTED:
    INLINE METHOD tbUp(n)
       LOCAL x
       n := IIF(n==NIL,-1,-n)
-      ::navigate(XBPBRW_Navigate_Skip, n)
-      ///////////////////////
-      //Mantis 1059
-      ::Forcestable()
-      ///////////////////////
+      IF ::cMes == "DDKEY_PG_SAFE_NAV" .AND. !EMPTY( ::W_ALIAS ) .AND. ;
+         dfPgRddIs( ( ::W_ALIAS )->( RDDNAME() ) )
+         EVAL( ::SkipBlock, n )
+         tbStab( self, .T. )
+      ELSE
+         ::navigate(XBPBRW_Navigate_Skip, n)
+         ///////////////////////
+         //Mantis 1059
+         ::Forcestable()
+         ///////////////////////
+      ENDIF
 //      DEFAULT n TO 1
 //      FOR x := 1 TO n
 //         ::up()

@@ -164,14 +164,26 @@ IF oTbr:WOBJ_TYPE#W_OBJ_FRM
    DO CASE
       CASE nUp>0
            WHILE nUp>0
-              oTbr:DOWN()
-              oTbr:FORCESTABLE()
+              IF oTbr:cMes == "DDKEY_PG_SAFE_NAV" .AND. !EMPTY( oTbr:W_ALIAS ) .AND. ;
+                 dfPgRddIs( ( oTbr:W_ALIAS )->( RDDNAME() ) )
+                 EVAL( oTbr:SkipBlock, 1 )
+                 tbStab( oTbr, .T. )
+              ELSE
+                 oTbr:DOWN()
+                 oTbr:FORCESTABLE()
+              ENDIF
               nUp--
            ENDDO
       CASE nUp<0
            WHILE nUp<0
-              oTbr:UP()
-              oTbr:FORCESTABLE()
+              IF oTbr:cMes == "DDKEY_PG_SAFE_NAV" .AND. !EMPTY( oTbr:W_ALIAS ) .AND. ;
+                 dfPgRddIs( ( oTbr:W_ALIAS )->( RDDNAME() ) )
+                 EVAL( oTbr:SkipBlock, -1 )
+                 tbStab( oTbr, .T. )
+              ELSE
+                 oTbr:UP()
+                 oTbr:FORCESTABLE()
+              ENDIF
               nUp++
            ENDDO
    ENDCASE

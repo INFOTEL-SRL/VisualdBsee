@@ -274,6 +274,7 @@ PROTECTED:
    METHOD _addGlobalFilter
    METHOD _SetFilter
    METHOD buildFilter
+   METHOD _syncBrowseRec
    
 //EXPORTED:
    VAR cAlias
@@ -547,7 +548,7 @@ METHOD RecSearch:create(cSearch)
    nPos := ::calcOffSet(oWin)
 
    // invio su listbox = seleziona e chiude
-   ::lsbRec:itemSelected := {||dbAct2Kbd("wri")}
+   ::lsbRec:itemSelected := {|| PostAppEvent(xbeP_User+EVENT_KEYBOARD, dbAct2Ksc("wri"), NIL, ::lsbRec) }
 
    drawingArea := oWin:searchObj("btnDelFilter")[1]:setParent()
    oXbp := oWin:searchObj("saySearch")[1]
@@ -948,6 +949,9 @@ METHOD RecSearch:Act()                                  // [ 03 ] <<000065>>INIZ
    ATTACH REFRESH GROUP "lsbRec" TO lsbRec:W_R_GROUP
    lsbRec:W_LINECURSOR:= .T.
    lsbRec:W_HEADERROWS := 1
+   IF dfPgRddIs( ( cAlias )->( RDDNAME() ) )
+      lsbRec:cMes := "DDKEY_PG_SAFE_NAV"
+   ENDIF
 
    ADDKEY "ret" TO lsbRec:W_KEYBOARDMETHODS          ; // Tasto su List Box
           BLOCK   {||dbAct2Kbd("wri")}                ; // Funzione sul tasto
@@ -1675,6 +1679,28 @@ METHOD RecSearch:checkValidAction(b)
 RETURN VALTYPE(b)=="L" .AND. b
 
 *******************************************************************************
+METHOD RecSearch:_syncBrowseRec( oWin )
+*******************************************************************************
+   LOCAL nRec
+
+   IF EMPTY( oWin ) .OR. VALTYPE( oWin ) # "O"
+      RETURN .F.
+   ENDIF
+   IF EMPTY( oWin:W_ALIAS ) .OR. EMPTY( oWin:W_CURRENTREC )
+      RETURN .F.
+   ENDIF
+   IF oWin:W_CURRENTREC <= 0
+      RETURN .F.
+   ENDIF
+
+   nRec := ( oWin:W_ALIAS )->( RECNO() )
+   IF nRec != oWin:W_CURRENTREC
+      ( oWin:W_ALIAS )->( DBGOTO( oWin:W_CURRENTREC ) )
+      tbRecCng( oWin )
+      tbStab( oWin, .T. )
+   ENDIF
+RETURN .T.
+*******************************************************************************
 METHOD RecSearch:Ecr( oWin ) // Erase
 *******************************************************************************
    LOCAL cDel := ALLTRIM(ALIAS()) +"DID()" // Metodo del dbRid per cancellazione
@@ -1685,6 +1711,7 @@ METHOD RecSearch:Ecr( oWin ) // Erase
    ENDIF
 
    dfPushAct()
+   ::_syncBrowseRec( oWin )
    IF Bof() .OR. Eof()
       dbMsgErr( dfStdMsg(MSG_DDWIN03) )
    ELSE
@@ -1720,6 +1747,7 @@ METHOD RecSearch:Mcr( oWin ) // Modify
    ENDIF
 
    dfPushAct()
+   ::_syncBrowseRec( oWin )
    IF Bof() .OR. Eof()
       dbMsgErr( dfStdMsg(MSG_DDWIN05) )
    ELSE
@@ -1769,6 +1797,7 @@ METHOD RecSearch:Anr( oWin ) // Append
    ENDIF
 
    dfPushAct()
+   ::_syncBrowseRec( oWin )
    cExe := ::oData:cEdit
    // simone 10/12/09 
    // aggiunta possibilità di cambiare/disattivare edit di default

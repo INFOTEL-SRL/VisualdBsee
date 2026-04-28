@@ -1,6 +1,8 @@
 @echo off
 setlocal EnableDelayedExpansion
 cd /d "%~dp0"
+set "ROOT=%~dp0.."
+for %%I in ("%ROOT%") do set "ROOT=%%~fI"
 
 if "%~1"=="" (
    echo Uso:
@@ -28,7 +30,7 @@ set "LIBDST=%~f3"
 
 if not defined LIBDST set "LIBDST=%DST%"
 
-set "SRC=%~dp0libreria\output\%VARIANT%\rel"
+set "SRC=%ROOT%\libreria\output\%VARIANT%\rel"
 set "SRCOMF=%SRC%\omf"
 
 if not exist "%SRC%\." (
