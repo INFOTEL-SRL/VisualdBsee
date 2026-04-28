@@ -1,6 +1,11 @@
-# PostgreSQL (PGDBE) - interventi sulla libreria Visual dBsee
+# PostgreSQL (PGDBE) - Interventi sulla libreria Visual dBsee
 
-Questo documento descrive gli adattamenti PostgreSQL introdotti nella libreria `libreria\src\`, organizzati secondo i commit applicati nel fork.
+Questo documento resta la vista completa degli interventi PG applicati in `libreria/src`, ordinata per commit e area funzionale.
+
+Per uso rapido:
+
+- panoramica chiavi runtime: `PGDBE-dfSet-riferimento-rapido.md`
+- verifica operativa: `PGDBE-checklist-riapplicazione.md`
 
 ## Obiettivo
 
@@ -13,15 +18,24 @@ Portare la libreria Visual dBsee a lavorare in modo piu prevedibile con `PGDBE`,
 
 ## Sequenza dei commit
 
-| Commit | Titolo | Area principale |
-|---|---|---|
-| `3a0e5ef` | Add PostgreSQL runtime infrastructure | runtime, sessione, nuovi moduli PG |
-| `ce3cfc2` | Fix PostgreSQL seek and lookup flow | `dfS`, `dbLook`, `dfSkip` |
-| `0fe8fe6` | Fix PostgreSQL report and query handling | query, report, Crystal output |
-| `cda7aec` | Adjust PostgreSQL browse and list navigation | browse, listbox, footer totals |
-| `4e37315` | Add PGDBE documentation | documentazione e rifiniture |
+| Commit | Data | Titolo | Area principale |
+|---|---|---|---|
+| `b77f497` | `2026-04-21` | aggiunta infrastruttura runtime PostgreSQL | runtime, sessione, nuovi moduli PG |
+| `a4de29f` | `2026-04-21` | corretto il flusso di seek e lookup PostgreSQL | `dfS`, `dbLook`, `dfSkip` |
+| `fc99184` | `2026-04-21` | corrette gestione report e query PostgreSQL | query, report, Crystal output |
+| `8ea3bbd` | `2026-04-21` | corretta la navigazione browse e listbox PostgreSQL | browse, listbox, footer totals |
+| `4cf939d` | `2026-04-21` | aggiunta documentazione PGDBE | documentazione e rifiniture |
+| `0757028` | `2026-04-21` | aggiunta variante di build Xbase++ 2.00.2598 e aggiornamento documentazione | build/output/documentazione |
+| `2ac44ba` | `2026-04-21` | riallineati i template ide xbase per l'integrazione PostgreSQL | template IDE |
+| `9d305d5` | `2026-04-21` | sostituito lo script locale di copia artefatti con uno generico | distribuzione artefatti |
+| `3012194` | `2026-04-24` | aggiunti campi postgresql al progetto e ide | metadati IDE/property grid |
+| `e79c566` | `2026-04-26` | riordinati gli script di supporto e rimossi i riferimenti locali dalle build | script e manutenzione |
+| `0e9244e` | `2026-04-26` | aggiornati i template del make | template build/make |
+| `52cad31` | `2026-04-26` | aggiornate le librerie per la build 2.00.2598 | aggiornamento binari/lib |
+| `79f6621` | `2026-04-26` | template per parametri postgres in vdb | template PG parameters |
+| `1f3439e` | `2026-04-28` | aggiunto supporto a pg anche per i listbox | integrazioni listbox su casi PG |
 
-## 1. Commit `3a0e5ef` - runtime PostgreSQL
+## 1. Commit `b77f497` - runtime PostgreSQL
 
 ### File toccati
 
@@ -54,7 +68,7 @@ Portare la libreria Visual dBsee a lavorare in modo piu prevedibile con `PGDBE`,
 - Le funzioni di seek PG non sono duplicate in piu punti ma centralizzate.
 - I file dizionario restano apribili anche con driver PG attivo.
 
-## 2. Commit `ce3cfc2` - seek e lookup PostgreSQL
+## 2. Commit `a4de29f` - seek e lookup PostgreSQL
 
 ### File toccati
 
@@ -91,7 +105,7 @@ Questo commit affronta i casi in cui `DBSEEK` su PG posiziona il cursore in modo
 - Lookup piu stabili su tabelle PG con ordini non banali.
 - Base tecnica riutilizzabile nei commit successivi su report e browse.
 
-## 3. Commit `0fe8fe6` - report, query e output
+## 3. Commit `fc99184` - report, query e output
 
 ### File toccati
 
@@ -143,7 +157,7 @@ Questo commit affronta i casi in cui `DBSEEK` su PG posiziona il cursore in modo
 - Meno regressioni legate a `NULL`, date non valorizzate e confronti stringa.
 - Stampa e query piu coerenti con il comportamento atteso dell'applicazione.
 
-## 4. Commit `cda7aec` - browse e navigazione listbox
+## 4. Commit `8ea3bbd` - browse e navigazione listbox
 
 ### File toccati
 
@@ -183,7 +197,13 @@ Questo commit affronta i casi in cui `DBSEEK` su PG posiziona il cursore in modo
 - Meno rischio di schermate vuote o navigazione troncata.
 - Riduzione del costo di apertura browse su tabelle grandi.
 
-## 5. Commit `4e37315` - documentazione
+## 5. Commit `1f3439e` - supporto PG aggiuntivo sui listbox
+
+Questo commit estende gli adattamenti su listbox in contesto PostgreSQL, consolidando la parte introdotta nei commit precedenti su browse/navigazione.
+
+In termini pratici, e' il completamento recente della linea di lavoro "PG su listbox", quindi va considerato insieme a `8ea3bbd` durante il collaudo funzionale.
+
+## 6. Commit `4cf939d` - documentazione
 
 ### File toccati
 
@@ -202,7 +222,28 @@ Questo commit affronta i casi in cui `DBSEEK` su PG posiziona il cursore in modo
   - configurazioni `dfSet`
   - checklist di verifica o porting
 
-## 6. Integrazione fuori da `libreria/src`
+## 7. Commit di integrazione (fuori da `libreria/src` ma rilevanti)
+
+Questi commit non sono solo "core libreria", ma sono parte integrante della catena PG del branch:
+
+- `0757028`  
+  Introduce la variante build `2.00.2598` (script, output e docs).
+- `2ac44ba`  
+  Riallinea template IDE (`INITPROC.TMP`, `RMAKEX*.TMP`) necessari per coerenza runtime PG lato progetto host.
+- `9d305d5`  
+  Sostituisce script locale con `scripts/copy-build-artifacts.bat` generico.
+- `3012194`  
+  Aggiorna DBF/NTX IDE (`dbseeopt`, `dbseetab`) con campi PostgreSQL in proprietà progetto.
+- `e79c566`  
+  Riordina script e rimuove riferimenti locali hardcoded nelle build.
+- `0e9244e`  
+  Aggiorna template make/build.
+- `52cad31`  
+  Aggiorna set librerie/binari per build `2.00.2598`.
+- `79f6621`  
+  Introduce template per parametri PostgreSQL in VDB.
+
+## 8. Integrazione fuori da `libreria/src`
 
 Nel confronto con una variante funzionante di riferimento e' emerso che il supporto PostgreSQL non dipende solo dai sorgenti della libreria e dalle DLL prodotte.
 
@@ -220,9 +261,9 @@ Ruolo operativo:
 
 Questi file sono stati riallineati alla variante funzionante di riferimento per mantenere coerente l'integrazione PG anche lato progetto host, non solo lato libreria.
 
-## 7. Chiavi `dfSet` collegate
+## 9. Chiavi `dfSet` collegate
 
-Le modifiche PG introdotte dai commit `0fe8fe6` e `cda7aec` possono essere modulate tramite alcune chiavi `dfSet`.
+Le modifiche PG introdotte dai commit `fc99184` e `8ea3bbd` possono essere modulate tramite alcune chiavi `dfSet`.
 
 Le principali sono:
 
@@ -235,26 +276,26 @@ Le principali sono:
 
 Il dettaglio operativo e' documentato in `PGDBE-dfSet-riferimento-rapido.md`.
 
-## 8. Mappa rapida file -> commit
+## 10. Mappa rapida file -> commit
 
 | File | Commit principale |
 |---|---|
-| `src/PG/*.prg` | `3a0e5ef` |
-| `src/base/PGSEEK.PRG` | `3a0e5ef` |
-| `src/base/DFS.PRG` | `3a0e5ef`, `ce3cfc2` |
-| `src/base/DBLOOK.PRG` | `ce3cfc2` |
-| `src/base/DFANY2ST.PRG` | `0fe8fe6` |
-| `src/base/DFQRYFLT.PRG` | `0fe8fe6` |
-| `src/base/DFSTA.PRG` | `0fe8fe6` |
-| `src/base/dfprncon.prg` | `0fe8fe6` |
-| `src/base/dfupdqry.prg` | `0fe8fe6` |
-| `src/xpp/DFCRWOUT.prg` | `0fe8fe6` |
-| `src/base/DFSKIP.PRG` | `cda7aec` |
-| `src/s2/S2BROWSE.prg` | `cda7aec` |
-| `src/s2/S2BRW.prg` | `cda7aec` |
+| `src/PG/*.prg` | `b77f497` |
+| `src/base/PGSEEK.PRG` | `b77f497` |
+| `src/base/DFS.PRG` | `b77f497`, `a4de29f` |
+| `src/base/DBLOOK.PRG` | `a4de29f` |
+| `src/base/DFANY2ST.PRG` | `fc99184` |
+| `src/base/DFQRYFLT.PRG` | `fc99184` |
+| `src/base/DFSTA.PRG` | `fc99184` |
+| `src/base/dfprncon.prg` | `fc99184` |
+| `src/base/dfupdqry.prg` | `fc99184` |
+| `src/xpp/DFCRWOUT.prg` | `fc99184` |
+| `src/base/DFSKIP.PRG` | `8ea3bbd` |
+| `src/s2/S2BROWSE.prg` | `8ea3bbd` |
+| `src/s2/S2BRW.prg` | `8ea3bbd`, `1f3439e` |
 
-## 9. Uso consigliato di questa documentazione
+## 11. Uso consigliato di questa documentazione
 
-1. Leggere questo file per capire la storia tecnica dei commit.
-2. Consultare `PGDBE-dfSet-riferimento-rapido.md` se serve modulare il comportamento runtime.
-3. Usare `PGDBE-checklist-riapplicazione.md` per verificare il fork o rifare il porting in futuro.
+1. Leggere questo file per la storia tecnica completa.
+2. Usare `PGDBE-dfSet-riferimento-rapido.md` per tuning/configurazione.
+3. Usare `PGDBE-checklist-riapplicazione.md` per audit e riallineamenti post-merge.

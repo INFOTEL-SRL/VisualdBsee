@@ -194,6 +194,18 @@ Lo script:
 - crea un backup `.bak` se nel repository esiste gia un file con lo stesso nome
 - non tocca i file versionati del repository fuori da `ide/BIN`
 
+### Profilo locale e parametri PostgreSQL nella property grid
+
+I parametri PostgreSQL mostrati nella sidebar "Scheda Progetto" non dipendono solo dai template in `ide/tmp/xbase/` o dai DBF versionati.
+
+In pratica entrano in gioco anche file locali di profilo IDE (in particolare `VDBSEE.qos` e `dbseeusr.dbf`) che arrivano da una installazione funzionante.
+
+Se dopo una pulizia aggressiva (es. `git clean -fd`) la UI non mostra piu i campi PG attesi:
+
+1. rieseguire `scripts/import-ide-local-files.ps1`
+2. chiudere e riaprire `vDbsee.exe`
+3. verificare che in `ide/BIN` siano presenti almeno `dbsee.ini`, `dbseeusr.dbf`, `VDBSEE.qos`, `dbsee.bak`
+
 ### Refresh indici property grid
 
 Se dopo una modifica a `ide/BIN/dbseeopt.dbf` o `ide/BIN/dbseetab.dbf` l'IDE non mostra i nuovi campi nella sidebar, prima di riaprire `vDbsee.exe` e' necessario cancellare gli indici locali:
