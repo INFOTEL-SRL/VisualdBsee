@@ -37,6 +37,66 @@
 #INCLUDE "dfSet.ch"
 
 STATIC s_cPgUpsizeTrace := ""
+#define DF_PG_UPSIZE_RC_OK            0
+#define DF_PG_UPSIZE_RC_CFG_ERROR     1
+#define DF_PG_UPSIZE_RC_LICENSE_ERROR 2
+#define DF_PG_UPSIZE_RC_UPSIZE_ERROR  3
+
+*******************************************************************************
+STATIC FUNCTION dfPgUpsizeBypassLicensePrecheck()
+*******************************************************************************
+LOCAL cEnv
+
+   cEnv := Upper( AllTrim( GetEnv( "VDB_PG_UPSIZE_BYPASS_LICENSE_PRECHECK" ) ) )
+
+RETURN ( cEnv == "1" .OR. cEnv == "YES" .OR. cEnv == "TRUE" )
+
+*******************************************************************************
+STATIC FUNCTION dfPgUpsizeStdoutEnabled()
+*******************************************************************************
+LOCAL cEnv, cExe
+
+   cEnv := Upper( AllTrim( GetEnv( "VDB_PG_UPSIZE_STDOUT" ) ) )
+   IF Empty( cEnv )
+      cEnv := Upper( AllTrim( GetEnv( "VDB_UPSIZE_LOG_CONSOLE" ) ) )
+   ENDIF
+   IF cEnv == "1" .OR. cEnv == "YES" .OR. cEnv == "TRUE"
+      RETURN .T.
+   ENDIF
+   IF cEnv == "0" .OR. cEnv == "NO" .OR. cEnv == "FALSE"
+      RETURN .F.
+   ENDIF
+
+   cExe := Upper( AllTrim( AppName( .F. ) ) )
+   IF cExe == "PGUPSIZE" .OR. cExe == "PGUPSIZE.EXE"
+      RETURN .T.
+   ENDIF
+
+RETURN .F.
+
+*******************************************************************************
+STATIC PROCEDURE dfPgUpsizeStdoutLine( cLine )
+*******************************************************************************
+   IF ValType( cLine ) == "C" .AND. !Empty( cLine ) .AND. dfPgUpsizeStdoutEnabled()
+      ? cLine
+   ENDIF
+RETURN
+
+*******************************************************************************
+STATIC PROCEDURE dfPgUpsizeNotifyError( cMsg, lNoUi )
+*******************************************************************************
+   IF ValType( cMsg ) != "C" .OR. Empty( cMsg )
+      RETURN
+   ENDIF
+
+   IF ValType( lNoUi ) == "L" .AND. lNoUi
+      dfPgUpsizeTraceBuildMsg( "UPSIZE.runtime.upsize", "ERROR: " + cMsg )
+      dfPgUpsizeStdoutLine( cMsg )
+      RETURN
+   ENDIF
+
+   dbMsgErr( cMsg )
+RETURN
 
 //*******************************************************************************
 FUNCTION dfPgIsSystemDictionaryStem( cStem )
@@ -206,6 +266,7 @@ LOCAL nHandle, cBuf, cPath
    IF ValType( cCfgPath ) != "C" .OR. Empty( cCfgPath ) .OR. ValType( cMsg ) != "C" .OR. Empty( cMsg )
       RETURN
    ENDIF
+   dfPgUpsizeStdoutLine( cMsg )
 
    cPath := cCfgPath + ".pgtrace.log"
    cBuf  := DToC( Date() ) + " " + Time() + " " + cMsg + Chr( 13 ) + Chr( 10 )
@@ -229,7 +290,13 @@ STATIC PROCEDURE dfPgUpsizeTraceLine( cLine )
 *******************************************************************************
 LOCAL nHandle, cBuf
 
-   IF Empty( s_cPgUpsizeTrace ) .OR. ValType( cLine ) != "C"
+   IF ValType( cLine ) != "C"
+      RETURN
+   ENDIF
+
+   dfPgUpsizeStdoutLine( cLine )
+
+   IF Empty( s_cPgUpsizeTrace )
       RETURN
    ENDIF
 
@@ -318,11 +385,41 @@ RETURN Self
 *******************************************************************************
 FUNCTION dfPgUpsizeResolveCfg()
 *******************************************************************************
-LOCAL cEnv, cTry
+LOCAL cEnv, cTry, cExeDir, cCur
 
    cEnv := AllTrim( GetEnv( "VDB_UPSIZE_CFG" ) )
    IF !Empty( cEnv ) .AND. File( cEnv )
       RETURN cEnv
+   ENDIF
+
+   cExeDir := dfPgExeDirectory()
+   IF ValType( cExeDir ) == "C" .AND. !Empty( cExeDir )
+      cTry := cExeDir + "UPSIZE.upsize"
+      IF File( cTry )
+         RETURN cTry
+      ENDIF
+
+      cTry := cExeDir + "pg\UPSIZE.upsize"
+      IF File( cTry )
+         RETURN cTry
+      ENDIF
+   ENDIF
+
+   cCur := CurDir()
+   IF ValType( cCur ) == "C" .AND. !Empty( cCur )
+      IF !( Right( cCur, 1 ) == "\" .OR. Right( cCur, 1 ) == "/" )
+         cCur += "\"
+      ENDIF
+
+      cTry := cCur + "UPSIZE.upsize"
+      IF File( cTry )
+         RETURN cTry
+      ENDIF
+
+      cTry := cCur + "pg\UPSIZE.upsize"
+      IF File( cTry )
+         RETURN cTry
+      ENDIF
    ENDIF
 
    cTry := "..\SOURCE\pg\UPSIZE.upsize"
@@ -380,38 +477,93 @@ RETURN NIL
 *******************************************************************************
 FUNCTION dfPgUpsizeAfterUpd()
 *******************************************************************************
+LOCAL nRc
+
+   nRc := dfPgUpsizeRunMigration( "", .F., .F., .T. )
+   IF nRc != DF_PG_UPSIZE_RC_OK
+      dfPgUpsizeTraceBuildMsg( "UPSIZE.runtime.upsize", "dfPgUpsizeAfterUpd: rc=" + LTrim( Str( nRc ) ) )
+   ENDIF
+
+RETURN NIL
+
+*******************************************************************************
+STATIC PROCEDURE dfPgUpsizeFinalizeRuntime( cPrevDbe )
+*******************************************************************************
+   dfPgDbeRestoreCompoundDefault( cPrevDbe )
+   dfPgEnsureExeCurDir()
+   dfPgEnsureLocalDbeForDictionary()
+RETURN
+
+*******************************************************************************
+FUNCTION dfPgUpsizeRunMigration( cTplOrCfg, lForce, lDryRun, lLogSkip, lNoUi )
+*******************************************************************************
 LOCAL oLog, cTpl, cCfg, lOk, cPrevDbe
 
 //* ddIndex() dopo /UPD usa DbInfo su DBF: il compound default deve essere DBFCDX (o come da INI), non PGDBE lasciato da DbfUpsize.
    cPrevDbe := dfPgDbeCaptureCompoundDefault()
 
-   IF !dfPgUpsizeShouldRunAfterUpd()
-      dfPgUpsizeLogSkip( "dfPgUpsizeShouldRunAfterUpd()=.F. (XbaseRunPgUpsizeOnUpd=NO/0/FALSE oppure VDB_SKIP_PG_UPSIZE=1)" )
-      RETURN NIL
+   IF ValType( lForce ) != "L"
+      lForce := .F.
+   ENDIF
+   IF ValType( lDryRun ) != "L"
+      lDryRun := .F.
+   ENDIF
+   IF ValType( lLogSkip ) != "L"
+      lLogSkip := .F.
+   ENDIF
+   IF ValType( lNoUi ) != "L"
+      lNoUi := .F.
    ENDIF
 
-   cTpl := dfPgUpsizeResolveCfg()
+   IF !lForce .AND. !dfPgUpsizeShouldRunAfterUpd()
+      IF lLogSkip
+         dfPgUpsizeLogSkip( "dfPgUpsizeShouldRunAfterUpd()=.F. (XbaseRunPgUpsizeOnUpd=NO/0/FALSE oppure VDB_SKIP_PG_UPSIZE=1)" )
+      ENDIF
+      dfPgUpsizeFinalizeRuntime( cPrevDbe )
+      RETURN DF_PG_UPSIZE_RC_OK
+   ENDIF
+
+   cTpl := ""
+   IF ValType( cTplOrCfg ) == "C"
+      cTpl := AllTrim( cTplOrCfg )
+   ENDIF
+   IF !Empty( cTpl ) .AND. !File( cTpl )
+      dfPgUpsizeNotifyError( "PostgreSQL upsize: file configurazione non trovato: " + cTpl, lNoUi )
+      dfPgUpsizeFinalizeRuntime( cPrevDbe )
+      RETURN DF_PG_UPSIZE_RC_CFG_ERROR
+   ENDIF
+
    IF Empty( cTpl )
-      dbMsgErr( "PostgreSQL upsize: file UPSIZE.upsize non trovato. Imposta VDB_UPSIZE_CFG o posiziona SOURCE\pg\UPSIZE.upsize (legacy: SOURCE\UPSIZE.upsize)." )
-      RETURN NIL
+      cTpl := dfPgUpsizeResolveCfg()
    ENDIF
 
-   dfPgUpsizeTraceBuildMsg( dfPgUpsizeCfgDirectory( cTpl ) + "UPSIZE.runtime.upsize", "dfPgUpsizeAfterUpd: template=" + cTpl )
+   IF !Empty( cTpl )
+      dfPgUpsizeTraceBuildMsg( dfPgUpsizeCfgDirectory( cTpl ) + "UPSIZE.runtime.upsize", "dfPgUpsizeRunMigration: template=" + cTpl )
+   ELSE
+      dfPgUpsizeTraceBuildMsg( "UPSIZE.runtime.upsize", "dfPgUpsizeRunMigration: no template, build from INI/path.ini" )
+   ENDIF
 
    cCfg := dfPgUpsizeBuildRuntimeCfg( cTpl )
    IF Empty( cCfg )
-      dbMsgErr( "PostgreSQL upsize: impossibile generare UPSIZE.runtime.upsize (connection, oppure nessun .DBF in EXE relativo al template)." )
-      RETURN NIL
+      dfPgUpsizeNotifyError( "PostgreSQL upsize: impossibile generare UPSIZE.runtime.upsize (connection, oppure nessun .DBF in EXE relativo al template).", lNoUi )
+      dfPgUpsizeFinalizeRuntime( cPrevDbe )
+      RETURN DF_PG_UPSIZE_RC_CFG_ERROR
    ENDIF
 
 //* Dopo BuildRuntimeCfg il template INI e' vuoto: serve di nuovo per ..\EXE\PgUpsize.ini (PgDbeLicense* come la Password).
    dfPgUpsizeSetTemplateForIni( cTpl )
-   IF ! dfPgDbeConfigurePgdbeLicense( .T. )
+   IF ! dfPgDbeConfigurePgdbeLicense( !dfPgUpsizeBypassLicensePrecheck() )
       dfPgUpsizeSetTemplateForIni( "" )
-      dfPgDbeRestoreCompoundDefault( cPrevDbe )
-      RETURN NIL
+      dfPgUpsizeFinalizeRuntime( cPrevDbe )
+      RETURN DF_PG_UPSIZE_RC_LICENSE_ERROR
    ENDIF
    dfPgUpsizeSetTemplateForIni( "" )
+
+   IF lDryRun
+      dfPgUpsizeTraceBuildMsg( cCfg, "dfPgUpsizeRunMigration: dry-run completed" )
+      dfPgUpsizeFinalizeRuntime( cPrevDbe )
+      RETURN DF_PG_UPSIZE_RC_OK
+   ENDIF
 
    dfPgUpsizeTraceOpen( cCfg )
    dfPgUpsizeTraceLine( "=== template " + cTpl )
@@ -423,14 +575,45 @@ LOCAL oLog, cTpl, cCfg, lOk, cPrevDbe
    dfPgUpsizeTraceLine( IIF( lOk, "=== DbfUpsize OK", "=== DbfUpsize FAILED" ) )
 
    IF !lOk
-      dbMsgErr( "PostgreSQL upsize non completato. Vedi " + cCfg + ".pgtrace.log e " + cCfg + ".log" )
+      dfPgUpsizeNotifyError( "PostgreSQL upsize non completato. Vedi " + cCfg + ".pgtrace.log e " + cCfg + ".log", lNoUi )
+      dfPgUpsizeFinalizeRuntime( cPrevDbe )
+      RETURN DF_PG_UPSIZE_RC_UPSIZE_ERROR
    ENDIF
 
-   dfPgDbeRestoreCompoundDefault( cPrevDbe )
-   dfPgEnsureExeCurDir()
-   dfPgEnsureLocalDbeForDictionary()
+   dfPgUpsizeFinalizeRuntime( cPrevDbe )
 
-RETURN NIL
+RETURN DF_PG_UPSIZE_RC_OK
+
+*******************************************************************************
+FUNCTION dfPgUpsizeRunFromUpd()
+*******************************************************************************
+LOCAL cExeDir, cTool, cCmd, nShellRc, nRc
+
+   IF !dfPgUpsizeShouldRunAfterUpd()
+      dfPgUpsizeLogSkip( "dfPgUpsizeRunFromUpd(): dfPgUpsizeShouldRunAfterUpd()=.F." )
+      RETURN .T.
+   ENDIF
+
+   cTool := AllTrim( GetEnv( "VDB_PG_UPSIZE_EXE" ) )
+   IF Empty( cTool )
+      cExeDir := dfPgExeDirectory()
+      IF !Empty( cExeDir )
+         cTool := cExeDir + "pgupsize.exe"
+      ENDIF
+   ENDIF
+
+   IF ValType( cTool ) == "C" .AND. !Empty( cTool ) .AND. File( cTool )
+      cCmd := '/C ""' + cTool + '" --from-upd"'
+      nShellRc := dfRunShell( cCmd, NIL, .F., .F. )
+      IF ValType( nShellRc ) == "N" .AND. nShellRc == 0
+         RETURN .T.
+      ENDIF
+   ENDIF
+
+//* Fallback compatibile storico: esecuzione interna diretta se tool esterno assente o fallisce.
+   nRc := dfPgUpsizeRunMigration( "", .F., .F., .T. )
+
+RETURN ( nRc == DF_PG_UPSIZE_RC_OK )
 
 *******************************************************************************
 //* Ripristina la cwd sulla cartella dell'EXE (AppName): DbfUpsize lavora spesso da cartella template UPSIZE.

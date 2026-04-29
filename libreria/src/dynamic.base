@@ -35,6 +35,8 @@
    <<FILELIST("%CUR%BASE\*.prg")>>
    <<FILELIST("%CUR%VDB\*.prg")>>
    <<FILELIST("%CUR%PG\*.prg")>>
+   <<FILELIST("%CUR%PG\Runtime\*.prg")>>
+   <<FILELIST("%CUR%PG\Upsize\*.prg")>>
 
 [VDBSEE1S.DLL]
    // non cambiare l'ordine di queste LIB senno' non funziona bene!

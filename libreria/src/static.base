@@ -35,4 +35,6 @@
    <<FILELIST("%CUR%CLIPSUPP\*.prg")>>
    <<FILELIST("%CUR%XML\*.prg")>>
    <<FILELIST("%CUR%PG\*.prg")>>
+   <<FILELIST("%CUR%PG\Runtime\*.prg")>>
+   <<FILELIST("%CUR%PG\Upsize\*.prg")>>
 

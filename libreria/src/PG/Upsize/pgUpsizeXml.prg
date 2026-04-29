@@ -163,7 +163,7 @@ RETURN .T.
 *******************************************************************************
 STATIC FUNCTION dfPgUpsizeCdxStemMatchesBase( cStem, cBase )
 *******************************************************************************
-LOCAL cUStem, cUBase, cRest
+LOCAL cUStem, cUBase, cRest, cBase7
 
    IF ValType( cStem ) != "C" .OR. ValType( cBase ) != "C" .OR. Empty( cBase )
       RETURN .F.
@@ -176,11 +176,26 @@ LOCAL cUStem, cUBase, cRest
       RETURN .T.
    ENDIF
 
-   IF Len( cUStem ) <= Len( cUBase )
+   IF Left( cUStem, Len( cUBase ) ) != cUBase
+//* Compatibilita' con stem storici 8.3 (es. PRESENZE -> PRESENZ1.CDX).
+//* In questo caso il base e' troncato di 1 carattere.
+      IF Len( cUBase ) >= 8
+         cBase7 := Left( cUBase, Len( cUBase ) - 1 )
+         IF Left( cUStem, Len( cBase7 ) ) == cBase7
+            IF Len( cUStem ) == Len( cBase7 )
+               RETURN .T.
+            ENDIF
+            cRest := SubStr( cUStem, Len( cBase7 ) + 1 )
+            IF dfPgUpsizeAllDigits( cRest )
+               RETURN .T.
+            ENDIF
+            RETURN dfPgUpsizeCdxOrderSuffixOk( cRest )
+         ENDIF
+      ENDIF
       RETURN .F.
    ENDIF
 
-   IF Left( cUStem, Len( cUBase ) ) != cUBase
+   IF Len( cUStem ) <= Len( cUBase )
       RETURN .F.
    ENDIF
 
@@ -405,6 +420,13 @@ LOCAL aOut, nSav, cRt, cStemU, cF
    ENDIF
 
    cExeDir := dfPgUpsizeEnsureTrailSlash( cExeDir )
+
+//* Standalone one-shot: se il dizionario locale non esiste in EXE, evitare dbCfgOpen("dbDD")
+//* (puo' mostrare errore "non riesco ad aprire DBDD.dbf") e usare fallback scan EXE.
+   IF !File( cExeDir + "DBDD.DBF" ) .AND. !File( cExeDir + "dbdd.dbf" )
+      RETURN aOut
+   ENDIF
+
    nSav    := Select()
 
    IF Select( "dbdd" ) == 0
@@ -683,32 +705,58 @@ RETURN cBlock
 //*******************************************************************************
 //* path.ini accanto a Menu.exe (EXE): chiavi UserPath01, UserPath02, ...
 //* Valori = directory dei dati applicativi (es. APPDATA2024). Solo da li' si elencano i .DBF per UPSIZE.runtime.upsize.
-STATIC FUNCTION dfPgUpsizePathIniFullPath()
+STATIC FUNCTION dfPgUpsizePathIniFullPath( cTplDir )
 //*******************************************************************************
-LOCAL cExe
+LOCAL cExe, cTry, cEnv, aRel, i, cCur
 
-   cExe := RTrim( dfPgExeDirectory() )
-   IF ValType( cExe ) != "C" .OR. Empty( cExe )
-      RETURN ""
+   cEnv := AllTrim( GetEnv( "VDB_PG_PATH_INI" ) )
+   IF ValType( cEnv ) == "C" .AND. !Empty( cEnv ) .AND. File( cEnv )
+      RETURN cEnv
    ENDIF
 
-   cExe := dfPgUpsizeEnsureTrailSlash( cExe )
+   cExe := RTrim( dfPgExeDirectory() )
+   IF ValType( cExe ) == "C" .AND. !Empty( cExe )
+      cExe := dfPgUpsizeEnsureTrailSlash( cExe )
+      IF File( cExe + "path.ini" )
+         RETURN cExe + "path.ini"
+      ENDIF
+   ENDIF
 
-   IF File( cExe + "path.ini" )
-      RETURN cExe + "path.ini"
+//* Standalone: risolvi path.ini dal template progetto (SOURCE\pg\UPSIZE.upsize -> ..\..\EXE\path.ini).
+   IF ValType( cTplDir ) == "C" .AND. !Empty( RTrim( cTplDir ) )
+      cTplDir := dfPgUpsizeEnsureTrailSlash( RTrim( cTplDir ) )
+      aRel := { "..\..\EXE\path.ini", "..\EXE\path.ini", "EXE\path.ini", "path.ini" }
+      FOR i := 1 TO Len( aRel )
+         cTry := cTplDir + aRel[i]
+         IF File( cTry )
+            RETURN cTry
+         ENDIF
+      NEXT
+   ENDIF
+
+//* Fallback cwd per casi ad-hoc da cartella EXE del progetto.
+   cCur := CurDir()
+   IF ValType( cCur ) == "C" .AND. !Empty( cCur )
+      cCur := dfPgUpsizeEnsureTrailSlash( cCur )
+      IF File( cCur + "path.ini" )
+         RETURN cCur + "path.ini"
+      ENDIF
+      IF File( cCur + "..\EXE\path.ini" )
+         RETURN cCur + "..\EXE\path.ini"
+      ENDIF
    ENDIF
 
 RETURN ""
 
 //*******************************************************************************
 //* Array di directory (con \ finale), deduplicate, da path.ini [UserPath*].
-STATIC FUNCTION dfPgUpsizeReadUserPathDirsFromPathIni()
+STATIC FUNCTION dfPgUpsizeReadUserPathDirsFromPathIni( cTplDir )
 //*******************************************************************************
 LOCAL cIni, cAll, cSeek, nPos, cLine, nEq, cKey, cVal, aOut, cNorm, nScan
 
    aOut := {}
 
-   cIni := dfPgUpsizePathIniFullPath()
+   cIni := dfPgUpsizePathIniFullPath( cTplDir )
    IF Empty( cIni )
       RETURN aOut
    ENDIF
@@ -806,7 +854,7 @@ LOCAL aRows, i
 RETURN aRows
 
 *******************************************************************************
-STATIC FUNCTION dfPgUpsizeBuildTablesXml( cTplDir )
+STATIC FUNCTION dfPgUpsizeBuildTablesXml( cTplDir, lNoTemplate )
 *******************************************************************************
 LOCAL cExeDir, cDbfRel, cLf, aRows, i, cBase, cDbe, cFname, cOrders, cBlock, cQ, aExe, cScan, cExtra, cDirTbl
 LOCAL aUserDirs, lIgnorePathIni, lFromPathIni
@@ -818,9 +866,16 @@ LOCAL aUserDirs, lIgnorePathIni, lFromPathIni
    cLf     := dfPgUpsizeXmlLf()
    cQ      := dfPgUpsizeXmlQuot()
    cTplDir := dfPgUpsizeEnsureTrailSlash( cTplDir )
+   IF ValType( lNoTemplate ) != "L"
+      lNoTemplate := .F.
+   ENDIF
 
 //* Preferire EXE reale da AppName(): path assoluti in XML (evita DbUseArea su ..\..\EXE\*.dbf con CurDir in SOURCE\pg).
-   cScan := RTrim( dfPgExeDirectory() )
+   IF lNoTemplate
+      cScan := RTrim( CurDir() )
+   ELSE
+      cScan := RTrim( dfPgExeDirectory() )
+   ENDIF
    IF ValType( cScan ) == "C" .AND. !Empty( cScan )
       IF !( Right( cScan, 1 ) == "\" .OR. Right( cScan, 1 ) == "/" )
          cScan += "\"
@@ -842,11 +897,17 @@ LOCAL aUserDirs, lIgnorePathIni, lFromPathIni
 
    lIgnorePathIni := Upper( AllTrim( dfPgUpsizeIniUpsizeOnly( "PgUpsizeIgnorePathIni" ) ) )
    lIgnorePathIni := ( lIgnorePathIni == "YES" .OR. lIgnorePathIni == "1" .OR. lIgnorePathIni == "TRUE" )
+   IF lNoTemplate
+//* Standalone senza SOURCE: path.ini deve essere sempre considerato.
+      lIgnorePathIni := .F.
+   ENDIF
 
    IF !lIgnorePathIni
-      aUserDirs := dfPgUpsizeReadUserPathDirsFromPathIni()
+      aUserDirs := dfPgUpsizeReadUserPathDirsFromPathIni( cTplDir )
+      dfPgUpsizeTraceBuildMsg( "UPSIZE.runtime.upsize", "BuildTablesXml: path.ini dirs=" + LTrim( Str( Len( aUserDirs ) ) ) )
       IF Len( aUserDirs ) > 0
          aRows := dfPgUpsizeDbfRowsFromUserPathDirs( aUserDirs )
+         dfPgUpsizeTraceBuildMsg( "UPSIZE.runtime.upsize", "BuildTablesXml: rows from path.ini=" + LTrim( Str( Len( aRows ) ) ) )
          IF Len( aRows ) > 0
             lFromPathIni := .T.
          ENDIF
@@ -1063,53 +1124,121 @@ LOCAL cScan, n1, cRest, nSlash, cNew, cLf, cQ, cPwdOut
 RETURN Left( cXml, n1 - 1 ) + cNew + SubStr( cXml, n1 + nSlash + 1 )
 
 *******************************************************************************
+STATIC FUNCTION dfPgUpsizeDefaultRuntimeXml( cSrv, cUid, cPwd, cDatabase )
+*******************************************************************************
+LOCAL cLf, cQ, cPwdOut, cXml
+
+   cLf := dfPgUpsizeXmlLf()
+   cQ  := dfPgUpsizeXmlQuot()
+
+   cPwdOut := dfPgPwdForDacAndUpsize( cPwd )
+   IF ValType( cPwdOut ) != "C" .OR. Empty( AllTrim( cPwdOut ) )
+      cPwdOut := "-"
+   ENDIF
+
+   cXml := '<?xml version="1.0" encoding="iso-8859-1" standalone="yes"?>' + cLf
+   cXml += "<config>" + cLf
+   cXml += "    <database_engines>" + cLf
+   cXml += "        <dbebuild name=" + cQ + "DBFNTX" + cQ + ">" + cLf
+   cXml += "            <storage name=" + cQ + "DBFDBE" + cQ + "/>" + cLf
+   cXml += "            <order name=" + cQ + "NTXDBE" + cQ + "/>" + cLf
+   cXml += "        </dbebuild>" + cLf
+   cXml += "        <dbebuild name=" + cQ + "DBFCDX" + cQ + ">" + cLf
+   cXml += "            <storage name=" + cQ + "DBFDBE" + cQ + "/>" + cLf
+   cXml += "            <order name=" + cQ + "CDXDBE" + cQ + "/>" + cLf
+   cXml += "        </dbebuild>" + cLf
+   cXml += "        <dbebuild name=" + cQ + "FOXCDX" + cQ + ">" + cLf
+   cXml += "            <storage name=" + cQ + "FOXDBE" + cQ + "/>" + cLf
+   cXml += "            <order name=" + cQ + "CDXDBE" + cQ + "/>" + cLf
+   cXml += "        </dbebuild>" + cLf
+   cXml += '        <dbeload name="PGDBE"/>' + cLf
+   cXml += "    </database_engines>" + cLf + cLf
+   cXml += "    <connection name     = " + cQ + "connection" + cQ + cLf
+   cXml += "                DBE      = " + cQ + "PGDBE" + cQ + cLf
+   cXml += "                SRV      = " + cQ + dfXmlAttrEscape( cSrv ) + cQ + cLf
+   cXml += "                UID      = " + cQ + dfXmlAttrEscape( cUid ) + cQ + cLf
+   cXml += "                PWD      = " + cQ + dfXmlAttrEscape( cPwdOut ) + cQ + cLf
+   cXml += "                DATABASE = " + cQ + dfXmlAttrEscape( cDatabase ) + cQ + "/>" + cLf + cLf
+   cXml += "</config>" + cLf
+
+RETURN cXml
+
+*******************************************************************************
 FUNCTION dfPgUpsizeBuildRuntimeCfg( cTplPath )
 *******************************************************************************
 LOCAL cDir, cOut, cBody, cMerged, cSrv, cUid, cPwd, cDb, cTables
+LOCAL cTplUsed, cExe, cPathIniEnv
+LOCAL lWritten, nTry, cOutTry, cStamp, cTmpDir
 
-   IF ValType( cTplPath ) != "C" .OR. Empty( cTplPath ) .OR. !File( cTplPath )
-      RETURN ""
+   cTplUsed := ""
+   IF ValType( cTplPath ) == "C" .AND. !Empty( cTplPath ) .AND. File( cTplPath )
+      cTplUsed := cTplPath
    ENDIF
 
-   dfPgUpsizeSetTemplateForIni( cTplPath )
+   dfPgUpsizeSetTemplateForIni( cTplUsed )
 
-   cDir := dfPgUpsizeCfgDirectory( cTplPath )
-   IF Empty( cDir )
-      cDir := CurDir()
-      IF ValType( cDir ) == "C" .AND. !Empty( cDir ) .AND. !( Right( cDir, 1 ) == "\" )
-         cDir += "\"
+   IF !Empty( cTplUsed )
+      cDir := dfPgUpsizeCfgDirectory( cTplUsed )
+   ELSE
+      cPathIniEnv := AllTrim( GetEnv( "VDB_PG_PATH_INI" ) )
+      IF ValType( cPathIniEnv ) == "C" .AND. !Empty( cPathIniEnv ) .AND. File( cPathIniEnv )
+         cDir := dfPgUpsizeDirParentWithSlash( cPathIniEnv )
       ENDIF
+      IF ValType( cDir ) != "C" .OR. Empty( cDir )
+         cDir := CurDir()
+      ENDIF
+      IF ValType( cDir ) != "C" .OR. Empty( cDir )
+         cExe := dfPgExeDirectory()
+         IF ValType( cExe ) == "C" .AND. !Empty( cExe )
+            cDir := cExe
+         ELSE
+            cDir := CurDir()
+         ENDIF
+      ENDIF
+      cDir := dfPgUpsizeEnsureTrailSlash( cDir )
+   ENDIF
+
+   IF Empty( cDir )
+      cDir := dfPgUpsizeEnsureTrailSlash( CurDir() )
    ENDIF
 
    cOut := cDir + "UPSIZE.runtime.upsize"
 
-   dfPgUpsizeTraceBuildMsg( cOut, "BuildRuntimeCfg: start tpl=" + cTplPath )
-
-   cBody := dfVdbReadWholeFile( cTplPath )
-   IF Empty( cBody )
-      dfPgUpsizeTraceBuildMsg( cOut, "BuildRuntimeCfg: abort template body vuoto" )
-      dfPgUpsizeSetTemplateForIni( "" )
-      RETURN ""
+   IF !Empty( cTplUsed )
+      dfPgUpsizeTraceBuildMsg( cOut, "BuildRuntimeCfg: start tpl=" + cTplUsed )
+   ELSE
+      dfPgUpsizeTraceBuildMsg( cOut, "BuildRuntimeCfg: start no-template (from INI/path.ini)" )
    ENDIF
-
-   cBody := dfPgUpsizeRemoveXmlComments( cBody )
-   cBody := dfPgUpsizeStripLegacyTableBlocks( cBody )
-
-//* DbfUpsize: <connection DBE=...> deve coincidere con il nome registrato (PGDBE). Template legacy "pgdbe" -> fallisce verify ("requires ... attributes").
-   cBody := StrTran( cBody, '<dbeload name="pgdbe"/>', '<dbeload name="PGDBE"/>' )
-   cBody := StrTran( cBody, '<dbeload name="Pgdbe"/>', '<dbeload name="PGDBE"/>' )
 
    cSrv := dfPgUpsizeConnSrv()
    cUid := dfPgUpsizeConnUid()
    cPwd := dfPgUpsizeConnPwd()
    cDb  := dfPgUpsizeConnDatabase()
 
+   IF !Empty( cTplUsed )
+      cBody := dfVdbReadWholeFile( cTplUsed )
+      IF Empty( cBody )
+         dfPgUpsizeTraceBuildMsg( cOut, "BuildRuntimeCfg: abort template body vuoto" )
+         dfPgUpsizeSetTemplateForIni( "" )
+         RETURN ""
+      ENDIF
+
+      cBody := dfPgUpsizeRemoveXmlComments( cBody )
+      cBody := dfPgUpsizeStripLegacyTableBlocks( cBody )
+
+//* DbfUpsize: <connection DBE=...> deve coincidere con il nome registrato (PGDBE). Template legacy "pgdbe" -> fallisce verify ("requires ... attributes").
+      cBody := StrTran( cBody, '<dbeload name="pgdbe"/>', '<dbeload name="PGDBE"/>' )
+      cBody := StrTran( cBody, '<dbeload name="Pgdbe"/>', '<dbeload name="PGDBE"/>' )
+   ELSE
+      cBody := dfPgUpsizeDefaultRuntimeXml( cSrv, cUid, cPwd, cDb )
+   ENDIF
+
    cMerged := dfPgUpsizeReplaceConnectionXml( cBody, cSrv, cUid, cPwd, cDb )
    IF !Empty( cMerged )
       cBody := cMerged
    ENDIF
 
-   cTables := dfPgUpsizeBuildTablesXml( dfPgUpsizeEnsureTrailSlash( cDir ) )
+   cTables := dfPgUpsizeBuildTablesXml( dfPgUpsizeEnsureTrailSlash( cDir ), Empty( cTplUsed ) )
    IF Empty( cTables )
       dfPgUpsizeTraceBuildMsg( cOut, "BuildRuntimeCfg: abort BuildTablesXml vuoto (nessun .DBF in EXE o DBDD senza file)" )
       dfPgUpsizeSetTemplateForIni( "" )
@@ -1124,12 +1253,49 @@ LOCAL cDir, cOut, cBody, cMerged, cSrv, cUid, cPwd, cDb, cTables
       RETURN ""
    ENDIF
 
-//* Chiudi eventuale lock IDE sul file runtime; altrimenti FCreate fallisce e resta il contenuto vecchio.
-   IF File( cOut )
-      FERASE( cOut )
+//* Alcuni lock (AV/indexer/editor) sono transitori: riprova brevemente prima di fallire.
+   lWritten := .F.
+   cOutTry  := cOut
+   FOR nTry := 1 TO 5
+      IF File( cOutTry )
+         FERASE( cOutTry )
+      ENDIF
+
+      lWritten := dfVdbWriteWholeFile( cOutTry, cBody )
+      IF lWritten
+         cOut := cOutTry
+         EXIT
+      ENDIF
+
+      Inkey( 0.2 )
+   NEXT
+
+//* Se il file standard resta bloccato, usa un runtime alternativo univoco nella stessa cartella.
+   IF !lWritten
+      cStamp := StrTran( DToS( Date() ) + "_" + StrTran( Time(), ":", "" ), " ", "" )
+      cOutTry := cDir + "UPSIZE.runtime." + cStamp + ".upsize"
+      lWritten := dfVdbWriteWholeFile( cOutTry, cBody )
+      IF lWritten
+         cOut := cOutTry
+         dfPgUpsizeTraceBuildMsg( cOut, "BuildRuntimeCfg: fallback su file runtime alternativo: " + cOutTry )
+      ENDIF
    ENDIF
 
-   IF !dfVdbWriteWholeFile( cOut, cBody )
+//* Ultimo fallback: usa TEMP utente (evita lock/ACL su EXE monitorata da altri processi).
+   IF !lWritten
+      cTmpDir := AllTrim( GetEnv( "TEMP" ) )
+      IF ValType( cTmpDir ) == "C" .AND. !Empty( cTmpDir )
+         cTmpDir := dfPgUpsizeEnsureTrailSlash( cTmpDir )
+         cOutTry := cTmpDir + "UPSIZE.runtime." + cStamp + ".upsize"
+         lWritten := dfVdbWriteWholeFile( cOutTry, cBody )
+         IF lWritten
+            cOut := cOutTry
+            dfPgUpsizeTraceBuildMsg( cOut, "BuildRuntimeCfg: fallback su TEMP: " + cOutTry )
+         ENDIF
+      ENDIF
+   ENDIF
+
+   IF !lWritten
       dfPgUpsizeTraceBuildMsg( cOut, "BuildRuntimeCfg: abort dfVdbWriteWholeFile fallito (file bloccato?)" )
       dfPgUpsizeSetTemplateForIni( "" )
       RETURN ""
