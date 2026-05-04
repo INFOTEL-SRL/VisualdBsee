@@ -293,6 +293,12 @@ LOCAL cDb, cTry, cDir, aRel, i, cEnv
 
 RETURN ""
 
+//*******************************************************************************
+//* Helper diagnostico: path PgUpsize.ini effettivamente risolto.
+FUNCTION dfPgUpsizeResolvedIniPath()
+//*******************************************************************************
+RETURN dfPgPgUpsizeIniPath()
+
 STATIC FUNCTION dfPgLicenseKeyFromPgUpsizeIni()
 LOCAL cIni
 

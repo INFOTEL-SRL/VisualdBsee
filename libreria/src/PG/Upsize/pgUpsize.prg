@@ -498,6 +498,7 @@ RETURN
 FUNCTION dfPgUpsizeRunMigration( cTplOrCfg, lForce, lDryRun, lLogSkip, lNoUi )
 *******************************************************************************
 LOCAL oLog, cTpl, cCfg, lOk, cPrevDbe
+LOCAL nAttempt, cFailBag, cFailDbf
 
 //* ddIndex() dopo /UPD usa DbInfo su DBF: il compound default deve essere DBFCDX (o come da INI), non PGDBE lasciato da DbfUpsize.
    cPrevDbe := dfPgDbeCaptureCompoundDefault()
@@ -522,6 +523,9 @@ LOCAL oLog, cTpl, cCfg, lOk, cPrevDbe
       dfPgUpsizeFinalizeRuntime( cPrevDbe )
       RETURN DF_PG_UPSIZE_RC_OK
    ENDIF
+
+   dfPgUpsizeResetTransientExcludedOrders()
+   dfPgUpsizeResetTransientExcludedTables()
 
    cTpl := ""
    IF ValType( cTplOrCfg ) == "C"
@@ -565,12 +569,42 @@ LOCAL oLog, cTpl, cCfg, lOk, cPrevDbe
       RETURN DF_PG_UPSIZE_RC_OK
    ENDIF
 
-   dfPgUpsizeTraceOpen( cCfg )
-   dfPgUpsizeTraceLine( "=== template " + cTpl )
-   dfPgUpsizeTraceLine( "=== start DbfUpsize " + cCfg + " srv=" + dfPgUpsizeConnSrv() + " db=" + dfPgUpsizeConnDatabase() + " uid=" + dfPgUpsizeConnUid() )
+   nAttempt := 1
+   DO WHILE nAttempt <= 8
+      dfPgUpsizeTraceOpen( cCfg )
+      dfPgUpsizeTraceLine( "=== template " + cTpl )
+      dfPgUpsizeTraceLine( "=== start DbfUpsize " + cCfg + " srv=" + dfPgUpsizeConnSrv() + " db=" + dfPgUpsizeConnDatabase() + " uid=" + dfPgUpsizeConnUid() + " attempt=" + LTrim( Str( nAttempt ) ) )
 
-   oLog := PgUpsizeLogger():new()
-   lOk  := DbfUpsize( cCfg, oLog )
+      oLog := PgUpsizeLogger():new()
+      lOk  := DbfUpsize( cCfg, oLog )
+      IF lOk
+         EXIT
+      ENDIF
+
+      cFailBag := dfPgUpsizeLastOrdListAddBag( cCfg + ".pgtrace.log" )
+      IF !Empty( cFailBag )
+         IF !dfPgUpsizeAddTransientExcludedOrder( cFailBag )
+            EXIT
+         ENDIF
+         dfPgUpsizeTraceBuildMsg( cCfg, "Retry after OrdListAdd bag exclude: " + cFailBag )
+      ELSE
+         cFailDbf := dfPgUpsizeLastExclusiveOpenTable( cCfg + ".pgtrace.log" )
+         IF Empty( cFailDbf )
+            EXIT
+         ENDIF
+
+         //* Non saltare tabelle su retry: meglio fallire esplicitamente
+         //* che completare con migrazione parziale silenziosa.
+         dfPgUpsizeTraceBuildMsg( cCfg, "Exclusive-open table detected, stop retry without table exclusion: " + cFailDbf )
+         EXIT
+      ENDIF
+
+      cCfg := dfPgUpsizeBuildRuntimeCfg( cTpl )
+      IF Empty( cCfg )
+         EXIT
+      ENDIF
+      nAttempt++
+   ENDDO
 
    dfPgUpsizeTraceLine( IIF( lOk, "=== DbfUpsize OK", "=== DbfUpsize FAILED" ) )
 
@@ -583,6 +617,91 @@ LOCAL oLog, cTpl, cCfg, lOk, cPrevDbe
    dfPgUpsizeFinalizeRuntime( cPrevDbe )
 
 RETURN DF_PG_UPSIZE_RC_OK
+
+//*******************************************************************************
+//* Estrae il bag che causa OrdListAdd dal trace (ultima occorrenza).
+STATIC FUNCTION dfPgUpsizeLastOrdListAddBag( cTracePath )
+//*******************************************************************************
+LOCAL cAll, cNeedle, nPos, cTail, nClose, cBag
+
+   IF ValType( cTracePath ) != "C" .OR. Empty( cTracePath ) .OR. !File( cTracePath )
+      RETURN ""
+   ENDIF
+
+   cAll := dfVdbReadWholeFile( cTracePath )
+   IF Empty( cAll )
+      RETURN ""
+   ENDIF
+
+   cNeedle := "opening bag ("
+   nPos := dfPgUpsizeLastPos( cNeedle, Lower( cAll ) )
+   IF nPos < 1
+      RETURN ""
+   ENDIF
+
+   cTail := SubStr( cAll, nPos + Len( cNeedle ) )
+   nClose := At( ")", cTail )
+   IF nClose < 1
+      RETURN ""
+   ENDIF
+
+   cBag := AllTrim( Left( cTail, nClose - 1 ) )
+RETURN cBag
+
+//*******************************************************************************
+//* Estrae l'ultimo DBF con errore "not able to open table exclusive:" dal trace.
+STATIC FUNCTION dfPgUpsizeLastExclusiveOpenTable( cTracePath )
+//*******************************************************************************
+LOCAL cAll, cNeedle, nPos, cTail, nEol, cDbf
+
+   IF ValType( cTracePath ) != "C" .OR. Empty( cTracePath ) .OR. !File( cTracePath )
+      RETURN ""
+   ENDIF
+
+   cAll := dfVdbReadWholeFile( cTracePath )
+   IF Empty( cAll )
+      RETURN ""
+   ENDIF
+
+   cNeedle := "not able to open table exclusive:"
+   nPos := dfPgUpsizeLastPos( cNeedle, Lower( cAll ) )
+   IF nPos < 1
+      RETURN ""
+   ENDIF
+
+   cTail := SubStr( cAll, nPos + Len( cNeedle ) )
+   nEol := At( Chr( 10 ), cTail )
+   IF nEol < 1
+      cDbf := AllTrim( StrTran( cTail, Chr( 13 ), "" ) )
+   ELSE
+      cDbf := AllTrim( StrTran( Left( cTail, nEol - 1 ), Chr( 13 ), "" ) )
+   ENDIF
+RETURN cDbf
+
+//*******************************************************************************
+//* Posizione dell'ultima occorrenza (1-based), 0 se non trovata.
+STATIC FUNCTION dfPgUpsizeLastPos( cNeedle, cHay )
+//*******************************************************************************
+LOCAL nPos, nFound, cRest
+
+   IF ValType( cNeedle ) != "C" .OR. Empty( cNeedle ) .OR. ;
+      ValType( cHay ) != "C" .OR. Empty( cHay )
+      RETURN 0
+   ENDIF
+
+   nPos := 0
+   cRest := cHay
+
+   DO WHILE .T.
+      nFound := At( cNeedle, cRest )
+      IF nFound < 1
+         EXIT
+      ENDIF
+      nPos += nFound
+      cRest := SubStr( cRest, nFound + 1 )
+   ENDDO
+
+RETURN nPos
 
 *******************************************************************************
 FUNCTION dfPgUpsizeRunFromUpd()

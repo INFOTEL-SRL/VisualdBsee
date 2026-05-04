@@ -17,6 +17,10 @@
 #INCLUDE "dfGenMsg.ch"
 #INCLUDE "dfSet.ch"
 
+STATIC s_lPgUpsizeExcludeOrdersTraceInit := .F.
+STATIC s_aPgUpsizeTransientExcludedOrders := {}
+STATIC s_aPgUpsizeTransientExcludedTables := {}
+
 *******************************************************************************
 STATIC FUNCTION dfXmlAttrEscape( cVal )
 *******************************************************************************
@@ -124,22 +128,184 @@ LOCAL cList, cTok, nAt, cU
 
 RETURN .F.
 
-*******************************************************************************
-STATIC FUNCTION dfPgUpsizeTableDbe( cBase )
-*******************************************************************************
-LOCAL a, i
+//*******************************************************************************
+//* [UPSIZE] PgUpsizeExcludeOrders=file1.cdx,file2.cdx (o stem senza estensione)
+//* esclude solo specifici bag/index problematici, mantenendo tutti gli altri.
+STATIC FUNCTION dfPgUpsizeIniExcludedOrder( cOrderPath )
+LOCAL cList, cTok, nAt, cCmp, cName, nPos, cIniPath, nStar, cPre, cSuf
+LOCAL i, cTmp
 
-   IF ValType( cBase ) != "C" .OR. Empty( cBase )
-      RETURN "foxcdx"
+   IF ValType( cOrderPath ) != "C" .OR. Empty( cOrderPath )
+      RETURN .F.
    ENDIF
 
-   a := dfPgUpsizeDbfcdxNames()
-   FOR i := 1 TO Len( a )
-      IF Upper( AllTrim( cBase ) ) == Upper( AllTrim( a[i] ) )
-         RETURN "dbfcdx"
+   cCmp  := Upper( AllTrim( cOrderPath ) )
+
+   cName := cOrderPath
+   nPos := RAt( "\", cName )
+   IF nPos < 1
+      nPos := RAt( "/", cName )
+   ENDIF
+   IF nPos > 0
+      cName := SubStr( cName, nPos + 1 )
+   ENDIF
+   cName := Upper( AllTrim( cName ) )
+
+   FOR i := 1 TO Len( s_aPgUpsizeTransientExcludedOrders )
+      cTmp := Upper( AllTrim( s_aPgUpsizeTransientExcludedOrders[i] ) )
+      IF !Empty( cTmp ) .AND. ( cTmp == cCmp .OR. cTmp == cName )
+         dfPgUpsizeTraceBuildMsg( "UPSIZE.runtime.upsize", "ExcludeOrders skip " + cOrderPath + " (transient)" )
+         RETURN .T.
       ENDIF
    NEXT
 
+   cList := dfPgUpsizeIniUpsizeOnly( "PgUpsizeExcludeOrders" )
+   IF !s_lPgUpsizeExcludeOrdersTraceInit
+      s_lPgUpsizeExcludeOrdersTraceInit := .T.
+      cIniPath := dfPgUpsizeResolvedIniPath()
+      dfPgUpsizeTraceBuildMsg( "UPSIZE.runtime.upsize", "ExcludeOrders ini=" + IIF( Empty( cIniPath ), "<none>", cIniPath ) + " value=" + IIF( Empty( AllTrim( cList ) ), "<empty>", cList ) )
+   ENDIF
+   IF ValType( cList ) != "C" .OR. Empty( AllTrim( cList ) )
+      RETURN .F.
+   ENDIF
+
+   cList := StrTran( cList, ";", "," )
+
+   DO WHILE Len( cList ) > 0
+      nAt := At( ",", cList )
+      IF nAt < 1
+         cTok := AllTrim( cList )
+         cList := ""
+      ELSE
+         cTok := AllTrim( Left( cList, nAt - 1 ) )
+         cList := SubStr( cList, nAt + 1 )
+      ENDIF
+
+      IF Empty( cTok )
+         LOOP
+      ENDIF
+
+      cTok := Upper( cTok )
+      IF At( ".", cTok ) < 1
+         cTok += ".CDX"
+      ENDIF
+
+      nStar := At( "*", cTok )
+      IF nStar > 0
+         cPre := Left( cTok, nStar - 1 )
+         cSuf := SubStr( cTok, nStar + 1 )
+         IF Left( cCmp, Len( cPre ) ) == cPre .AND. Right( cCmp, Len( cSuf ) ) == cSuf
+            dfPgUpsizeTraceBuildMsg( "UPSIZE.runtime.upsize", "ExcludeOrders skip " + cOrderPath + " (wildcard " + cTok + ")" )
+            RETURN .T.
+         ENDIF
+         IF Left( cName, Len( cPre ) ) == cPre .AND. Right( cName, Len( cSuf ) ) == cSuf
+            dfPgUpsizeTraceBuildMsg( "UPSIZE.runtime.upsize", "ExcludeOrders skip " + cOrderPath + " (wildcard " + cTok + ")" )
+            RETURN .T.
+         ENDIF
+      ENDIF
+
+      IF cTok == cCmp .OR. cTok == cName
+         dfPgUpsizeTraceBuildMsg( "UPSIZE.runtime.upsize", "ExcludeOrders skip " + cOrderPath )
+         RETURN .T.
+      ENDIF
+   ENDDO
+
+RETURN .F.
+
+//*******************************************************************************
+//* Esclusioni dinamiche per singolo run (non persistenti su INI).
+FUNCTION dfPgUpsizeResetTransientExcludedOrders()
+//*******************************************************************************
+   s_aPgUpsizeTransientExcludedOrders := {}
+RETURN NIL
+
+//*******************************************************************************
+FUNCTION dfPgUpsizeAddTransientExcludedOrder( cOrderPath )
+//*******************************************************************************
+LOCAL cCmp, cName, nPos
+
+   IF ValType( cOrderPath ) != "C" .OR. Empty( AllTrim( cOrderPath ) )
+      RETURN .F.
+   ENDIF
+
+   cCmp := Upper( AllTrim( cOrderPath ) )
+   cName := cCmp
+   nPos := RAt( "\", cName )
+   IF nPos < 1
+      nPos := RAt( "/", cName )
+   ENDIF
+   IF nPos > 0
+      cName := SubStr( cName, nPos + 1 )
+   ENDIF
+
+   IF AScan( s_aPgUpsizeTransientExcludedOrders, {|x| Upper( AllTrim( x ) ) == cCmp .OR. Upper( AllTrim( x ) ) == cName } ) == 0
+      AAdd( s_aPgUpsizeTransientExcludedOrders, cCmp )
+      dfPgUpsizeTraceBuildMsg( "UPSIZE.runtime.upsize", "Transient exclude add " + cCmp )
+      RETURN .T.
+   ENDIF
+
+RETURN .F.
+
+//*******************************************************************************
+FUNCTION dfPgUpsizeResetTransientExcludedTables()
+//*******************************************************************************
+   s_aPgUpsizeTransientExcludedTables := {}
+RETURN NIL
+
+//*******************************************************************************
+//* Esclusione tabella solo per esecuzione corrente (full path o base name).
+FUNCTION dfPgUpsizeAddTransientExcludedTable( cDbfPathOrName )
+//*******************************************************************************
+LOCAL cCmp, cName, nPos
+
+   IF ValType( cDbfPathOrName ) != "C" .OR. Empty( AllTrim( cDbfPathOrName ) )
+      RETURN .F.
+   ENDIF
+
+   cCmp := Upper( AllTrim( cDbfPathOrName ) )
+   cName := cCmp
+   nPos := RAt( "\", cName )
+   IF nPos < 1
+      nPos := RAt( "/", cName )
+   ENDIF
+   IF nPos > 0
+      cName := SubStr( cName, nPos + 1 )
+   ENDIF
+   IF Right( cName, 4 ) == ".DBF"
+      cName := Left( cName, Len( cName ) - 4 )
+   ENDIF
+
+   IF AScan( s_aPgUpsizeTransientExcludedTables, {|x| Upper( AllTrim( x ) ) == cCmp .OR. Upper( AllTrim( x ) ) == cName } ) == 0
+      AAdd( s_aPgUpsizeTransientExcludedTables, cCmp )
+      IF !Empty( cName ) .AND. AScan( s_aPgUpsizeTransientExcludedTables, {|x| Upper( AllTrim( x ) ) == cName } ) == 0
+         AAdd( s_aPgUpsizeTransientExcludedTables, cName )
+      ENDIF
+      dfPgUpsizeTraceBuildMsg( "UPSIZE.runtime.upsize", "Transient table exclude add " + cCmp )
+      RETURN .T.
+   ENDIF
+RETURN .F.
+
+//*******************************************************************************
+STATIC FUNCTION dfPgUpsizeIsTransientExcludedTable( cBase, cDbfPath )
+//*******************************************************************************
+LOCAL cBaseU, cPathU
+
+   cBaseU := Upper( AllTrim( IIF( ValType( cBase ) == "C", cBase, "" ) ) )
+   cPathU := Upper( AllTrim( IIF( ValType( cDbfPath ) == "C", cDbfPath, "" ) ) )
+
+   IF !Empty( cBaseU ) .AND. AScan( s_aPgUpsizeTransientExcludedTables, {|x| Upper( AllTrim( x ) ) == cBaseU } ) > 0
+      RETURN .T.
+   ENDIF
+   IF !Empty( cPathU ) .AND. AScan( s_aPgUpsizeTransientExcludedTables, {|x| Upper( AllTrim( x ) ) == cPathU } ) > 0
+      RETURN .T.
+   ENDIF
+RETURN .F.
+
+*******************************************************************************
+STATIC FUNCTION dfPgUpsizeTableDbe( cBase )
+*******************************************************************************
+   // Regola globale richiesta: runtime XML sempre con FOXCDX.
+   // cBase resta parametro per compatibilita' chiamate esistenti.
 RETURN "foxcdx"
 
 *******************************************************************************
@@ -177,9 +343,10 @@ LOCAL cUStem, cUBase, cRest, cBase7
    ENDIF
 
    IF Left( cUStem, Len( cUBase ) ) != cUBase
-//* Compatibilita' con stem storici 8.3 (es. PRESENZE -> PRESENZ1.CDX).
-//* In questo caso il base e' troncato di 1 carattere.
-      IF Len( cUBase ) >= 8
+//* Compatibilita' con stem storici 8.3 (es. PRESENZE_EXTRA -> PRESENZE1.CDX).
+//* Applichiamo la regola solo per nomi oltre 8 char, per evitare collisioni
+//* su nomi gia' da 8 caratteri (es. CAU_RECG che collide con CAU_REC*).
+      IF Len( cUBase ) > 8
          cBase7 := Left( cUBase, Len( cUBase ) - 1 )
          IF Left( cUStem, Len( cBase7 ) ) == cBase7
             IF Len( cUStem ) == Len( cBase7 )
@@ -207,6 +374,65 @@ LOCAL cUStem, cUBase, cRest, cBase7
 
 //* Suffisso tipo _M, _P, _1, M1, ... (indici multipli Visual dBsee / FoxCDX oltre a presenze1, presenze2).
 RETURN dfPgUpsizeCdxOrderSuffixOk( cRest )
+
+//*******************************************************************************
+//* Normalizza il nome tabella target PostgreSQL (no spazi, parentesi, simboli).
+STATIC FUNCTION dfPgUpsizeNormalizeTargetTableName( cBase )
+//*******************************************************************************
+LOCAL cIn, cOut, i, cCh, n
+
+   cIn := Upper( AllTrim( IIF( ValType( cBase ) == "C", cBase, "" ) ) )
+   IF Empty( cIn )
+      RETURN "TBL"
+   ENDIF
+
+   cOut := ""
+   FOR i := 1 TO Len( cIn )
+      cCh := SubStr( cIn, i, 1 )
+      n   := Asc( cCh )
+      IF ( n >= 65 .AND. n <= 90 ) .OR. ( n >= 48 .AND. n <= 57 ) .OR. cCh == "_"
+         cOut += cCh
+      ELSE
+         cOut += "_"
+      ENDIF
+   NEXT
+
+   DO WHILE At( "__", cOut ) > 0
+      cOut := StrTran( cOut, "__", "_" )
+   ENDDO
+   DO WHILE Left( cOut, 1 ) == "_"
+      cOut := SubStr( cOut, 2 )
+   ENDDO
+   DO WHILE Right( cOut, 1 ) == "_"
+      cOut := Left( cOut, Len( cOut ) - 1 )
+   ENDDO
+
+   IF Empty( cOut )
+      cOut := "TBL"
+   ENDIF
+   IF Left( cOut, 1 ) >= "0" .AND. Left( cOut, 1 ) <= "9"
+      cOut := "T_" + cOut
+   ENDIF
+
+RETURN cOut
+
+//*******************************************************************************
+//* Garantisce un nome univoco nel runtime XML: NAME, NAME_2, NAME_3, ...
+STATIC FUNCTION dfPgUpsizeUniqueTargetTableName( cBase, aUsed )
+//*******************************************************************************
+LOCAL cNorm, cTry, nIdx
+
+   cNorm := dfPgUpsizeNormalizeTargetTableName( cBase )
+   cTry  := cNorm
+   nIdx  := 2
+
+   DO WHILE AScan( aUsed, {|x| x == cTry } ) > 0
+      cTry := cNorm + "_" + LTrim( Str( nIdx ) )
+      nIdx++
+   ENDDO
+
+   AAdd( aUsed, cTry )
+RETURN cTry
 
 *******************************************************************************
 //* Suffisso dopo il nome tabella nello stem del .CDX: lettere, cifre, underscore (no spazi).
@@ -571,7 +797,7 @@ RETURN aOut
 *******************************************************************************
 STATIC FUNCTION dfPgUpsizeOrdersXmlForBase( cBase, aCdxStems, cDbfRel, cLf )
 *******************************************************************************
-LOCAL k, cStem, cBlock
+LOCAL k, cStem, cBlock, cFull
 
    cBlock := ""
 
@@ -582,7 +808,10 @@ LOCAL k, cStem, cBlock
    FOR k := 1 TO Len( aCdxStems )
       cStem := aCdxStems[k]
       IF dfPgUpsizeCdxStemMatchesBase( cStem, cBase )
-         cBlock += "        <order>" + dfXmlAttrEscape( cDbfRel + cStem + ".CDX" ) + "</order>" + cLf
+         cFull := cDbfRel + cStem + ".CDX"
+         IF !dfPgUpsizeIniExcludedOrder( cFull )
+            cBlock += "        <order>" + dfXmlAttrEscape( cFull ) + "</order>" + cLf
+         ENDIF
       ENDIF
    NEXT
 
@@ -617,9 +846,15 @@ RETURN cDir + cStem + ".CDX"
 STATIC FUNCTION dfPgUpsizeOrdersXmlFromDbddAndDir( cBase, cDirTbl, cLf )
 *******************************************************************************
 LOCAL cBlock, cDir, cFNdx, nSav, cAliRaw, cStem, nNdxNum, uPath, aSeen, k, cStemF, cFull, aCdxRow, cMacro
+LOCAL cDisableOrders
 
    cBlock := ""
    aSeen  := {}
+
+   cDisableOrders := Upper( AllTrim( dfPgUpsizeIniUpsizeOnly( "PgUpsizeDisableOrders" ) ) )
+   IF cDisableOrders == "YES" .OR. cDisableOrders == "1" .OR. cDisableOrders == "TRUE"
+      RETURN cBlock
+   ENDIF
 
    IF ValType( cBase ) != "C" .OR. Empty( cBase ) .OR. ValType( cDirTbl ) != "C" .OR. Empty( cDirTbl ) .OR. ValType( cLf ) != "C"
       RETURN cBlock
@@ -671,7 +906,7 @@ LOCAL cBlock, cDir, cFNdx, nSav, cAliRaw, cStem, nNdxNum, uPath, aSeen, k, cStem
 
       IF !Empty( cStem )
          cFull := dfPgUpsizeOrderPathCdx( cDir, cStem )
-         IF !Empty( cFull )
+         IF !Empty( cFull ) .AND. File( cFull ) .AND. !dfPgUpsizeIniExcludedOrder( cFull )
             uPath := Upper( RTrim( cFull ) )
             IF AScan( aSeen, {|p| p == uPath} ) == 0
                AAdd( aSeen, uPath )
@@ -692,10 +927,12 @@ LOCAL cBlock, cDir, cFNdx, nSav, cAliRaw, cStem, nNdxNum, uPath, aSeen, k, cStem
       cStemF := aCdxRow[k]
       IF dfPgUpsizeCdxStemMatchesBase( cStemF, cBase )
          cFull := dfPgUpsizeOrderPathCdx( cDir, cStemF )
-         uPath := Upper( RTrim( cFull ) )
-         IF AScan( aSeen, {|p| p == uPath} ) == 0
-            AAdd( aSeen, uPath )
-            cBlock += "        <order>" + dfXmlAttrEscape( cFull ) + "</order>" + cLf
+         IF !Empty( cFull ) .AND. File( cFull ) .AND. !dfPgUpsizeIniExcludedOrder( cFull )
+            uPath := Upper( RTrim( cFull ) )
+            IF AScan( aSeen, {|p| p == uPath} ) == 0
+               AAdd( aSeen, uPath )
+               cBlock += "        <order>" + dfXmlAttrEscape( cFull ) + "</order>" + cLf
+            ENDIF
          ENDIF
       ENDIF
    NEXT
@@ -857,7 +1094,7 @@ RETURN aRows
 STATIC FUNCTION dfPgUpsizeBuildTablesXml( cTplDir, lNoTemplate )
 *******************************************************************************
 LOCAL cExeDir, cDbfRel, cLf, aRows, i, cBase, cDbe, cFname, cOrders, cBlock, cQ, aExe, cScan, cExtra, cDirTbl
-LOCAL aUserDirs, lIgnorePathIni, lFromPathIni
+LOCAL aUserDirs, lIgnorePathIni, lFromPathIni, aUsedNames, cTargetName
 
    aUserDirs    := {}
    aRows        := {}
@@ -937,18 +1174,24 @@ LOCAL aUserDirs, lIgnorePathIni, lFromPathIni
    ENDIF
 
    cBlock := ""
+   aUsedNames := {}
 
    FOR i := 1 TO Len( aRows )
       cBase   := aRows[i][1]
+      cTargetName := dfPgUpsizeUniqueTargetTableName( cBase, aUsedNames )
       cDbe    := dfPgUpsizeTableDbe( cBase )
       cFname  := aRows[i][2]
+      IF dfPgUpsizeIsTransientExcludedTable( cBase, cFname )
+         dfPgUpsizeTraceBuildMsg( "UPSIZE.runtime.upsize", "BuildTablesXml: transient skip table " + cBase + " (" + cFname + ")" )
+         LOOP
+      ENDIF
       cDirTbl := dfPgUpsizeDirParentWithSlash( cFname )
       IF Empty( cDirTbl )
          cDirTbl := cDbfRel
       ENDIF
       cOrders := dfPgUpsizeOrdersXmlFromDbddAndDir( cBase, cDirTbl, cLf )
 
-      cBlock += "    <table name = " + cQ + dfXmlAttrEscape( cBase ) + cQ + cLf
+      cBlock += "    <table name = " + cQ + dfXmlAttrEscape( cTargetName ) + cQ + cLf
       cBlock += "           dbe  = " + cQ + dfXmlAttrEscape( cDbe ) + cQ + cLf
       cBlock += "           dbf  = " + cQ + dfXmlAttrEscape( cFname ) + cQ + ">" + cLf
 
@@ -957,7 +1200,7 @@ LOCAL aUserDirs, lIgnorePathIni, lFromPathIni
       ENDIF
 
       cBlock += "    </table>" + cLf
-      cBlock += "    <upsize table=" + cQ + dfXmlAttrEscape( cBase ) + cQ + " connection=" + cQ + "connection" + cQ + " mode=" + cQ + "isam" + cQ + " />" + cLf
+      cBlock += "    <upsize table=" + cQ + dfXmlAttrEscape( cTargetName ) + cQ + " connection=" + cQ + "connection" + cQ + " mode=" + cQ + "isam" + cQ + " />" + cLf
       cBlock += cLf
    NEXT
 
