@@ -256,6 +256,13 @@ Per i progetti legacy senza cartella `SOURCE`, il runtime viene costruito dirett
 - `EXE\pgupsize.ini` (connessione/licenza)
 - `EXE\path.ini` (`UserPathXX` con le cartelle DBF reali)
 
+La fase di upsize e' divisa in due passaggi:
+
+1. creazione di `UPSIZE.runtime.upsize`, cioe' il file XML effettivamente passato a `DbfUpsize`
+2. esecuzione di `DbfUpsize` usando quel runtime file
+
+Il runtime file viene generato risolvendo connessione/licenza da environment o INI, poi ricostruendo l'elenco tabelle da template, `path.ini`, cartella `EXE`, dizionario `DBDD` o cartella extra configurata. In dry-run il processo si ferma dopo la creazione del file, utile per verificare path DBF, nomi tabella e ordini CDX prima di trasferire dati.
+
 Uso rapido:
 
 ```bat

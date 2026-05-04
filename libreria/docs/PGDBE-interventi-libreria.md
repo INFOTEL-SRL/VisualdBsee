@@ -35,6 +35,10 @@ Portare la libreria Visual dBsee a lavorare in modo piu prevedibile con `PGDBE`,
 | `79f6621` | `2026-04-26` | template per parametri postgres in vdb | template PG parameters |
 | `1f3439e` | `2026-04-28` | aggiunto supporto a pg anche per i listbox | integrazioni listbox su casi PG |
 | `7e0ffed` | `2026-05-04` | riordinata la struttura PGUpsize e semplificato il flusso CLI per uso cliente | `PG/Runtime`, `PG/Upsize`, CLI |
+| `e55d174` | `2026-05-04` | upsize: gestisci retry ed esclusioni nella migrazione PG | retry `DbfUpsize`, esclusioni ordini/tabelle |
+| `a7c31d1` | `2026-05-04` | browse: proteggi indici e alias non disponibili | `DDUSE`, browse totals/top-bottom |
+| `f97114b` | `2026-05-04` | docs: aggiorna documentazione PGUpsize e PGDBE | README e docs PG |
+| `5ca83c7` | `2026-05-04` | build: aggiorna artefatti 2.00.2598 e pgupsize | output build, `pgupsize.exe`, template |
 
 ## 1. Commit `b77f497` - runtime PostgreSQL
 
@@ -245,6 +249,14 @@ Questi commit non sono solo "core libreria", ma sono parte integrante della cate
   Introduce template per parametri PostgreSQL in VDB.
 - `7e0ffed`
   Riordina i moduli PG in `Runtime/` e `Upsize/`, aggiunge la guida cliente del runner `pgupsize.exe` e semplifica il flusso standalone tramite environment/INI.
+- `e55d174`
+  Aggiunge retry controllato della migrazione: se `DbfUpsize` fallisce su un `OrdListAdd`, il trace viene letto per individuare il bag CDX problematico, il file runtime viene rigenerato escludendo temporaneamente solo quell'ordine e la migrazione viene ritentata.
+- `a7c31d1`
+  Protegge l'apertura indici e le chiamate browse quando un alias non e' disponibile o non e' piu selezionabile.
+- `f97114b`
+  Riallinea README e documentazione PGDBE alla struttura `PG/Runtime` + `PG/Upsize` e alla CLI standalone.
+- `5ca83c7`
+  Aggiorna gli artefatti build `2.00.2598`, include `pgupsize.exe` negli output e riallinea `dfLibDate()`.
 
 ## 8. Integrazione fuori da `libreria/src`
 
@@ -284,11 +296,11 @@ Il dettaglio operativo e' documentato in `PGDBE-dfSet-riferimento-rapido.md`.
 | File | Commit principale |
 |---|---|
 | `src/PG/Runtime/*.prg` | `b77f497`, `7e0ffed` |
-| `src/PG/Upsize/*.prg` | `b77f497`, `7e0ffed` |
+| `src/PG/Upsize/*.prg` | `b77f497`, `7e0ffed`, `e55d174` |
 | `src/base/PGSEEK.PRG` | `b77f497` |
 | `src/base/DFS.PRG` | `b77f497`, `a4de29f` |
 | `src/base/DBLOOK.PRG` | `a4de29f` |
-| `src/base/DDUSE.PRG` | `b77f497`, hardening indice non apribile |
+| `src/base/DDUSE.PRG` | `b77f497`, `a7c31d1` |
 | `src/base/DFANY2ST.PRG` | `fc99184` |
 | `src/base/DFQRYFLT.PRG` | `fc99184` |
 | `src/base/DFSTA.PRG` | `fc99184` |
@@ -298,8 +310,8 @@ Il dettaglio operativo e' documentato in `PGDBE-dfSet-riferimento-rapido.md`.
 | `src/base/DFSKIP.PRG` | `8ea3bbd` |
 | `src/s2/S2BROWSE.prg` | `8ea3bbd` |
 | `src/s2/S2BRW.prg` | `8ea3bbd`, `1f3439e` |
-| `src/support/TBTOTAL.prg` | hardening browse senza alias valido |
-| `src/xpp/TBTOP.prg` | hardening browse senza alias valido |
+| `src/support/TBTOTAL.prg` | `a7c31d1` |
+| `src/xpp/TBTOP.prg` | `a7c31d1` |
 
 ## 11. Uso consigliato di questa documentazione
 
@@ -328,6 +340,43 @@ Per coprire anche il caso "tool esterno", e' stato introdotto un runner CLI dedi
   - guida cliente per licenza PGDBE esterna, connessione, path INI, dry-run, log ed exit code
 
 Il template `ide/tmp/xbase/INITPROC.TMP` resta responsabile dell'inizializzazione runtime PostgreSQL del progetto generato. La chiamata esplicita alla migrazione puo avvenire da tool standalone oppure da codice applicativo che invoca gli helper sopra.
+
+### Fase di creazione `UPSIZE.runtime.upsize`
+
+La migrazione non usa direttamente il template sorgente. Prima viene sempre costruito un file runtime:
+
+1. `dfPgUpsizeRunMigration()` riceve un template esplicito (`VDB_UPSIZE_CFG` / `VDB_UPSIZE_CONFIG`) oppure chiede a `dfPgUpsizeResolveCfg()` di trovarne uno.
+2. Se non esiste un template, il flusso entra in modalita no-template e crea una configurazione minima partendo dagli INI disponibili.
+3. `dfPgUpsizeBuildRuntimeCfg()` determina la cartella di lavoro:
+   - dalla directory del template, se il template esiste
+   - da `VDB_PG_PATH_INI`, se si usa un `path.ini` esplicito
+   - dalla directory corrente / cartella `EXE`, nei casi standalone
+4. La connessione PostgreSQL viene scritta nel runtime prendendo i valori da environment, `[apps]` o `[UPSIZE]`.
+5. L'elenco tabelle viene ricostruito leggendo:
+   - i DBF presenti in `EXE` o nelle cartelle `UserPathXX` di `path.ini`
+   - oppure il dizionario `DBDD`, quando `PgUpsizeTableSource=DBDD`
+   - piu l'eventuale `PgUpsizeExtraDbfDir`
+6. Ogni tabella viene emessa nel runtime XML con:
+   - nome target PostgreSQL normalizzato e univoco
+   - path DBF sorgente originale
+   - DBE tabella `foxcdx`
+   - ordini CDX validi, se non disabilitati o esclusi
+7. Il file generato e' `UPSIZE.runtime.upsize`; se non e' scrivibile nella destinazione prevista, il codice prova un fallback su path alternativo o `%TEMP%`.
+
+Questa fase e' eseguibile da sola con dry-run (`VDB_PG_UPSIZE_DRY_RUN=1` o `VDB_UPSIZE_SIMULA=1`) ed e' il primo controllo da fare quando una migrazione cliente non parte.
+
+### Fase di esecuzione upsize
+
+Dopo la creazione del runtime:
+
+1. viene configurata la licenza PGDBE (`pgdbe_license.txt`, environment o INI)
+2. se il run non e' dry-run, viene aperto il trace `<runtime>.pgtrace.log`
+3. `DbfUpsize( cCfg, oLog )` trasferisce dati e strutture verso PostgreSQL
+4. in caso di successo viene ripristinato il DBE locale precedente
+5. in caso di errore:
+   - se il trace segnala un CDX non apribile durante `OrdListAdd`, viene aggiunta un'esclusione transitoria e il runtime viene rigenerato per ritentare
+   - se il trace segnala una tabella non apribile in esclusiva, il flusso fallisce esplicitamente per evitare migrazioni parziali silenziose
+   - dopo il limite di retry, il runner ritorna codice `3`
 
 ## 13. Hardening corrente PGUpsize e browse
 

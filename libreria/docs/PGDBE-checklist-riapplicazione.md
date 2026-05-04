@@ -51,6 +51,7 @@ Usa questa checklist quando riallinei il fork PG o dopo merge importanti sulla l
 - `PgUpsize.ini` e `dbstart.ini` risolvono correttamente connessione e licenza PGDBE
 - `pgdbe_license.txt` o `VDB_PG_LICENSE_FILE` funzionano come alternativa esterna alla licenza in INI
 - dry-run genera `UPSIZE.runtime.upsize` e `UPSIZE.runtime.upsize.pgtrace.log`
+- il runtime file generato contiene connessione, tabelle, path DBF e ordini attesi prima di lanciare una migrazione reale
 - con progetto senza `SOURCE`, la generazione runtime legge `EXE\path.ini` tramite `VDB_PG_PATH_INI`
 
 ## 7) Generazione runtime XML
@@ -60,6 +61,7 @@ Usa questa checklist quando riallinei il fork PG o dopo merge importanti sulla l
 - `PgUpsizeExcludeTables` salta solo le tabelle dichiarate
 - `PgUpsizeExcludeOrders` salta solo i CDX dichiarati, inclusi stem o wildcard
 - in caso di errore `OrdListAdd`, il retry esclude temporaneamente solo il bag rilevato dal trace
+- dopo l'esclusione transitoria, `UPSIZE.runtime.upsize` viene rigenerato prima del nuovo tentativo `DbfUpsize`
 - errori di apertura esclusiva tabella non producono migrazione parziale silenziosa
 - nomi tabella target sono validi per PostgreSQL e univoci nel runtime XML
 

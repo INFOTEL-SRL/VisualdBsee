@@ -117,6 +117,42 @@ Se non valorizzato, prova a risolvere automaticamente i path standard (`UPSIZE.u
 
 Se non esiste un template, il tool puo lavorare in modalita no-template: genera un XML runtime minimale partendo da `PgUpsize.ini`/`dbstart.ini` per la connessione e da `path.ini` o dalla cartella `EXE` per l'elenco DBF.
 
+## Fasi del processo
+
+`pgupsize.exe` lavora sempre in due fasi distinte.
+
+### 1) Creazione del file runtime
+
+Il file `UPSIZE.runtime.upsize` e' il file XML finale usato da `DbfUpsize`.
+
+La creazione avviene cosi:
+
+1. risolve il template `.upsize`, se indicato o trovato automaticamente
+2. se il template non c'e, usa la modalita no-template
+3. risolve `PgUpsize.ini`, `dbstart.ini` e `path.ini`
+4. scrive la connessione PostgreSQL nel runtime
+5. costruisce la lista tabelle:
+   - da DBF in `EXE`
+   - da `path.ini` (`UserPathXX`)
+   - da `DBDD`, se `PgUpsizeTableSource=DBDD`
+   - da `PgUpsizeExtraDbfDir`, se presente
+6. normalizza i nomi tabella target PostgreSQL
+7. aggiunge gli ordini CDX trovati, salvo esclusioni o `PgUpsizeDisableOrders=YES`
+
+In questa fase non vengono ancora trasferiti dati su PostgreSQL.
+
+### 2) Esecuzione di `DbfUpsize`
+
+Dopo la creazione del runtime:
+
+1. configura la licenza PGDBE
+2. apre i log `UPSIZE.runtime.upsize.pgtrace.log` e `UPSIZE.runtime.upsize.log`
+3. chiama `DbfUpsize` con il runtime file
+4. ritorna `0` se la migrazione termina correttamente
+5. ritorna `3` se `DbfUpsize` fallisce dopo gli eventuali retry
+
+Se vuoi controllare solo la prima fase, usa dry-run (`VDB_UPSIZE_SIMULA=1` oppure `VDB_PG_UPSIZE_DRY_RUN=1`).
+
 ## Parametri per sezioni
 
 ### 1) Parametri essenziali (quelli che usi davvero)
@@ -237,6 +273,8 @@ Output atteso:
 Durante la migrazione `DbfUpsize` puo fallire su un `OrdListAdd` di un CDX danneggiato o non compatibile.
 
 Il runner legge `UPSIZE.runtime.upsize.pgtrace.log`, individua l'ultimo bag CDX problematico, lo esclude solo per il run corrente e rigenera `UPSIZE.runtime.upsize` per ritentare. L'esclusione temporanea non modifica `PgUpsize.ini`.
+
+Il retry quindi ripete entrambe le fasi: prima ricrea il runtime XML senza quel singolo ordine, poi richiama `DbfUpsize`.
 
 Se vuoi rendere persistente l'esclusione di un indice noto:
 
