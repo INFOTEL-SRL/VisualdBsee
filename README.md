@@ -49,7 +49,7 @@ Sottocartelle rilevanti di `libreria/src/`:
 - `xpp/`
   Codice di integrazione con componenti Xbase++ e output report.
 - `PG/`
-  Moduli introdotti per supporto runtime PostgreSQL e infrastruttura PGDBE. La struttura corrente separa `Runtime/` (sessione PG, INI, bootstrap DBE) e `Upsize/` (migrazione DBF -> PostgreSQL, generazione XML runtime e CLI `pgupsize.exe`).
+  Moduli introdotti per supporto runtime PostgreSQL e infrastruttura PGDBE. La struttura corrente separa `Runtime/` (sessione PG, INI, bootstrap DBE) e `Upsize/` (migrazione DBF -> PostgreSQL, generazione XML runtime e runner `pgupsize.exe` / `pgupsize-console.exe`).
 - `support/`
   File di supporto, stub e helper complementari.
 - `vdb/`, `xml/`, `cfunc/`, `clipsupp/`, `c_obj/`, `extralib/`, `extraobj/`, `extra_ch/`, `messaggi/`
@@ -126,7 +126,7 @@ La variante `2.00.2598` e' stata introdotta per permettere build locali senza sp
 
 ## Copia degli artefatti
 
-Per copiare DLL, LIB e, se presente, `pgupsize.exe` verso un progetto host o una cartella di distribuzione, il repository include lo script:
+Per copiare DLL, LIB e, se presenti, `pgupsize.exe` e `pgupsize-console.exe` verso un progetto host o una cartella di distribuzione, il repository include lo script:
 
 - `scripts/copy-build-artifacts.bat`
 
@@ -143,7 +143,7 @@ scripts\copy-build-artifacts.bat lib200-2598 C:\dest\bin
 scripts\copy-build-artifacts.bat lib200-2598 C:\dest\exe C:\dest\lib
 ```
 
-Se la destinazione LIB non viene passata, DLL e LIB vengono copiate nella stessa cartella. L'eseguibile `pgupsize.exe` viene copiato nella destinazione DLL quando esiste nell'output della variante scelta.
+Se la destinazione LIB non viene passata, DLL e LIB vengono copiate nella stessa cartella. Gli eseguibili `pgupsize.exe` e `pgupsize-console.exe` vengono copiati nella destinazione DLL quando esistono nell'output della variante scelta.
 
 ## Template IDE rilevanti
 
@@ -244,13 +244,27 @@ La documentazione dedicata si trova in [libreria/docs/README.md](./libreria/docs
 
 ### EXE migrazione PostgreSQL
 
-E' disponibile un entrypoint dedicato per eseguire la migrazione DBF -> PostgreSQL fuori dal main applicativo:
+Sono disponibili due entrypoint per eseguire la migrazione DBF -> PostgreSQL fuori dal main applicativo (stesso core, subsystem diverso):
 
-- sorgente CLI: `libreria/src/PG/Upsize/pgUpsizeExe.prg`
-- progetto build: `libreria/src/PG/Upsize/pgUpsizeExe.xpj`
-- script build rapido: `libreria/src/PG/Upsize/build-pgupsize-exe.bat`
+| Eseguibile | Progetto | Script build | Uso tipico |
+| --- | --- | --- | --- |
+| `pgupsize.exe` | `libreria/src/PG/Upsize/pgUpsizeExe.xpj` | `libreria/src/PG/Upsize/build-pgupsize-exe.bat` | Link `/PM:PM` richiesto dalle librerie runtime: apre una finestra console separata. |
+| `pgupsize-console.exe` | `libreria/src/PG/Upsize/pgUpsizeConsole.xpj` | `libreria/src/PG/Upsize/build-pgupsize-console.bat` | Link `/PM:VIO`: output nella **stessa** finestra terminale (IDE, `cmd`, PowerShell). |
 
-Il runner riusa il core PGUpsize previsto anche per l'integrazione applicativa: generazione `UPSIZE.runtime.upsize`, configurazione licenza PGDBE, esecuzione `DbfUpsize`.
+Sorgenti principali:
+
+- `libreria/src/PG/Upsize/pgUpsizeExe.prg` — `MAIN` per `pgupsize.exe` (help CLI, env, attesa INVIO opzionale).
+- `libreria/src/PG/Upsize/pgUpsizeConsoleMain.prg` — `MAIN` per `pgupsize-console.exe` (stesso flusso via env; di default non attende INVIO a fine run).
+
+Entrambi i runner riusano il core PGUpsize previsto anche per l'integrazione applicativa: generazione `UPSIZE.runtime.upsize`, configurazione licenza PGDBE, esecuzione `DbfUpsize`.
+
+**Nota importante:** il binario `pgupsize.exe` non puo essere linkato come pura applicazione console (`/PM:VIO`): con le DLL attuali si ottiene `BASE/4314` (*Application was not linked using /PM:PM-switch*). Per uso da terminale integrato usare `pgupsize-console.exe`.
+
+**Argomenti CLI:** `pgupsize.exe` riconosce `--help` / `-h` / `/?` ed esce senza migrare. `pgupsize-console.exe` e pensato per script/IDE: legge solo le variabili d'ambiente (nessun parsing degli argomenti).
+
+**Log su stdout:** con nome eseguibile che contiene `PGUPSIZE-CONSOLE` (in pratica `pgupsize-console.exe`) il trace viene anche stampato su stdout, oltre al file `.pgtrace.log`. Si puo forzare con `VDB_PG_UPSIZE_STDOUT=1` o `VDB_UPSIZE_LOG_CONSOLE=1`. A fine run `pgupsize-console.exe` stampa i path del log completo (`*.pgtrace.log` e `*.log` senza suffisso trace).
+
+**Flusso integrato (dopo `/UPD`):** `dfPgUpsizeRunFromUpd()` esegue l'upsize **nello stesso processo** dell'applicazione (nessuna nuova finestra). Per tornare al lancio esterno di `pgupsize.exe` impostare `VDB_PG_UPSIZE_EXTERNAL=1` (opzionale `VDB_PG_UPSIZE_EXE` per path custom).
 Per i progetti legacy senza cartella `SOURCE`, il runtime viene costruito direttamente da:
 
 - `EXE\pgupsize.ini` (connessione/licenza)
@@ -261,20 +275,36 @@ La fase di upsize e' divisa in due passaggi:
 1. creazione di `UPSIZE.runtime.upsize`, cioe' il file XML effettivamente passato a `DbfUpsize`
 2. esecuzione di `DbfUpsize` usando quel runtime file
 
-Il runtime file viene generato risolvendo connessione/licenza da environment o INI, poi ricostruendo l'elenco tabelle da template, `path.ini`, cartella `EXE`, dizionario `DBDD` o cartella extra configurata. In dry-run il processo si ferma dopo la creazione del file, utile per verificare path DBF, nomi tabella e ordini CDX prima di trasferire dati.
+Il runtime file viene generato risolvendo connessione/licenza da environment o INI, poi ricostruendo l'elenco tabelle dal dizionario `DBDD`, che e' la sorgente predefinita e rappresenta lo stato esatto del database. I DBF dichiarati nel DBDD vengono risolti usando `File_Path` verso le cartelle reali di `path.ini` (`UserPathXX`), poi cercando negli altri `UserPathXX` e infine nella cartella `EXE`; gli ordini vengono presi dalle righe `NDX` del DBDD/`FILE_ALI`, senza dedurli dal nome della tabella o dallo scan dei `.CDX`. In dry-run il processo si ferma dopo la creazione del file, utile per verificare path DBF, nomi tabella e ordini CDX prima di trasferire dati.
 
-Uso rapido:
+Uso rapido (build entrambi gli exe):
 
 ```bat
 cd libreria\src\PG\Upsize
 build-pgupsize-exe.bat
+build-pgupsize-console.bat
+```
+
+Esempio da terminale integrato (stessa finestra, log live):
+
+```bat
 cd /d C:\src\PRESENZE\EXE
 set VDB_PG_UPSIZE_FORCE=1
 set VDB_PG_UPSIZE_DRY_RUN=1
-set VDB_PG_UPSIZE_TABLE_SOURCE=EXE
 set VDB_PG_PATH_INI=C:\src\PRESENZE\EXE\path.ini
+C:\src\VisualdBsee\libreria\output\lib200-2598\rel\pgupsize-console.exe
+```
+
+Esempio con runner classico (finestra separata):
+
+```bat
 C:\src\VisualdBsee\libreria\output\lib200-2598\rel\pgupsize.exe
 ```
+
+Output build tipico (variante `lib200-2598`):
+
+- `libreria/output/lib200-2598/rel/pgupsize.exe`
+- `libreria/output/lib200-2598/rel/pgupsize-console.exe`
 
 Configurazione supportata (env):
 
@@ -282,13 +312,16 @@ Configurazione supportata (env):
 - `VDB_PG_UPSIZE_FORCE=1`
 - `VDB_PG_UPSIZE_DRY_RUN=1` (per dry-run)
 - `VDB_PG_PATH_INI=<path a path.ini>` (opzionale ma consigliato)
-- `VDB_PG_UPSIZE_TABLE_SOURCE=EXE|DBDD`
+- `VDB_PG_UPSIZE_TABLE_SOURCE=DBDD|EXE` (default `DBDD`; `EXE` abilita lo scan fisico legacy)
 - `VDB_PGUPSIZE_INI=<path a PgUpsize.ini>` (override esplicito)
 - `VDB_PG_UPSIZE_EXTRA_DBF_DIR=<cartella DBF extra>` (opzionale)
+- `VDB_PG_UPSIZE_STDOUT=1` / `VDB_UPSIZE_LOG_CONSOLE=1` (forzare log su console)
+- `VDB_PG_UPSIZE_EXTERNAL=1` (solo flusso integrato: rilancia `pgupsize.exe` esterno invece dell'esecuzione inline)
+- `VDB_PG_UPSIZE_EXE=<path>` (path esplicito per `pgupsize.exe` quando `VDB_PG_UPSIZE_EXTERNAL=1`)
 
 Configurazione supportata (`EXE\PgUpsize.ini`, sezione `[UPSIZE]`):
 
-- `PgUpsizeTableSource=EXE|DBDD`
+- `PgUpsizeTableSource=DBDD|EXE` (default `DBDD`; `EXE` abilita lo scan fisico legacy)
 - `PgUpsizeExtraDbfDir=<cartella DBF extra>`
 - `PgUpsizeExcludeTables=nome1,nome2`
 - `PgUpsizeExcludeOrders=file1.cdx,file2.cdx` (supporta anche stem e wildcard `*`)
@@ -303,7 +336,7 @@ Codici di uscita:
 
 Note operative:
 
-- `pgupsize.exe` usa gli stessi moduli core PGUpsize della libreria, ma aggiunge shim minimi per l'uso standalone.
+- `pgupsize.exe` e `pgupsize-console.exe` usano gli stessi moduli core PGUpsize della libreria; il progetto console aggiunge solo `pgUpsizeConsoleMain.prg` e riusa `pgUpsizeCliCompat.prg` per shim standalone.
 - Se `DbfUpsize` fallisce su un `OrdListAdd`, il runtime puo rigenerare l'XML escludendo temporaneamente solo quel bag CDX e ritentare, senza rendere permanente l'esclusione.
 - Le tabelle nel runtime XML vengono normalizzate a nomi PostgreSQL validi e rese univoche (`NOME`, `NOME_2`, ...), mentre il path DBF resta quello originale.
 

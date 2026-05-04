@@ -11,89 +11,69 @@
 #define DF_PG_UPSIZE_RC_LICENSE_ERROR 2
 #define DF_PG_UPSIZE_RC_UPSIZE_ERROR  3
 
-STATIC FUNCTION dfPgCliEnvText( cEnvName, cEnvAlias )
-LOCAL cVal
+STATIC FUNCTION dfPgCliIsHelpArg( cArg )
+LOCAL c
 
-   cVal := AllTrim( GetEnv( cEnvName ) )
-   IF !Empty( cVal )
-      RETURN cVal
+   IF ValType( cArg ) != "C"
+      RETURN .F.
    ENDIF
 
-   IF ValType( cEnvAlias ) == "C" .AND. !Empty( cEnvAlias )
-      cVal := AllTrim( GetEnv( cEnvAlias ) )
-      IF !Empty( cVal )
-         RETURN cVal
+   c := Lower( AllTrim( cArg ) )
+RETURN ( c == "--help" .OR. c == "-h" .OR. c == "/?" .OR. c == "-?" .OR. c == "help" )
+
+STATIC FUNCTION dfPgCliWantsHelp()
+LOCAL n, cArg
+
+   FOR n := 1 TO dfArgC() - 1
+      cArg := dfArgV( n )
+      IF dfPgCliIsHelpArg( cArg )
+         RETURN .T.
       ENDIF
-   ENDIF
+   NEXT
 
-RETURN ""
+RETURN .F.
 
-STATIC FUNCTION dfPgCliEnvFlag( cEnvName, cEnvAlias )
-LOCAL cVal
-
-   cVal := Upper( dfPgCliEnvText( cEnvName, cEnvAlias ) )
-
-RETURN ( cVal == "1" .OR. cVal == "YES" .OR. cVal == "TRUE" )
-
-STATIC FUNCTION dfPgCliRcMessage( nRc )
-
-   DO CASE
-      CASE nRc == DF_PG_UPSIZE_RC_OK
-         RETURN "PostgreSQL upsize completato."
-      CASE nRc == DF_PG_UPSIZE_RC_CFG_ERROR
-         RETURN "Errore configurazione/template."
-      CASE nRc == DF_PG_UPSIZE_RC_LICENSE_ERROR
-         RETURN "Errore licenza PGDBE."
-      CASE nRc == DF_PG_UPSIZE_RC_UPSIZE_ERROR
-         RETURN "DbfUpsize fallito."
-   ENDCASE
-
-RETURN "Errore non classificato: " + LTrim( Str( nRc ) )
-
-STATIC FUNCTION dfPgCliHoldEnabled()
-LOCAL cVal
-
-   cVal := Upper( dfPgCliEnvText( "VDB_PG_UPSIZE_NOHOLD", "VDB_UPSIZE_NON_ATTENDERE" ) )
-
-RETURN !( cVal == "1" .OR. cVal == "YES" .OR. cVal == "TRUE" )
-
-STATIC PROCEDURE dfPgCliHoldWindow()
-LOCAL cDummy
-
-   IF !dfPgCliHoldEnabled()
-      RETURN
-   ENDIF
-
+STATIC PROCEDURE dfPgCliPrintHelp()
+   ? "pgupsize.exe - standalone DBF -> PostgreSQL"
    ? ""
-   ?? "Premi INVIO per chiudere pgupsize.exe..."
-   ACCEPT TO cDummy
-RETURN
-
-STATIC PROCEDURE dfPgCliUsage()
-   ? "pgupsize.exe (standalone)"
-   ? "Configurazione via environment:"
-   ? "  VDB_UPSIZE_CFG=<path template .upsize>"
-   ? "  VDB_PG_UPSIZE_FORCE=1"
-   ? "  VDB_PG_UPSIZE_DRY_RUN=1"
-   ? "Alias in italiano:"
-   ? "  VDB_UPSIZE_CONFIG=<path template .upsize>"
-   ? "  VDB_UPSIZE_FORZA=1"
-   ? "  VDB_UPSIZE_SIMULA=1"
-   ? "  VDB_UPSIZE_NON_ATTENDERE=1"
+   ? "Uso:"
+   ? "  pgupsize.exe [--help]"
+   ? ""
+   ? "Parametri:"
+   ? "  --help, -h, /?, -?   Mostra questo help ed esce"
+   ? ""
+   ? "Variabili principali:"
+   ? "  VDB_PG_UPSIZE_FORCE=1     Esegue la migrazione"
+   ? "  VDB_PG_UPSIZE_DRY_RUN=1   Genera solo UPSIZE.runtime.upsize"
+   ? "  VDB_PG_UPSIZE_NOHOLD=1    Non attendere INVIO a fine run"
+   ? "  VDB_UPSIZE_CFG=<path>     Template esplicito (opzionale)"
+   ? ""
+   ? "Nota: senza VDB_UPSIZE_CFG il runtime XML viene costruito automaticamente."
 RETURN
 
 PROCEDURE MAIN()
-LOCAL cCfg, nRc
+LOCAL cCfg, nRc, lForce, lDryRun
 
-   cCfg   := dfPgCliEnvText( "VDB_UPSIZE_CFG", "VDB_UPSIZE_CONFIG" )
+   IF dfPgCliWantsHelp()
+      dfPgCliPrintHelp()
+      ErrorLevel( DF_PG_UPSIZE_RC_OK )
+      QUIT
+      RETURN
+   ENDIF
+
+   cCfg    := dfPgUpsizeCliEnvText( "VDB_UPSIZE_CFG", "VDB_UPSIZE_CONFIG" )
+   lForce  := dfPgUpsizeCliEnvFlag( "VDB_PG_UPSIZE_FORCE", "VDB_UPSIZE_FORZA" )
+   lDryRun := dfPgUpsizeCliEnvFlag( "VDB_PG_UPSIZE_DRY_RUN", "VDB_UPSIZE_SIMULA" )
+
+   dfPgUpsizeCliPrintEffectiveConfig( "pgupsize.exe", cCfg, lForce, lDryRun, .T. )
 
    nRc := dfPgUpsizeRunMigration( cCfg, ;
-                                  dfPgCliEnvFlag( "VDB_PG_UPSIZE_FORCE", "VDB_UPSIZE_FORZA" ), ;
-                                  dfPgCliEnvFlag( "VDB_PG_UPSIZE_DRY_RUN", "VDB_UPSIZE_SIMULA" ), ;
+                                  lForce, ;
+                                  lDryRun, ;
                                   .T., ;
                                   .T. )
 
-   ? dfPgCliRcMessage( nRc )
+   ? dfPgUpsizeCliRcMessage( nRc )
 
    IF nRc != DF_PG_UPSIZE_RC_OK .AND. ;
       nRc != DF_PG_UPSIZE_RC_CFG_ERROR .AND. ;
@@ -103,6 +83,6 @@ LOCAL cCfg, nRc
    ENDIF
 
    ErrorLevel( nRc )
-   dfPgCliHoldWindow()
+   dfPgUpsizeCliHoldWindow( "pgupsize.exe", .T. )
    QUIT
 RETURN

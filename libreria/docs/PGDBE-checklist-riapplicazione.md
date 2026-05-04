@@ -56,7 +56,8 @@ Usa questa checklist quando riallinei il fork PG o dopo merge importanti sulla l
 
 ## 7) Generazione runtime XML
 
-- `PgUpsizeTableSource=EXE|DBDD` o `VDB_PG_UPSIZE_TABLE_SOURCE` selezionano l'origine tabelle attesa
+- default `DBDD`: `UPSIZE.runtime.upsize` legge tabelle `RecTyp=DBF` e ordini `NDX` dal dizionario, risolvendo i DBF fisici da `File_Path`/`path.ini`/`EXE`
+- `PgUpsizeTableSource=EXE` o `VDB_PG_UPSIZE_TABLE_SOURCE=EXE` abilitano solo lo scan fisico legacy/diagnostico
 - `PgUpsizeExtraDbfDir` o `VDB_PG_UPSIZE_EXTRA_DBF_DIR` includono DBF aggiuntivi
 - `PgUpsizeExcludeTables` salta solo le tabelle dichiarate
 - `PgUpsizeExcludeOrders` salta solo i CDX dichiarati, inclusi stem o wildcard

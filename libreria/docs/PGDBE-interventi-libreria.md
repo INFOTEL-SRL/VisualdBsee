@@ -352,16 +352,19 @@ La migrazione non usa direttamente il template sorgente. Prima viene sempre cost
    - da `VDB_PG_PATH_INI`, se si usa un `path.ini` esplicito
    - dalla directory corrente / cartella `EXE`, nei casi standalone
 4. La connessione PostgreSQL viene scritta nel runtime prendendo i valori da environment, `[apps]` o `[UPSIZE]`.
-5. L'elenco tabelle viene ricostruito leggendo:
-   - i DBF presenti in `EXE` o nelle cartelle `UserPathXX` di `path.ini`
-   - oppure il dizionario `DBDD`, quando `PgUpsizeTableSource=DBDD`
-   - piu l'eventuale `PgUpsizeExtraDbfDir`
+5. L'elenco tabelle viene ricostruito dal dizionario `DBDD`, sorgente predefinita per rappresentare lo stato esatto del database:
+   - vengono lette le righe `RecTyp=DBF`
+   - i DBF di dizionario/sistema e le tabelle escluse vengono saltati
+   - il file DBF fisico viene cercato usando `File_Path` verso il relativo `UserPathXX`, poi negli altri `UserPathXX` e infine in `EXE`
+   - l'eventuale `PgUpsizeExtraDbfDir` viene aggiunto solo come inclusione esplicita
 6. Ogni tabella viene emessa nel runtime XML con:
    - nome target PostgreSQL normalizzato e univoco
    - path DBF sorgente originale
    - DBE tabella `foxcdx`
-   - ordini CDX validi, se non disabilitati o esclusi
+   - ordini CDX presi dalle righe `NDX` del `DBDD`/`FILE_ALI`, se non disabilitati o esclusi
 7. Il file generato e' `UPSIZE.runtime.upsize`; se non e' scrivibile nella destinazione prevista, il codice prova un fallback su path alternativo o `%TEMP%`.
+
+La modalita `PgUpsizeTableSource=EXE` / `VDB_PG_UPSIZE_TABLE_SOURCE=EXE` resta disponibile solo come scan fisico legacy/diagnostico. In modalita predefinita non si deducono gli indici dal nome della tabella e non si fondono automaticamente i `.CDX` presenti nella cartella dati: se un ordine non e' nel `DBDD`, non entra nel runtime.
 
 Questa fase e' eseguibile da sola con dry-run (`VDB_PG_UPSIZE_DRY_RUN=1` o `VDB_UPSIZE_SIMULA=1`) ed e' il primo controllo da fare quando una migrazione cliente non parte.
 
@@ -388,7 +391,7 @@ Lo stato corrente aggiunge protezioni operative non legate a un solo commit stor
   - supporta `[UPSIZE] PgUpsizeExcludeTables`
   - supporta `[UPSIZE] PgUpsizeExcludeOrders` con nomi file, stem e wildcard
   - supporta `[UPSIZE] PgUpsizeDisableOrders=YES` per diagnosi o migrazioni senza ordini
-  - puo leggere tabelle da `EXE` o `DBDD` tramite `PgUpsizeTableSource` / `VDB_PG_UPSIZE_TABLE_SOURCE`
+  - legge di default tabelle e ordini da `DBDD`; `PgUpsizeTableSource=EXE` / `VDB_PG_UPSIZE_TABLE_SOURCE=EXE` mantiene solo lo scan fisico legacy
   - puo includere una cartella DBF extra tramite `PgUpsizeExtraDbfDir` / `VDB_PG_UPSIZE_EXTRA_DBF_DIR`
 - `pgUpsize.prg`
   - se `DbfUpsize` fallisce durante `OrdListAdd`, legge il trace, esclude temporaneamente il singolo bag CDX e rigenera il runtime XML per ritentare

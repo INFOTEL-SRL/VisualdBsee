@@ -93,6 +93,18 @@ if exist "%SRC%\pgupsize.exe" (
    echo ATTENZIONE: pgupsize.exe non trovato in %SRC%
 )
 
+if exist "%SRC%\pgupsize-console.exe" (
+   copy /Y "%SRC%\pgupsize-console.exe" "%DST%\pgupsize-console.exe" >nul
+   if errorlevel 1 (
+      echo ERRORE copia EXE pgupsize-console.exe
+      set "ERR=1"
+   ) else (
+      echo OK EXE pgupsize-console.exe
+   )
+) else (
+   echo ATTENZIONE: pgupsize-console.exe non trovato in %SRC%
+)
+
 echo.
 set "COPIED_LIBS=;"
 set "CORE_LIBS=;DBLANG;VDBSEE1O;VDBSEE1S;VDBSEE1X;"

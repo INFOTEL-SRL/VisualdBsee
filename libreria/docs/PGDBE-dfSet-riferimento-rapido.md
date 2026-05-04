@@ -67,7 +67,8 @@ Sezione `[UPSIZE]` in `PgUpsize.ini`:
   Licenza PGDBE esterna al binario.
 - `PgActivateDbeSys=YES|NO`
   Attiva il runtime PG in `dbeSys`.
-- `PgUpsizeTableSource=EXE|DBDD`
+- `PgUpsizeTableSource=DBDD|EXE`
+  Default `DBDD`: runtime upsize generato da tabelle/ordini del dizionario. `EXE` abilita lo scan fisico legacy.
   Origine elenco tabelle per il runtime XML.
 - `PgUpsizeExtraDbfDir=<cartella>`
   Cartella DBF aggiuntiva da includere nella migrazione.

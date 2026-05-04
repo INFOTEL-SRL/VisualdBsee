@@ -8,8 +8,9 @@
   documenti grandi; vedi
   https://doc.alaska-software.com/content/xml_h2_processing_xml_configuration_files.cxp
   Qui si costruisce ancora XML come testo: merge template, sostituzione
-  <connection>, generazione blocchi <table> da scan EXE/DBDD — nessuna lib
+  <connection>, generazione blocchi <table> da DBDD (scan EXE legacy) — nessuna lib
   XML extra nel progetto, output allineato a quanto si aspetta DbfUpsize().
+  Default corrente: tabelle e ordini da DBDD; scan EXE solo legacy esplicito.
 ******************************************************************************/
 #INCLUDE "Common.ch"
 #INCLUDE "DFCLPSUP.CH"
@@ -507,18 +508,25 @@ STATIC FUNCTION dfPgUpsizeTableSourceDbdd()
 *******************************************************************************
 LOCAL cEnv, cIni
 
-   cEnv := Upper( RTrim( GetEnv( "VDB_PG_UPSIZE_TABLE_SOURCE" ) ) )
+   cEnv := Upper( AllTrim( GetEnv( "VDB_PG_UPSIZE_TABLE_SOURCE" ) ) )
+   IF cEnv == "EXE" .OR. cEnv == "DIR" .OR. cEnv == "DIRECTORY"
+      RETURN .F.
+   ENDIF
    IF cEnv == "DBDD"
       RETURN .T.
    ENDIF
 
-   cIni := Upper( RTrim( dfPgUpsizeIniUpsizeOnly( "PgUpsizeTableSource" ) ) )
-RETURN ( cIni == "DBDD" )
+   cIni := Upper( AllTrim( dfPgUpsizeIniUpsizeOnly( "PgUpsizeTableSource" ) ) )
+   IF cIni == "EXE" .OR. cIni == "DIR" .OR. cIni == "DIRECTORY"
+      RETURN .F.
+   ENDIF
+
+RETURN .T.
 
 //*******************************************************************************
 STATIC FUNCTION dfPgUpsizeExtraDbfDir()
 //*******************************************************************************
-//* Directory aggiuntiva da cui includere *.DBF nell'upsize (dopo EXE / DBDD). Env ha priorita' su INI.
+//* Directory aggiuntiva da cui includere *.DBF nell'upsize (inclusione esplicita). Env ha priorita' su INI.
 LOCAL c
 
    c := RTrim( AllTrim( GetEnv( "VDB_PG_UPSIZE_EXTRA_DBF_DIR" ) ) )
@@ -596,18 +604,18 @@ LOCAL aDir, i, cF, cBase, nLen, cEx
 RETURN
 
 *******************************************************************************
-//* Nome file .DBF in EXE (Directory) con stem case-insensitive = cStemUpper (senza .DBF).
-STATIC FUNCTION dfPgUpsizeFindDbfFilenameInExe( cExeDir, cStemUpper )
+//* Nome file .DBF in directory (Directory) con stem case-insensitive = cStemUpper (senza .DBF).
+STATIC FUNCTION dfPgUpsizeFindDbfFilenameInDir( cDir, cStemUpper )
 *******************************************************************************
 LOCAL aDir, i, nLen, cF, cB
 
-   IF ValType( cExeDir ) != "C" .OR. Empty( cExeDir ) .OR. ValType( cStemUpper ) != "C" .OR. Empty( cStemUpper )
+   IF ValType( cDir ) != "C" .OR. Empty( cDir ) .OR. ValType( cStemUpper ) != "C" .OR. Empty( cStemUpper )
       RETURN ""
    ENDIF
 
    cStemUpper := Upper( RTrim( cStemUpper ) )
-   cExeDir    := dfPgUpsizeEnsureTrailSlash( cExeDir )
-   aDir       := Directory( cExeDir + "*.DBF" )
+   cDir       := dfPgUpsizeEnsureTrailSlash( cDir )
+   aDir       := Directory( cDir + "*.DBF" )
 
    IF ValType( aDir ) != "A"
       RETURN ""
@@ -634,10 +642,51 @@ LOCAL aDir, i, nLen, cF, cB
 RETURN ""
 
 *******************************************************************************
-//* Righe tabella come DirectoryDbfRows: { nomeDD, pathDbfCompleto } dal dizionario DBDD (RecTyp DBF).
-STATIC FUNCTION dfPgUpsizeDbddDbfRows( cExeDir )
+//* Path DBF reale per una tabella DBDD: prima path.ini/UserPathXX, poi EXE.
+STATIC FUNCTION dfPgUpsizeFindDbfPathFromDbddStem( cStemUpper, cExeDir, aUserDirs, nDbddPath )
 *******************************************************************************
-LOCAL aOut, nSav, cRt, cStemU, cF
+LOCAL i, cDir, cF
+
+   IF ValType( nDbddPath ) == "N" .AND. ValType( aUserDirs ) == "A" .AND. ;
+      nDbddPath >= 1 .AND. nDbddPath <= Len( aUserDirs )
+      cDir := aUserDirs[nDbddPath]
+      IF ValType( cDir ) == "C" .AND. !Empty( RTrim( cDir ) )
+         cDir := dfPgUpsizeEnsureTrailSlash( RTrim( cDir ) )
+         cF := dfPgUpsizeFindDbfFilenameInDir( cDir, cStemUpper )
+         IF !Empty( cF )
+            RETURN cDir + cF
+         ENDIF
+      ENDIF
+   ENDIF
+
+   IF ValType( aUserDirs ) == "A"
+      FOR i := 1 TO Len( aUserDirs )
+         cDir := aUserDirs[i]
+         IF ValType( cDir ) == "C" .AND. !Empty( RTrim( cDir ) )
+            cDir := dfPgUpsizeEnsureTrailSlash( RTrim( cDir ) )
+            cF := dfPgUpsizeFindDbfFilenameInDir( cDir, cStemUpper )
+            IF !Empty( cF )
+               RETURN cDir + cF
+            ENDIF
+         ENDIF
+      NEXT
+   ENDIF
+
+   IF ValType( cExeDir ) == "C" .AND. !Empty( RTrim( cExeDir ) )
+      cExeDir := dfPgUpsizeEnsureTrailSlash( RTrim( cExeDir ) )
+      cF := dfPgUpsizeFindDbfFilenameInDir( cExeDir, cStemUpper )
+      IF !Empty( cF )
+         RETURN cExeDir + cF
+      ENDIF
+   ENDIF
+
+RETURN ""
+
+*******************************************************************************
+//* Righe tabella come DirectoryDbfRows: { nomeDD, pathDbfCompleto } dal dizionario DBDD (RecTyp DBF).
+STATIC FUNCTION dfPgUpsizeDbddDbfRows( cExeDir, aUserDirs )
+*******************************************************************************
+LOCAL aOut, nSav, cRt, cStemU, cF, nPath
 
    aOut := {}
 
@@ -648,15 +697,15 @@ LOCAL aOut, nSav, cRt, cStemU, cF
    cExeDir := dfPgUpsizeEnsureTrailSlash( cExeDir )
 
 //* Standalone one-shot: se il dizionario locale non esiste in EXE, evitare dbCfgOpen("dbDD")
-//* (puo' mostrare errore "non riesco ad aprire DBDD.dbf") e usare fallback scan EXE.
-   IF !File( cExeDir + "DBDD.DBF" ) .AND. !File( cExeDir + "dbdd.dbf" )
+//* (puo' mostrare errore "non riesco ad aprire DBDD.dbf"). La modalita' EXE resta esplicita.
+   IF Select( "dbdd" ) == 0 .AND. !File( cExeDir + "DBDD.DBF" ) .AND. !File( cExeDir + "dbdd.dbf" )
       RETURN aOut
    ENDIF
 
    nSav    := Select()
 
    IF Select( "dbdd" ) == 0
-      IF !dbCfgOpen( "dbDD" )
+      IF !dfPgUpsizeOpenDbddFromExeDir( cExeDir ) .AND. !dbCfgOpen( "dbDD" )
          IF nSav > 0 .AND. nSav <= 250
             IF !Empty( Alias( nSav ) )
                DBSELECTAREA( nSav )
@@ -682,10 +731,13 @@ LOCAL aOut, nSav, cRt, cStemU, cF
             !dfPgUpsizeDbfExcluded( cStemU ) .AND. ;
             !dfPgUpsizeIniExcludedTable( cStemU )
 
-            cF := dfPgUpsizeFindDbfFilenameInExe( cExeDir, cStemU )
+            nPath := Val( RTrim( dbdd->File_Path ) )
+            cF := dfPgUpsizeFindDbfPathFromDbddStem( cStemU, cExeDir, aUserDirs, nPath )
 
             IF !Empty( cF ) .AND. AScan( aOut, {|x| Upper( x[1] ) == cStemU } ) == 0
-               AAdd( aOut, { cStemU, cExeDir + cF } )
+               AAdd( aOut, { cStemU, cF } )
+            ELSEIF Empty( cF )
+               dfPgUpsizeTraceBuildMsg( "UPSIZE.runtime.upsize", "BuildTablesXml: tabella DBDD senza DBF fisico " + cStemU )
             ENDIF
 
          ENDIF
@@ -707,6 +759,41 @@ LOCAL aOut, nSav, cRt, cStemU, cF
    ENDIF
 
 RETURN aOut
+
+//*******************************************************************************
+//* Apertura dizionario DBDD da EXE fisica (standalone), con indici DBDD1/2.CDX.
+STATIC FUNCTION dfPgUpsizeOpenDbddFromExeDir( cExeDir )
+//*******************************************************************************
+LOCAL cDir, cDbf
+
+   IF ValType( cExeDir ) != "C" .OR. Empty( RTrim( cExeDir ) )
+      RETURN .F.
+   ENDIF
+
+   cDir := dfPgUpsizeEnsureTrailSlash( RTrim( cExeDir ) )
+
+   cDbf := cDir + "DBDD.DBF"
+   IF !File( cDbf )
+      cDbf := cDir + "dbdd.dbf"
+   ENDIF
+   IF !File( cDbf )
+      RETURN .F.
+   ENDIF
+
+   BEGIN SEQUENCE
+      dbUseArea( .T., NIL, cDbf, "dbdd", .T., .F. )
+   RECOVER
+      RETURN .F.
+   END SEQUENCE
+
+   IF Select( "dbdd" ) <= 0
+      RETURN .F.
+   ENDIF
+
+//* In standalone non forzare OrdListAdd (puo' fallire per mismatch driver/default DBE).
+//* Il chiamante gestisce gia' fallback lineare su DBDD senza indici.
+
+RETURN .T.
 
 *******************************************************************************
 //* Ogni elemento: { nomeTabella, pathDbfCompleto }.
@@ -841,12 +928,12 @@ LOCAL cStem, cU
 RETURN cDir + cStem + ".CDX"
 
 *******************************************************************************
-//* Blocco <order>: da DBDD (NDX+PADR(stem,8), FILE_ALI come ddUsePg.ddUse), poi
-//* merge con *.CDX in directory tabella. Upsize = solo indici CDX.
+//* Blocco <order>: solo da DBDD (NDX+PADR(stem,8), FILE_ALI come ddUsePg.ddUse).
+//* Nessuna inferenza da nome tabella / scan *.CDX: il DBDD rappresenta lo stato del database.
 STATIC FUNCTION dfPgUpsizeOrdersXmlFromDbddAndDir( cBase, cDirTbl, cLf )
 *******************************************************************************
-LOCAL cBlock, cDir, cFNdx, nSav, cAliRaw, cStem, nNdxNum, uPath, aSeen, k, cStemF, cFull, aCdxRow, cMacro
-LOCAL cDisableOrders
+LOCAL cBlock, cDir, cFNdx, nSav, cAliRaw, cStem, nNdxNum, uPath, aSeen, cFull, cMacro
+LOCAL cDisableOrders, aCdxRow, lUseSeek, cBaseU
 
    cBlock := ""
    aSeen  := {}
@@ -862,12 +949,13 @@ LOCAL cDisableOrders
 
    cDir := dfPgUpsizeEnsureTrailSlash( RTrim( cDirTbl ) )
 
-   cFNdx := Upper( PADR( RTrim( cBase ), 8 ) )
+   cBaseU := Upper( RTrim( cBase ) )
+   cFNdx := Upper( PADR( cBaseU, 8 ) )
 
    nSav := Select()
 
    IF Select( "dbdd" ) == 0
-      IF !dbCfgOpen( "dbDD" )
+      IF !dfPgUpsizeOpenDbddFromExeDir( dfPgExeDirectory() ) .AND. !dbCfgOpen( "dbDD" )
          IF nSav > 0 .AND. nSav <= 250 .AND. !Empty( Alias( nSav ) )
             DBSELECTAREA( nSav )
          ENDIF
@@ -877,12 +965,26 @@ LOCAL cDisableOrders
    ENDIF
 
    SELECT dbdd
-   dbdd->( DbSeek( "NDX" + cFNdx ) )
+   lUseSeek := dbdd->( OrdCount() ) > 0
+   IF lUseSeek
+      dbdd->( DbSeek( "NDX" + cFNdx ) )
+   ELSE
+      dbdd->( DbGoTop() )
+   ENDIF
 
    nNdxNum := 0
-   DO WHILE Upper( dbdd->RecTyp + dbdd->file_name ) == "NDX" + cFNdx .AND. ;
-         nNdxNum <= 15 .AND. ;
-         ! dbdd->( Eof() )
+   DO WHILE nNdxNum <= 15 .AND. ! dbdd->( Eof() )
+
+      IF lUseSeek
+         IF Upper( dbdd->RecTyp + dbdd->file_name ) != "NDX" + cFNdx
+            EXIT
+         ENDIF
+      ELSE
+         IF Upper( RTrim( dbdd->RecTyp ) ) != "NDX" .OR. Upper( RTrim( dbdd->file_name ) ) != cBaseU
+            dbdd->( DbSkip() )
+            LOOP
+         ENDIF
+      ENDIF
 
       nNdxNum++
 
@@ -921,21 +1023,6 @@ LOCAL cDisableOrders
    IF nSav > 0 .AND. nSav <= 250 .AND. !Empty( Alias( nSav ) )
       DBSELECTAREA( nSav )
    ENDIF
-
-   aCdxRow := dfPgUpsizeDirectoryCdxStems( cDir )
-   FOR k := 1 TO Len( aCdxRow )
-      cStemF := aCdxRow[k]
-      IF dfPgUpsizeCdxStemMatchesBase( cStemF, cBase )
-         cFull := dfPgUpsizeOrderPathCdx( cDir, cStemF )
-         IF !Empty( cFull ) .AND. File( cFull ) .AND. !dfPgUpsizeIniExcludedOrder( cFull )
-            uPath := Upper( RTrim( cFull ) )
-            IF AScan( aSeen, {|p| p == uPath} ) == 0
-               AAdd( aSeen, uPath )
-               cBlock += "        <order>" + dfXmlAttrEscape( cFull ) + "</order>" + cLf
-            ENDIF
-         ENDIF
-      ENDIF
-   NEXT
 
 RETURN cBlock
 
@@ -1094,7 +1181,7 @@ RETURN aRows
 STATIC FUNCTION dfPgUpsizeBuildTablesXml( cTplDir, lNoTemplate )
 *******************************************************************************
 LOCAL cExeDir, cDbfRel, cLf, aRows, i, cBase, cDbe, cFname, cOrders, cBlock, cQ, aExe, cScan, cExtra, cDirTbl
-LOCAL aUserDirs, lIgnorePathIni, lFromPathIni, aUsedNames, cTargetName
+LOCAL aUserDirs, lIgnorePathIni, lFromPathIni, aUsedNames, cTargetName, lUseDbdd
 
    aUserDirs    := {}
    aRows        := {}
@@ -1122,6 +1209,10 @@ LOCAL aUserDirs, lIgnorePathIni, lFromPathIni, aUsedNames, cTargetName
    IF ValType( cScan ) == "C" .AND. !Empty( cScan ) .AND. Len( Directory( cScan + "*.DBF" ) ) > 0
       cExeDir := cScan
       cDbfRel := cExeDir
+   ELSEIF lNoTemplate .AND. ValType( cTplDir ) == "C" .AND. !Empty( cTplDir ) .AND. ;
+      ( File( cTplDir + "DBDD.DBF" ) .OR. File( cTplDir + "dbdd.dbf" ) .OR. Len( Directory( cTplDir + "*.DBF" ) ) > 0 )
+      cExeDir := cTplDir
+      cDbfRel := cExeDir
    ELSE
       aExe    := dfPgUpsizeExeDirAndRelFromTpl( cTplDir )
       cExeDir := aExe[1]
@@ -1139,10 +1230,12 @@ LOCAL aUserDirs, lIgnorePathIni, lFromPathIni, aUsedNames, cTargetName
       lIgnorePathIni := .F.
    ENDIF
 
+   lUseDbdd := dfPgUpsizeTableSourceDbdd()
+
    IF !lIgnorePathIni
       aUserDirs := dfPgUpsizeReadUserPathDirsFromPathIni( cTplDir )
       dfPgUpsizeTraceBuildMsg( "UPSIZE.runtime.upsize", "BuildTablesXml: path.ini dirs=" + LTrim( Str( Len( aUserDirs ) ) ) )
-      IF Len( aUserDirs ) > 0
+      IF !lUseDbdd .AND. Len( aUserDirs ) > 0
          aRows := dfPgUpsizeDbfRowsFromUserPathDirs( aUserDirs )
          dfPgUpsizeTraceBuildMsg( "UPSIZE.runtime.upsize", "BuildTablesXml: rows from path.ini=" + LTrim( Str( Len( aRows ) ) ) )
          IF Len( aRows ) > 0
@@ -1152,11 +1245,18 @@ LOCAL aUserDirs, lIgnorePathIni, lFromPathIni, aUsedNames, cTargetName
    ENDIF
 
    IF !lFromPathIni
-      IF dfPgUpsizeTableSourceDbdd()
-         aRows := dfPgUpsizeDbddDbfRows( cExeDir )
+      IF lUseDbdd
+         aRows := dfPgUpsizeDbddDbfRows( cExeDir, aUserDirs )
+         dfPgUpsizeTraceBuildMsg( "UPSIZE.runtime.upsize", "BuildTablesXml: rows from DBDD=" + LTrim( Str( Len( aRows ) ) ) )
+
+         IF Len( aRows ) < 1 .AND. Len( aUserDirs ) > 0
+            aRows := dfPgUpsizeDbfRowsFromUserPathDirs( aUserDirs )
+            dfPgUpsizeTraceBuildMsg( "UPSIZE.runtime.upsize", "BuildTablesXml: fallback rows from path.ini=" + LTrim( Str( Len( aRows ) ) ) )
+         ENDIF
+
          IF Len( aRows ) < 1
-//* DBDD vuoto o non disponibile: fallback scan EXE (comportamento precedente).
             aRows := dfPgUpsizeDirectoryDbfRows( cExeDir )
+            dfPgUpsizeTraceBuildMsg( "UPSIZE.runtime.upsize", "BuildTablesXml: fallback rows from EXE dir=" + LTrim( Str( Len( aRows ) ) ) )
          ENDIF
       ELSE
          aRows := dfPgUpsizeDirectoryDbfRows( cExeDir )
@@ -1483,7 +1583,7 @@ LOCAL lWritten, nTry, cOutTry, cStamp, cTmpDir
 
    cTables := dfPgUpsizeBuildTablesXml( dfPgUpsizeEnsureTrailSlash( cDir ), Empty( cTplUsed ) )
    IF Empty( cTables )
-      dfPgUpsizeTraceBuildMsg( cOut, "BuildRuntimeCfg: abort BuildTablesXml vuoto (nessun .DBF in EXE o DBDD senza file)" )
+      dfPgUpsizeTraceBuildMsg( cOut, "BuildRuntimeCfg: abort BuildTablesXml vuoto (DBDD non disponibile o DBF fisici non trovati)" )
       dfPgUpsizeSetTemplateForIni( "" )
       RETURN ""
    ENDIF

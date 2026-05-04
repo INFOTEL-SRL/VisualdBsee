@@ -16,11 +16,12 @@
   Riferimenti: Alaska PGDBE doc, Visual dBsee INCLUDE (DFCLPSUP.CH), Xbase++ xpp20 (pgdbe.ch).
 
   Env utili: VDB_SKIP_PG_UPSIZE, VDB_PG_UPSIZE_FORCE, VDB_UPSIZE_CFG, VDB_PGUPSIZE_INI, VDB_PG_*,
-  VDB_PG_ACTIVATE_DBESYS, VDB_DBSTART_INI, VDB_PG_UPSIZE_TABLE_SOURCE (EXE|DBDD), VDB_PG_UPSIZE_EXTRA_DBF_DIR.
+  VDB_PG_ACTIVATE_DBESYS, VDB_DBSTART_INI, VDB_PG_UPSIZE_TABLE_SOURCE (DBDD|EXE), VDB_PG_UPSIZE_EXTRA_DBF_DIR.
 
-  Elenco tabelle in UPSIZE.runtime: default = scan EXE\\*.DBF (esclusi i DBF di sistema del dizionario: DBDD, DBHLP,
+  Elenco tabelle in UPSIZE.runtime: default = DBDD; EXE resta solo scan fisico legacy (esclusi i DBF di sistema: DBDD, DBHLP,
   DBLOGIN, DBTABD, DBTAB — altrimenti DbfUpsize tenterebbe l'esclusiva su file gia' in USE). Con PgUpsize.ini [UPSIZE]
   PgUpsizeTableSource=DBDD (o env DBDD) si usano le tabelle RecTyp DBF dal dizionario, con le stesse esclusioni.
+  Nota aggiornata: DBDD e' ora il default; EXE abilita solo lo scan fisico legacy/diagnostico.
   Cartella extra (opzionale): [UPSIZE] PgUpsizeExtraDbfDir=C:\\...\\ (o env VDB_PG_UPSIZE_EXTRA_DBF_DIR) unisce altri
   .DBF nell'elenco (stesso nome in EXE vince). I file creati dall'IDE vanno copiati in EXE oppure in quella cartella.
 
@@ -37,6 +38,7 @@
 #INCLUDE "dfSet.ch"
 
 STATIC s_cPgUpsizeTrace := ""
+STATIC s_cPgUpsizeLastCfg := ""
 #define DF_PG_UPSIZE_RC_OK            0
 #define DF_PG_UPSIZE_RC_CFG_ERROR     1
 #define DF_PG_UPSIZE_RC_LICENSE_ERROR 2
@@ -68,7 +70,8 @@ LOCAL cEnv, cExe
    ENDIF
 
    cExe := Upper( AllTrim( AppName( .F. ) ) )
-   IF cExe == "PGUPSIZE" .OR. cExe == "PGUPSIZE.EXE"
+   IF cExe == "PGUPSIZE" .OR. cExe == "PGUPSIZE.EXE" .OR. ;
+      ( "PGUPSIZE-CONSOLE" $ cExe )
       RETURN .T.
    ENDIF
 
@@ -500,6 +503,8 @@ FUNCTION dfPgUpsizeRunMigration( cTplOrCfg, lForce, lDryRun, lLogSkip, lNoUi )
 LOCAL oLog, cTpl, cCfg, lOk, cPrevDbe
 LOCAL nAttempt, cFailBag, cFailDbf
 
+   s_cPgUpsizeLastCfg := ""
+
 //* ddIndex() dopo /UPD usa DbInfo su DBF: il compound default deve essere DBFCDX (o come da INI), non PGDBE lasciato da DbfUpsize.
    cPrevDbe := dfPgDbeCaptureCompoundDefault()
 
@@ -553,6 +558,7 @@ LOCAL nAttempt, cFailBag, cFailDbf
       dfPgUpsizeFinalizeRuntime( cPrevDbe )
       RETURN DF_PG_UPSIZE_RC_CFG_ERROR
    ENDIF
+   s_cPgUpsizeLastCfg := cCfg
 
 //* Dopo BuildRuntimeCfg il template INI e' vuoto: serve di nuovo per ..\EXE\PgUpsize.ini (PgDbeLicense* come la Password).
    dfPgUpsizeSetTemplateForIni( cTpl )
@@ -603,6 +609,7 @@ LOCAL nAttempt, cFailBag, cFailDbf
       IF Empty( cCfg )
          EXIT
       ENDIF
+      s_cPgUpsizeLastCfg := cCfg
       nAttempt++
    ENDDO
 
@@ -617,6 +624,18 @@ LOCAL nAttempt, cFailBag, cFailDbf
    dfPgUpsizeFinalizeRuntime( cPrevDbe )
 
 RETURN DF_PG_UPSIZE_RC_OK
+
+*******************************************************************************
+FUNCTION dfPgUpsizeLastTraceLogPath()
+*******************************************************************************
+LOCAL cCfg
+
+   cCfg := s_cPgUpsizeLastCfg
+   IF ValType( cCfg ) == "C" .AND. !Empty( cCfg )
+      RETURN cCfg + ".pgtrace.log"
+   ENDIF
+
+RETURN "UPSIZE.runtime.upsize.pgtrace.log"
 
 //*******************************************************************************
 //* Estrae il bag che causa OrdListAdd dal trace (ultima occorrenza).
@@ -706,26 +725,29 @@ RETURN nPos
 *******************************************************************************
 FUNCTION dfPgUpsizeRunFromUpd()
 *******************************************************************************
-LOCAL cExeDir, cTool, cCmd, nShellRc, nRc
+LOCAL cExeDir, cTool, cCmd, nShellRc, nRc, cUseExternal
 
    IF !dfPgUpsizeShouldRunAfterUpd()
       dfPgUpsizeLogSkip( "dfPgUpsizeRunFromUpd(): dfPgUpsizeShouldRunAfterUpd()=.F." )
       RETURN .T.
    ENDIF
 
-   cTool := AllTrim( GetEnv( "VDB_PG_UPSIZE_EXE" ) )
-   IF Empty( cTool )
-      cExeDir := dfPgExeDirectory()
-      IF !Empty( cExeDir )
-         cTool := cExeDir + "pgupsize.exe"
+   cUseExternal := Upper( AllTrim( GetEnv( "VDB_PG_UPSIZE_EXTERNAL" ) ) )
+   IF cUseExternal == "1" .OR. cUseExternal == "YES" .OR. cUseExternal == "TRUE"
+      cTool := AllTrim( GetEnv( "VDB_PG_UPSIZE_EXE" ) )
+      IF Empty( cTool )
+         cExeDir := dfPgExeDirectory()
+         IF !Empty( cExeDir )
+            cTool := cExeDir + "pgupsize.exe"
+         ENDIF
       ENDIF
-   ENDIF
 
-   IF ValType( cTool ) == "C" .AND. !Empty( cTool ) .AND. File( cTool )
-      cCmd := '/C ""' + cTool + '" --from-upd"'
-      nShellRc := dfRunShell( cCmd, NIL, .F., .F. )
-      IF ValType( nShellRc ) == "N" .AND. nShellRc == 0
-         RETURN .T.
+      IF ValType( cTool ) == "C" .AND. !Empty( cTool ) .AND. File( cTool )
+         cCmd := '/C ""' + cTool + '"'
+         nShellRc := dfRunShell( cCmd, NIL, .F., .F. )
+         IF ValType( nShellRc ) == "N" .AND. nShellRc == 0
+            RETURN .T.
+         ENDIF
       ENDIF
    ENDIF
 
@@ -780,4 +802,3 @@ LOCAL cD
    ENDIF
 
 RETURN NIL
-

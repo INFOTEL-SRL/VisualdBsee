@@ -14,3 +14,7 @@
 /ide/BIN/dbseeusr.dbf
 /ide/BIN/VDBSEE.qos
 /ide/BIN/dbsee.bak
+/ide/BIN/LOG/
+
+# Trace runtime upsize (generati da esecuzioni locali)
+*.pgtrace.log

@@ -1,0 +1,26 @@
+//
+// Project - Definition (console launcher)
+//
+[PROJECT]
+    COMPILE       = xpp
+    COMPILE_FLAGS = /M/W/N/ES/Q/NOD/COFF/PRE
+    DEBUG         = no
+    GUI           = no
+    LINKER        = alink
+    LINK_FLAGS    = /PM:VIO /out:..\..\..\output\lib200-2598\rel\pgupsize-console.exe
+    RC_COMPILE    = arc
+    RC_FLAGS      = /v
+    OBJ_FORMAT    = COFF
+    OBJ_DIR       = ..\..\..\output\lib200-2598\rel\obj
+    PROJECT.XPJ
+
+[PROJECT.XPJ]
+    PGUPSIZECONSOLE.EXE
+
+[PGUPSIZECONSOLE.EXE]
+    pgUpsizeConsoleMain.prg
+    pgUpsizeCliCompat.prg
+    ..\Runtime\pgVdbIni.prg
+    pgUpsizeConn.prg
+    pgUpsizeXml.prg
+    pgUpsize.prg
