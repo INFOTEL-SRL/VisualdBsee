@@ -5,8 +5,8 @@
 
 [PROJECT]
     COMPILE       = xppvdb
-    COMPILE_FLAGS = ï¿½toExeEnv("compileroption")ï¿½ /ES/Q/PRE/O:noncb
-    DEBUG         = ï¿½IF("/B"$UPPER(toExeEnv("compileroption")) .or. alltrim(toExeEnv("debug"))=="1","yes","no")ï¿½
+    COMPILE_FLAGS = ÛtoExeEnv("compileroption")Û /ES/Q/PRE/O:noncb
+    DEBUG         = ÛIF("/B"$UPPER(toExeEnv("compileroption")) .or. alltrim(toExeEnv("debug"))=="1","yes","no")Û
     GUI           = yes
 .if !empty(toExeEnv("execompress")) .AND. alltrim(toExeEnv("execompress")) =="1" 
     LINKER        = upxalink
@@ -17,7 +17,7 @@
     RC_COMPILE    = arc
     RC_FLAGS      = /v
     OBJ_FORMAT    = COFF
-    OBJ_DIR       = ï¿½tOBJPath()ï¿½
+    OBJ_DIR       = ÛtOBJPath()Û
     PROJECT.XPJ
 .M->cLinkerF := ""
 .M->nTObjR1 := oo_obj->(recno())
@@ -30,12 +30,12 @@
 .oo_obj->(dbGoto(nTObjR1))
 
 [PROJECT.XPJ]
-    ï¿½cTiniï¿½.EXE
+    ÛcTiniÛ.EXE
 .M->aPrgObj := ARRAY(0)
 .foreach make oo_bld->EXT=="prg"
    .M->cTprg := AllTrim(oo_obj->PRG)
    .aadd(aPrgObj,cTPrg)
-    ï¿½cTprgï¿½.DLL
+    ÛcTprgÛ.DLL
 .next
 .*
 .M->aExtObj := ARRAY(0)
@@ -65,28 +65,28 @@
    .endif
 .next
 
-[ï¿½cTiniï¿½.EXE]
-   LINK_FLAGS    = /out:ï¿½if( empty(cTout),"..\EXE\",cTout+"\")+ALLTRIM(oo_exe->ExeName)ï¿½.exe /FORCE:UNRESOLVED
+[ÛcTiniÛ.EXE]
+   LINK_FLAGS    = /out:Ûif( empty(cTout),"..\EXE\",cTout+"\")+ALLTRIM(oo_exe->ExeName)Û.exe /FORCE:UNRESOLVED
 // Starting procedure
 .if TGenerationDividedfortype()
-ï¿½"   ...\source\Form\_"+cTiniï¿½.prg
+Û"   ...\source\Form\_"+cTiniÛ.prg
 .else
-ï¿½"   ...\source\_"+cTiniï¿½.prg
+Û"   ...\source\_"+cTiniÛ.prg
 .endif
-   ï¿½cTiniï¿½.lib
-   ï¿½MstPrgNamï¿½.ARC
+   ÛcTiniÛ.lib
+   ÛMstPrgNamÛ.ARC
 .foreach make oo_bld->EXT=="arc"
-ï¿½"   "+alltrim(oo_obj->PRG)ï¿½.ARC
+Û"   "+alltrim(oo_obj->PRG)Û.ARC
 .next
 
-   ...\EXE\dblang.lib
-   ...\EXE\vdbsee1s.lib
-   ...\EXE\vdbsee1o.lib
+   ...\lib\dblang.lib
+   ...\lib\vdbsee1s.lib
+   ...\lib\vdbsee1o.lib
 
 .foreach make oo_bld->EXT=="prg"
    .M->cTprg := AllTrim(oo_obj->PRG)
-[ï¿½cTprgï¿½.DLL]
-   LINK_FLAGS    = /out:ï¿½if( empty(cTout),"..\EXE\",cTout+"\")+cTPrgï¿½.DLL /FORCE:UNRESOLVED
+[ÛcTprgÛ.DLL]
+   LINK_FLAGS    = /out:Ûif( empty(cTout),"..\EXE\",cTout+"\")+cTPrgÛ.DLL /FORCE:UNRESOLVED
    .M->cPath := ""
    .if ! empty(toObject("objectpath"))
       .M->cPath := "   "+toObject("objectpath")
@@ -100,12 +100,12 @@
      .M->cPath := "   ...\source\"
      .endif
    .endif
-ï¿½M->cPath+cTprgï¿½.prg
+ÛM->cPath+cTprgÛ.prg
 .M->nTCnt := 1
 .M->nTlen := Len(aPrgObj)
 .do while nTCnt <= nTlen
    .if ! aPrgObj[nTCnt] == cTPrg
-   ï¿½aPrgObj[nTCnt]ï¿½.lib
+   ÛaPrgObj[nTCnt]Û.lib
    .endif
    .M->nTCnt := nTCnt+1
 .enddo
@@ -118,13 +118,13 @@
 .M->nTlen := Len(aLib)
 
 .do while nTCnt <= nTlen
-   ï¿½aLib[nTCnt]ï¿½
+   ÛaLib[nTCnt]Û
    .M->nTCnt := nTCnt+1
 .enddo
 
-   ...\EXE\dblang.lib
-   ...\EXE\vdbsee1s.lib
-   ...\EXE\vdbsee1o.lib
+   ...\lib\dblang.lib
+   ...\lib\vdbsee1s.lib
+   ...\lib\vdbsee1o.lib
 
 .next
 
@@ -135,27 +135,27 @@
 .M->nTCnt := 1
 .M->nTlen := Len(aExtObj)
 .do while nTCnt <= nTlen
-   ï¿½aExtObj[nTCnt]ï¿½.obj
+   ÛaExtObj[nTCnt]Û.obj
    .M->nTCnt := nTCnt+1
 .enddo
 
 .M->nTCnt := 1
 .M->nTlen := Len(aPrgObj)
 .do while nTCnt <= nTlen
-   ï¿½aPrgObj[nTCnt]ï¿½.lib
+   ÛaPrgObj[nTCnt]Û.lib
    .M->nTCnt := nTCnt+1
 .enddo
 
 .M->nTCnt := 1
 .M->nTlen := Len(aLib)
 .do while nTCnt <= nTlen
-   ï¿½aLib[nTCnt]ï¿½
+   ÛaLib[nTCnt]Û
    .M->nTCnt := nTCnt+1
 .enddo
 
-   ...\EXE\dblang.lib
-   ...\EXE\vdbsee1s.lib
-   ...\EXE\vdbsee1o.lib
+   ...\lib\dblang.lib
+   ...\lib\vdbsee1s.lib
+   ...\lib\vdbsee1o.lib
 .endif
 
    .inj RMK4 Let a Empty Row
