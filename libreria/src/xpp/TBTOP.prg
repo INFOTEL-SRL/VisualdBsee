@@ -1,5 +1,58 @@
-FUNCTION tbTop(oWin); RETURN oWin:tbTop()
-FUNCTION tbBottom(oWin); RETURN oWin:tbBottom()
+FUNCTION tbTop( oWin )
+LOCAL uRet
+
+   IF !tbCanMoveBrowse( oWin )
+      RETURN NIL
+   ENDIF
+   uRet := NIL
+   BEGIN SEQUENCE
+      uRet := oWin:tbTop()
+   RECOVER
+   END SEQUENCE
+RETURN uRet
+
+FUNCTION tbBottom( oWin )
+LOCAL uRet
+
+   IF !tbCanMoveBrowse( oWin )
+      RETURN NIL
+   ENDIF
+   uRet := NIL
+   BEGIN SEQUENCE
+      uRet := oWin:tbBottom()
+   RECOVER
+   END SEQUENCE
+RETURN uRet
+
+STATIC FUNCTION tbCanMoveBrowse( oWin )
+LOCAL cAlias
+
+   IF ValType( oWin ) != "O"
+      RETURN .F.
+   ENDIF
+
+   cAlias := ""
+   BEGIN SEQUENCE
+      cAlias := AllTrim( IIF( ValType( oWin:W_ALIAS ) == "C", oWin:W_ALIAS, "" ) )
+   RECOVER
+      RETURN .F.
+   END SEQUENCE
+
+   IF Empty( cAlias )
+      RETURN .F.
+   ENDIF
+
+   IF Select( cAlias ) <= 0
+      RETURN .F.
+   ENDIF
+
+   BEGIN SEQUENCE
+      DBSELECTAREA( cAlias )
+   RECOVER
+      RETURN .F.
+   END SEQUENCE
+
+RETURN .T.
 
 // //*****************************************************************************
 // //Progetto       : dBsee 4.0

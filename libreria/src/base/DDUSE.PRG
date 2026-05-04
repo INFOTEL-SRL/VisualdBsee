@@ -262,6 +262,7 @@ LOCAL nTimeOut, nStart, lOldDeleted
 LOCAL cIndexName
 
 LOCAL bErr, oIdxErr, oOpenErr
+LOCAL oAddErr
 LOCAL nPrev
 LOCAL cMessage
 LOCAL lOpen := .F.
@@ -368,7 +369,19 @@ bErr := ERRORBLOCK()
   #ifdef _LOG_OPEN_
                     _logMsg("2", "     prima ADD: "+cIndexName+dfIndExt(cDriver), .T.)
   #endif
-                    ORDLISTADD( cIndexName )
+                    oAddErr := NIL
+                    ERRORBLOCK( {|e| oAddErr := e, Break( e )} )
+                    BEGIN SEQUENCE
+                       ORDLISTADD( cIndexName )
+                    RECOVER
+                    END SEQUENCE
+                    ERRORBLOCK( bErr )
+                    IF oAddErr != NIL
+  #ifdef _LOG_OPEN_
+                       _logMsg("2E", "     skip ADD non apribile: "+cIndexName+dfIndExt(cDriver), .T.)
+  #endif
+                       LOOP
+                    ENDIF
                  ELSE
                     CLOSE
                     lRet := .F.
@@ -386,7 +399,19 @@ bErr := ERRORBLOCK()
            IF LEN(aNdx)>0
               cIndexName := cPath +cFName
               IF dfRddFile( cIndexName +dfIndExt(cDriver), cDriver )
-                 ORDLISTADD( cIndexName )
+                 oAddErr := NIL
+                 ERRORBLOCK( {|e| oAddErr := e, Break( e )} )
+                 BEGIN SEQUENCE
+                    ORDLISTADD( cIndexName )
+                 RECOVER
+                 END SEQUENCE
+                 ERRORBLOCK( bErr )
+                 IF oAddErr != NIL
+  #ifdef _LOG_OPEN_
+                    _logMsg("2E", "     skip ADD compound non apribile: "+cIndexName+dfIndExt(cDriver), .T.)
+  #endif
+                    lRet := .F.
+                 ENDIF
               ELSE
                  CLOSE
                  lRet := .F.
@@ -401,7 +426,10 @@ bErr := ERRORBLOCK()
   #ifdef _LOG_OPEN_
            _logMsg("3", " prima setorder to "+dfAny2Str(nNdxNum), .T.)
   #endif
-           SET ORDER TO nNdxNum
+           BEGIN SEQUENCE
+              SET ORDER TO nNdxNum
+           RECOVER
+           END SEQUENCE
         ENDIF
       RECOVER USING oIdxErr
 
