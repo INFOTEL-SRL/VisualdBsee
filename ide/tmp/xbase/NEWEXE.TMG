@@ -136,7 +136,7 @@
    .oo_itm->BAND        := "001"
    .oo_itm->ITMINCN     := 0
    .oo_itm->TYP         := "pag"
-   .oo_itm->ITMSAY      := "Pagina Nø1"
+   .oo_itm->ITMSAY      := "Pagina Nï¿½1"
    .*
    .ToWrite( "obj", oo_obj->OBJ, "actionbar" ,"1" )
    .*
@@ -230,7 +230,7 @@
    .oo_itm->BAND        := "001"
    .oo_itm->ITMINCN     := 0
    .oo_itm->TYP         := "pag"
-   .oo_itm->ITMSAY      := "Pagina Nø1"
+   .oo_itm->ITMSAY      := "Pagina Nï¿½1"
    .*
    .M->MENDLOG  := M->CodObj
    .*

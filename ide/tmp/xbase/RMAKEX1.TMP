@@ -4,8 +4,8 @@
 //
 [PROJECT]
     COMPILE       = xppvdb
-    COMPILE_FLAGS = ÛtoExeEnv("compileroption")Û /ES/Q/PRE/O:noncb
-    DEBUG         = ÛIF("/B"$UPPER(toExeEnv("compileroption")) .or. alltrim(toExeEnv("debug"))=="1","yes","no")Û
+    COMPILE_FLAGS = ï¿½toExeEnv("compileroption")ï¿½ /ES/Q/PRE/O:noncb
+    DEBUG         = ï¿½IF("/B"$UPPER(toExeEnv("compileroption")) .or. alltrim(toExeEnv("debug"))=="1","yes","no")ï¿½
     GUI           = yes
 .if !empty(toExeEnv("execompress")) .AND. alltrim(toExeEnv("execompress")) =="1" 
     LINKER        = upxalink
@@ -13,7 +13,7 @@
     LINKER        = alink
 .endif
 .M->cTOut := toExeEnv("outputexe")
-    LINK_FLAGS    = /out:Ûif( empty(cTout),"..\EXE\",cTout+"\")+ALLTRIM(oo_exe->ExeName)Û.exe /FORCE:UNRESOLVED
+    LINK_FLAGS    = /out:ï¿½if( empty(cTout),"..\EXE\",cTout+"\")+ALLTRIM(oo_exe->ExeName)ï¿½.exe /FORCE:UNRESOLVED
     RC_COMPILE    = arc
     RC_FLAGS      = /v
     PROJECT.XPJ
@@ -22,7 +22,7 @@
 .else
     OBJ_FORMAT    = OMF
 .endif
-    OBJ_DIR       = ÛtOBJPath()Û
+    OBJ_DIR       = ï¿½tOBJPath()ï¿½
 .M->cLinkerF := ""
 .M->nTObjR1 := oo_obj->(recno())
 .foreach special
@@ -32,22 +32,22 @@
    .endif
 .next
 .oo_obj->(dbGoto(nTObjR1))
-    OMF_LINKER    = _BLINKER.BAT ÛcLinkerFÛ
+    OMF_LINKER    = _BLINKER.BAT ï¿½cLinkerFï¿½
 
 [PROJECT.XPJ]
-    ÛcTiniÛ.EXE
+    ï¿½cTiniï¿½.EXE
 
-[ÛcTiniÛ.EXE]
+[ï¿½cTiniï¿½.EXE]
 .if TGenerationDividedfortype()
 // Main
-Û"   ...\source\Form\"+cTiniÛ.prg
+ï¿½"   ...\source\Form\"+cTiniï¿½.prg
 // Starting procedure
-Û"   ...\source\Form\_"+cTiniÛ.prg
+ï¿½"   ...\source\Form\_"+cTiniï¿½.prg
 .else
 // Main
-Û"   ...\source\"+cTiniÛ.prg
+ï¿½"   ...\source\"+cTiniï¿½.prg
 // Starting procedure
-Û"   ...\source\_"+cTiniÛ.prg
+ï¿½"   ...\source\_"+cTiniï¿½.prg
 .endif
 
 // Source
@@ -59,14 +59,14 @@
           .M->cPath := cPath+"\"
        .endif
        .if !Empty(M->cPath)
-Û"   "+cPath+alltrim(oo_obj->PRG)Û.prg
+ï¿½"   "+cPath+alltrim(oo_obj->PRG)ï¿½.prg
        .else
          .if TGenerationDividedfortype()
          .M->cPath := "   ...\source\"+ tsourceGenPath()
          .else
          .M->cPath := "   ...\source\"
          .endif
-ÛcPath+cTprgÛ.prg
+ï¿½cPath+cTprgï¿½.prg
        .endif
    .endif
 .next
@@ -79,32 +79,32 @@
             .M->cPath := cPath+"\"
          .endif
       .endif
-Û"   "+cPath+alltrim(oo_obj->PRG)Û.obj
+ï¿½"   "+cPath+alltrim(oo_obj->PRG)ï¿½.obj
    .endif
 .next
-   dblang.lib
+   ...\EXE\dblang.lib
 .if toExeEnv("linker")=="8"
-   vdbsee1o.lib
-   vdbsee1s.lib
+   ...\EXE\vdbsee1s.lib
+   ...\EXE\vdbsee1o.lib
 .else
    kernel32.LIB
    user32.lib
    msvcrt.lib
    winspool.lib
    comdlg32.lib
-   vdbsee1x.lib
+   ...\LIB\vdbsee1x.lib
 .endif
 .foreach link oo_bld->typ=="lib" .and. oo_bld->SECTION $ "0123456789"
 .M->cPath := if(!empty(toObject("objectpath")),toObject("objectpath")+[\],[])
    .if !(upper(alltrim(oo_obj->PRG)+"."+oo_obj->EXT)=="CLD.LIB")
       .if !(upper(alltrim(oo_obj->PRG)+"."+oo_obj->EXT)$"CMX52.LIB")
-   ÛcPath+alltrim(oo_obj->PRG)+"."+oo_obj->EXTÛ
+   ï¿½cPath+alltrim(oo_obj->PRG)+"."+oo_obj->EXTï¿½
       .endif
    .endif
 .next
-   ÛMstPrgNamÛ.ARC
+   ï¿½MstPrgNamï¿½.ARC
 .foreach make oo_bld->EXT=="arc"
-Û"   "+alltrim(oo_obj->PRG)Û.ARC
+ï¿½"   "+alltrim(oo_obj->PRG)ï¿½.ARC
 .next
 
    // #COD OIRMK4 // #END In coda ai programmi in compilazione. (Lasciare una riga vuota!!)
@@ -114,6 +114,6 @@
    .inj RMK4 In coda ai programmi in compilazione. (Lasciare una riga vuota!!)
 
 .close
-.out ÛtSourcePath()+"\"Û_blinker.bat
+.out ï¿½tSourcePath()+"\"ï¿½_blinker.bat
 blinker.com %1
 .close
