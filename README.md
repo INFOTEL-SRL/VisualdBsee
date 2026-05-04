@@ -49,7 +49,7 @@ Sottocartelle rilevanti di `libreria/src/`:
 - `xpp/`
   Codice di integrazione con componenti Xbase++ e output report.
 - `PG/`
-  Moduli introdotti per supporto runtime PostgreSQL e infrastruttura PGDBE.
+  Moduli introdotti per supporto runtime PostgreSQL e infrastruttura PGDBE. La struttura corrente separa `Runtime/` (sessione PG, INI, bootstrap DBE) e `Upsize/` (migrazione DBF -> PostgreSQL, generazione XML runtime e CLI `pgupsize.exe`).
 - `support/`
   File di supporto, stub e helper complementari.
 - `vdb/`, `xml/`, `cfunc/`, `clipsupp/`, `c_obj/`, `extralib/`, `extraobj/`, `extra_ch/`, `messaggi/`
@@ -126,7 +126,7 @@ La variante `2.00.2598` e' stata introdotta per permettere build locali senza sp
 
 ## Copia degli artefatti
 
-Per copiare DLL e LIB generate verso un progetto host o una cartella di distribuzione, il repository include lo script:
+Per copiare DLL, LIB e, se presente, `pgupsize.exe` verso un progetto host o una cartella di distribuzione, il repository include lo script:
 
 - `scripts/copy-build-artifacts.bat`
 
@@ -143,7 +143,7 @@ scripts\copy-build-artifacts.bat lib200-2598 C:\dest\bin
 scripts\copy-build-artifacts.bat lib200-2598 C:\dest\exe C:\dest\lib
 ```
 
-Se la destinazione LIB non viene passata, DLL e LIB vengono copiate nella stessa cartella.
+Se la destinazione LIB non viene passata, DLL e LIB vengono copiate nella stessa cartella. L'eseguibile `pgupsize.exe` viene copiato nella destinazione DLL quando esiste nell'output della variante scelta.
 
 ## Template IDE rilevanti
 
@@ -230,7 +230,8 @@ In particolare:
 
 Questo fork contiene adattamenti specifici per PostgreSQL tramite `PGDBE`, concentrati soprattutto in:
 
-- `libreria/src/PG/`
+- `libreria/src/PG/Runtime/`
+- `libreria/src/PG/Upsize/`
 - `libreria/src/base/PGSEEK.PRG`
 - vari moduli in `libreria/src/base/`, `libreria/src/s2/` e `libreria/src/xpp/`
 
@@ -239,6 +240,65 @@ La documentazione dedicata si trova in [libreria/docs/README.md](./libreria/docs
 - panoramica per commit degli interventi PG
 - riferimento rapido delle chiavi `dfSet`
 - checklist di verifica o riapplicazione
+- guida operativa CLI: [libreria/src/PG/Upsize/README-upsize-cli.md](./libreria/src/PG/Upsize/README-upsize-cli.md)
+
+### EXE migrazione PostgreSQL
+
+E' disponibile un entrypoint dedicato per eseguire la migrazione DBF -> PostgreSQL fuori dal main applicativo:
+
+- sorgente CLI: `libreria/src/PG/Upsize/pgUpsizeExe.prg`
+- progetto build: `libreria/src/PG/Upsize/pgUpsizeExe.xpj`
+- script build rapido: `libreria/src/PG/Upsize/build-pgupsize-exe.bat`
+
+Il runner riusa il core PGUpsize previsto anche per l'integrazione applicativa: generazione `UPSIZE.runtime.upsize`, configurazione licenza PGDBE, esecuzione `DbfUpsize`.
+Per i progetti legacy senza cartella `SOURCE`, il runtime viene costruito direttamente da:
+
+- `EXE\pgupsize.ini` (connessione/licenza)
+- `EXE\path.ini` (`UserPathXX` con le cartelle DBF reali)
+
+Uso rapido:
+
+```bat
+cd libreria\src\PG\Upsize
+build-pgupsize-exe.bat
+cd /d C:\src\PRESENZE\EXE
+set VDB_PG_UPSIZE_FORCE=1
+set VDB_PG_UPSIZE_DRY_RUN=1
+set VDB_PG_UPSIZE_TABLE_SOURCE=EXE
+set VDB_PG_PATH_INI=C:\src\PRESENZE\EXE\path.ini
+C:\src\VisualdBsee\libreria\output\lib200-2598\rel\pgupsize.exe
+```
+
+Configurazione supportata (env):
+
+- `VDB_UPSIZE_CFG` (opzionale; se manca, usa modalita no-template)
+- `VDB_PG_UPSIZE_FORCE=1`
+- `VDB_PG_UPSIZE_DRY_RUN=1` (per dry-run)
+- `VDB_PG_PATH_INI=<path a path.ini>` (opzionale ma consigliato)
+- `VDB_PG_UPSIZE_TABLE_SOURCE=EXE|DBDD`
+- `VDB_PGUPSIZE_INI=<path a PgUpsize.ini>` (override esplicito)
+- `VDB_PG_UPSIZE_EXTRA_DBF_DIR=<cartella DBF extra>` (opzionale)
+
+Configurazione supportata (`EXE\PgUpsize.ini`, sezione `[UPSIZE]`):
+
+- `PgUpsizeTableSource=EXE|DBDD`
+- `PgUpsizeExtraDbfDir=<cartella DBF extra>`
+- `PgUpsizeExcludeTables=nome1,nome2`
+- `PgUpsizeExcludeOrders=file1.cdx,file2.cdx` (supporta anche stem e wildcard `*`)
+- `PgUpsizeDisableOrders=YES` (solo diagnosi o migrazioni senza indici)
+
+Codici di uscita:
+
+- `0`: successo
+- `1`: errore configurazione/template
+- `2`: errore licenza PGDBE
+- `3`: `DbfUpsize` fallito
+
+Note operative:
+
+- `pgupsize.exe` usa gli stessi moduli core PGUpsize della libreria, ma aggiunge shim minimi per l'uso standalone.
+- Se `DbfUpsize` fallisce su un `OrdListAdd`, il runtime puo rigenerare l'XML escludendo temporaneamente solo quel bag CDX e ritentare, senza rendere permanente l'esclusione.
+- Le tabelle nel runtime XML vengono normalizzate a nomi PostgreSQL validi e rese univoche (`NOME`, `NOME_2`, ...), mentre il path DBF resta quello originale.
 
 ## Note sul contenuto del repository
 

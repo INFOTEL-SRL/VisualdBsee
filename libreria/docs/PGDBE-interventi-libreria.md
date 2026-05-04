@@ -34,16 +34,17 @@ Portare la libreria Visual dBsee a lavorare in modo piu prevedibile con `PGDBE`,
 | `52cad31` | `2026-04-26` | aggiornate le librerie per la build 2.00.2598 | aggiornamento binari/lib |
 | `79f6621` | `2026-04-26` | template per parametri postgres in vdb | template PG parameters |
 | `1f3439e` | `2026-04-28` | aggiunto supporto a pg anche per i listbox | integrazioni listbox su casi PG |
+| `7e0ffed` | `2026-05-04` | riordinata la struttura PGUpsize e semplificato il flusso CLI per uso cliente | `PG/Runtime`, `PG/Upsize`, CLI |
 
 ## 1. Commit `b77f497` - runtime PostgreSQL
 
 ### File toccati
 
-- `libreria/src/PG/pgDacSession.prg`
-- `libreria/src/PG/pgUpsize.prg`
-- `libreria/src/PG/pgUpsizeConn.prg`
-- `libreria/src/PG/pgUpsizeXml.prg`
-- `libreria/src/PG/pgVdbIni.prg`
+- `libreria/src/PG/Runtime/pgDacSession.prg`
+- `libreria/src/PG/Runtime/pgVdbIni.prg`
+- `libreria/src/PG/Upsize/pgUpsize.prg`
+- `libreria/src/PG/Upsize/pgUpsizeConn.prg`
+- `libreria/src/PG/Upsize/pgUpsizeXml.prg`
 - `libreria/src/_gotutto.base`
 - `libreria/src/base/DBCFGOPE.PRG`
 - `libreria/src/base/DDUSE.PRG`
@@ -55,7 +56,7 @@ Portare la libreria Visual dBsee a lavorare in modo piu prevedibile con `PGDBE`,
 
 ### Cosa introduce
 
-- Nuovi moduli sotto `src\PG\` per gestire bootstrap PG, configurazione, upsize e sessione runtime.
+- Nuovi moduli sotto `src\PG\` per gestire bootstrap PG, configurazione, upsize e sessione runtime. Nello stato corrente sono separati in `src\PG\Runtime\` e `src\PG\Upsize\`.
 - Infrastruttura comune `PGSEEK.PRG` con helper per capire se l'RDD corrente e' PG, dedurre il campo da `ORDKEY()`, verificare il record dopo un `DBSEEK` e fare fallback scan quando serve.
 - Aggiornamenti ai file base di build per includere i moduli PG nella compilazione della libreria.
 - Adattamento di `DBCFGOPE.PRG` per aprire i dizionari locali con `DBFCDX` anche quando il driver di default e' PG.
@@ -233,7 +234,7 @@ Questi commit non sono solo "core libreria", ma sono parte integrante della cate
 - `9d305d5`  
   Sostituisce script locale con `scripts/copy-build-artifacts.bat` generico.
 - `3012194`  
-  Aggiorna DBF/NTX IDE (`dbseeopt`, `dbseetab`) con campi PostgreSQL in proprietà progetto.
+  Aggiorna DBF/NTX IDE (`dbseeopt`, `dbseetab`) con campi PostgreSQL in proprieta' progetto.
 - `e79c566`  
   Riordina script e rimuove riferimenti locali hardcoded nelle build.
 - `0e9244e`  
@@ -242,6 +243,8 @@ Questi commit non sono solo "core libreria", ma sono parte integrante della cate
   Aggiorna set librerie/binari per build `2.00.2598`.
 - `79f6621`  
   Introduce template per parametri PostgreSQL in VDB.
+- `7e0ffed`
+  Riordina i moduli PG in `Runtime/` e `Upsize/`, aggiunge la guida cliente del runner `pgupsize.exe` e semplifica il flusso standalone tramite environment/INI.
 
 ## 8. Integrazione fuori da `libreria/src`
 
@@ -280,10 +283,12 @@ Il dettaglio operativo e' documentato in `PGDBE-dfSet-riferimento-rapido.md`.
 
 | File | Commit principale |
 |---|---|
-| `src/PG/*.prg` | `b77f497` |
+| `src/PG/Runtime/*.prg` | `b77f497`, `7e0ffed` |
+| `src/PG/Upsize/*.prg` | `b77f497`, `7e0ffed` |
 | `src/base/PGSEEK.PRG` | `b77f497` |
 | `src/base/DFS.PRG` | `b77f497`, `a4de29f` |
 | `src/base/DBLOOK.PRG` | `a4de29f` |
+| `src/base/DDUSE.PRG` | `b77f497`, hardening indice non apribile |
 | `src/base/DFANY2ST.PRG` | `fc99184` |
 | `src/base/DFQRYFLT.PRG` | `fc99184` |
 | `src/base/DFSTA.PRG` | `fc99184` |
@@ -293,9 +298,59 @@ Il dettaglio operativo e' documentato in `PGDBE-dfSet-riferimento-rapido.md`.
 | `src/base/DFSKIP.PRG` | `8ea3bbd` |
 | `src/s2/S2BROWSE.prg` | `8ea3bbd` |
 | `src/s2/S2BRW.prg` | `8ea3bbd`, `1f3439e` |
+| `src/support/TBTOTAL.prg` | hardening browse senza alias valido |
+| `src/xpp/TBTOP.prg` | hardening browse senza alias valido |
 
 ## 11. Uso consigliato di questa documentazione
 
 1. Leggere questo file per la storia tecnica completa.
 2. Usare `PGDBE-dfSet-riferimento-rapido.md` per tuning/configurazione.
 3. Usare `PGDBE-checklist-riapplicazione.md` per audit e riallineamenti post-merge.
+
+## 12. EXE standalone DBF->Postgres
+
+Per coprire anche il caso "tool esterno", e' stato introdotto un runner CLI dedicato che riusa il core di migrazione PG della libreria.
+
+- `libreria/src/PG/Upsize/pgUpsize.prg`
+  - espone `dfPgUpsizeRunMigration(cTplOrCfg, lForce, lDryRun, lLogSkip, lNoUi)`
+  - gestisce dry-run, codici uscita, precheck licenza, ripristino DBE locale dopo `DbfUpsize`
+  - mantiene `dfPgUpsizeAfterUpd()` e `dfPgUpsizeRunFromUpd()` per eventuali integrazioni applicative
+- `libreria/src/PG/Upsize/pgUpsizeExe.prg`
+  - entrypoint `MAIN()` standalone
+  - configurazione via environment (`VDB_UPSIZE_CFG`, `VDB_PG_UPSIZE_FORCE`, `VDB_PG_UPSIZE_DRY_RUN`) e alias in italiano (`VDB_UPSIZE_CONFIG`, `VDB_UPSIZE_FORZA`, `VDB_UPSIZE_SIMULA`)
+  - mappa codici uscita espliciti (`0..3`) per script, supporto cliente e CI
+- `libreria/src/PG/Upsize/pgUpsizeCliCompat.prg`
+  - shim minimo per usare il core PG fuori dal framework completo
+  - fornisce fallback per messaggi, shell, `dbCfgOpen()` e risoluzione `dbstart.ini`
+- `libreria/src/PG/Upsize/pgUpsizeExe.xpj` + `libreria/src/PG/Upsize/build-pgupsize-exe.bat`
+  - target build dedicato per produrre `pgupsize.exe` su output `libreria/output/lib200-2598/rel`
+- `libreria/src/PG/Upsize/README-upsize-cli.md`
+  - guida cliente per licenza PGDBE esterna, connessione, path INI, dry-run, log ed exit code
+
+Il template `ide/tmp/xbase/INITPROC.TMP` resta responsabile dell'inizializzazione runtime PostgreSQL del progetto generato. La chiamata esplicita alla migrazione puo avvenire da tool standalone oppure da codice applicativo che invoca gli helper sopra.
+
+## 13. Hardening corrente PGUpsize e browse
+
+Lo stato corrente aggiunge protezioni operative non legate a un solo commit storico:
+
+- `pgUpsizeXml.prg`
+  - genera il runtime XML con DBE tabella `foxcdx`
+  - normalizza i nomi target PostgreSQL e li rende univoci (`NOME`, `NOME_2`, ...)
+  - supporta `[UPSIZE] PgUpsizeExcludeTables`
+  - supporta `[UPSIZE] PgUpsizeExcludeOrders` con nomi file, stem e wildcard
+  - supporta `[UPSIZE] PgUpsizeDisableOrders=YES` per diagnosi o migrazioni senza ordini
+  - puo leggere tabelle da `EXE` o `DBDD` tramite `PgUpsizeTableSource` / `VDB_PG_UPSIZE_TABLE_SOURCE`
+  - puo includere una cartella DBF extra tramite `PgUpsizeExtraDbfDir` / `VDB_PG_UPSIZE_EXTRA_DBF_DIR`
+- `pgUpsize.prg`
+  - se `DbfUpsize` fallisce durante `OrdListAdd`, legge il trace, esclude temporaneamente il singolo bag CDX e rigenera il runtime XML per ritentare
+  - limita i retry a un massimo controllato
+  - non salta tabelle con errore di apertura esclusiva: in quel caso fallisce in modo esplicito per evitare migrazioni parziali silenziose
+- `pgUpsizeConn.prg`
+  - espone `dfPgUpsizeResolvedIniPath()` per diagnostica del `PgUpsize.ini` realmente usato
+- `DDUSE.PRG`
+  - protegge `ORDLISTADD()` e `SET ORDER TO` da indici non apribili, evitando che un bag rotto blocchi tutta l'apertura tabella quando e' possibile proseguire
+- `TBTOTAL.prg` e `TBTOP.prg`
+  - verificano che l'oggetto browse abbia un alias valido e selezionabile prima di calcolare totali o muovere top/bottom
+  - racchiudono le chiamate browse in `BEGIN SEQUENCE`, cosi un alias gia chiuso non fa collassare la UI
+
+Queste protezioni sono particolarmente utili durante migrazioni o smoke test su progetti legacy, dove indici locali, DBF e workarea possono non essere nello stato atteso.
