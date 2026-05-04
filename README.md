@@ -9,19 +9,19 @@ Questo repository contiene sia il codice della libreria condivisa sia i componen
 Le aree principali del progetto sono:
 
 - `libreria/`
-  Contiene la libreria Visual dBsee vera e propria: sorgenti, include, output di compilazione, utilita e documentazione tecnica.
+Contiene la libreria Visual dBsee vera e propria: sorgenti, include, output di compilazione, utilita e documentazione tecnica.
 - `ide/`
-  Contiene il codice e gli asset dell'IDE Visual dBsee: binari, sorgenti, librerie di supporto, template temporanei e risorse.
+Contiene il codice e gli asset dell'IDE Visual dBsee: binari, sorgenti, librerie di supporto, template temporanei e risorse.
 - `setup/`
-  Contiene i pacchetti di installazione e le note legate al setup storico del prodotto.
+Contiene i pacchetti di installazione e le note legate al setup storico del prodotto.
 - `build190.bat`
-  Prepara l'ambiente e compila la libreria per la toolchain Xbase++ 1.90.
+Prepara l'ambiente e compila la libreria per la toolchain Xbase++ 1.90.
 - `build200-832.bat`
-  Prepara l'ambiente e compila la libreria per la toolchain Xbase++ 2.00 / build 832.
+Prepara l'ambiente e compila la libreria per la toolchain Xbase++ 2.00 / build 832.
 - `build200-2598.bat`
-  Prepara l'ambiente e compila la libreria per la toolchain Xbase++ 2.00.2598 in un output separato.
+Prepara l'ambiente e compila la libreria per la toolchain Xbase++ 2.00.2598 in un output separato.
 - `scripts/`
-  Utility di supporto per copia artefatti, import file locali IDE e manutenzione di progetto.
+Utility di supporto per copia artefatti, import file locali IDE e manutenzione di progetto.
 
 ## Struttura principale
 
@@ -30,51 +30,51 @@ Le aree principali del progetto sono:
 Cartella dedicata al core condiviso di Visual dBsee.
 
 - `libreria/src/`
-  Sorgenti della libreria, organizzati per area funzionale.
+Sorgenti della libreria, organizzati per area funzionale.
 - `libreria/include/`
-  Header e file `.ch` usati in compilazione.
+Header e file `.ch` usati in compilazione.
 - `libreria/output/`
-  Output delle build della libreria, separati per variante di toolchain.
+Output delle build della libreria, separati per variante di toolchain.
 - `libreria/uti/`
-  Utility usate durante build o manutenzione.
+Utility usate durante build o manutenzione.
 - `libreria/docs/`
-  Documentazione tecnica del fork, inclusa la parte PGDBE/PostgreSQL.
+Documentazione tecnica del fork, inclusa la parte PGDBE/PostgreSQL.
 
 Sottocartelle rilevanti di `libreria/src/`:
 
 - `base/`
-  Nucleo storico della libreria: gestione dati, report, query, configurazione e logica comune.
+Nucleo storico della libreria: gestione dati, report, query, configurazione e logica comune.
 - `s2/`
-  Componenti browse e UI collegati alla navigazione dati.
+Componenti browse e UI collegati alla navigazione dati.
 - `xpp/`
-  Codice di integrazione con componenti Xbase++ e output report.
+Codice di integrazione con componenti Xbase++ e output report.
 - `PG/`
-  Moduli introdotti per supporto runtime PostgreSQL e infrastruttura PGDBE. La struttura corrente separa `Runtime/` (sessione PG, INI, bootstrap DBE) e `Upsize/` (migrazione DBF -> PostgreSQL, generazione XML runtime e runner `pgupsize.exe` / `pgupsize-console.exe`).
+Moduli introdotti per supporto runtime PostgreSQL e infrastruttura PGDBE. La struttura corrente separa `Runtime/` (sessione PG, INI, bootstrap DBE) e `Upsize/` (migrazione DBF -> PostgreSQL, generazione XML runtime e runner `pgupsize.exe` / `pgupsize-console.exe`).
 - `support/`
-  File di supporto, stub e helper complementari.
+File di supporto, stub e helper complementari.
 - `vdb/`, `xml/`, `cfunc/`, `clipsupp/`, `c_obj/`, `extralib/`, `extraobj/`, `extra_ch/`, `messaggi/`
-  Aree specialistiche usate dalla build della libreria e dai moduli accessori.
+Aree specialistiche usate dalla build della libreria e dai moduli accessori.
 
 ### `ide/`
 
 Cartella dedicata all'ambiente Visual dBsee.
 
 - `ide/SOURCE/`
-  Sorgenti dell'IDE e di parte del codice applicativo collegato agli strumenti di sviluppo.
+Sorgenti dell'IDE e di parte del codice applicativo collegato agli strumenti di sviluppo.
 - `ide/INCLUDE/`
-  Include usati dal progetto IDE.
+Include usati dal progetto IDE.
 - `ide/BIN/`
-  Binari e materiali runtime dell'IDE.
+Binari e materiali runtime dell'IDE.
 - `ide/LIB/`, `ide/Lib190/`, `ide/Lib200/`, `ide/Lib200-519/`, `ide/Lib200-2598/`
-  Librerie e varianti per diverse versioni del toolchain.
+Librerie e varianti per diverse versioni del toolchain.
 - `ide/resource/`
-  Risorse dell'applicazione.
+Risorse dell'applicazione.
 - `ide/tmp/`
-  Template e file intermedi usati per generazione progetto o rigenerazione asset.
+Template e file intermedi usati per generazione progetto o rigenerazione asset.
 - `ide/SAMPLES/`
-  Materiale di esempio.
+Materiale di esempio.
 - `ide/UTIL/`, `ide/DOC/`
-  Utility e documentazione storica dell'IDE.
+Utility e documentazione storica dell'IDE.
 
 ### `setup/`
 
@@ -116,11 +116,11 @@ Per evitare di mischiare artefatti prodotti da versioni diverse di Xbase++, il r
 Percorsi attualmente presenti o supportati:
 
 - `libreria/output/lib190/`
-  Build storica Xbase++ 1.90.
+Build storica Xbase++ 1.90.
 - `libreria/output/lib200-832/`
-  Build Xbase++ 2.00 / build 832.
+Build Xbase++ 2.00 / build 832.
 - `libreria/output/lib200-2598/`
-  Build Xbase++ 2.00.2598.
+Build Xbase++ 2.00.2598.
 
 La variante `2.00.2598` e' stata introdotta per permettere build locali senza sporcare gli artefatti della vecchia `lib200-832`.
 
@@ -152,11 +152,11 @@ Oltre alla libreria, il comportamento del progetto generato dall'IDE dipende anc
 Per l'integrazione PostgreSQL/PGDBE sono rilevanti in particolare:
 
 - `ide/tmp/xbase/INITPROC.TMP`
-  Template di inizializzazione del progetto generato. Qui possono vivere i blocchi di bootstrap runtime PG.
+Template di inizializzazione del progetto generato. Qui possono vivere i blocchi di bootstrap runtime PG.
 - `ide/tmp/xbase/RMAKEX1.TMP`
 - `ide/tmp/xbase/RMAKEX2.TMP`
 - `ide/tmp/xbase/rmakex3.tmp`
-  Template collegati alla generazione del progetto di build/link del main.
+Template collegati alla generazione del progetto di build/link del main.
 
 Nel fork questi file sono stati riallineati alla variante funzionante di riferimento, per evitare che il supporto PG resti limitato alla sola libreria o alle sole DLL copiate.
 
@@ -246,10 +246,12 @@ La documentazione dedicata si trova in [libreria/docs/README.md](./libreria/docs
 
 Sono disponibili due entrypoint per eseguire la migrazione DBF -> PostgreSQL fuori dal main applicativo (stesso core, subsystem diverso):
 
-| Eseguibile | Progetto | Script build | Uso tipico |
-| --- | --- | --- | --- |
-| `pgupsize.exe` | `libreria/src/PG/Upsize/pgUpsizeExe.xpj` | `libreria/src/PG/Upsize/build-pgupsize-exe.bat` | Link `/PM:PM` richiesto dalle librerie runtime: apre una finestra console separata. |
+
+| Eseguibile             | Progetto                                     | Script build                                        | Uso tipico                                                                           |
+| ---------------------- | -------------------------------------------- | --------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| `pgupsize.exe`         | `libreria/src/PG/Upsize/pgUpsizeExe.xpj`     | `libreria/src/PG/Upsize/build-pgupsize-exe.bat`     | Link `/PM:PM` richiesto dalle librerie runtime: apre una finestra console separata.  |
 | `pgupsize-console.exe` | `libreria/src/PG/Upsize/pgUpsizeConsole.xpj` | `libreria/src/PG/Upsize/build-pgupsize-console.bat` | Link `/PM:VIO`: output nella **stessa** finestra terminale (IDE, `cmd`, PowerShell). |
+
 
 Sorgenti principali:
 
@@ -257,6 +259,39 @@ Sorgenti principali:
 - `libreria/src/PG/Upsize/pgUpsizeConsoleMain.prg` — `MAIN` per `pgupsize-console.exe` (stesso flusso via env; di default non attende INVIO a fine run).
 
 Entrambi i runner riusano il core PGUpsize previsto anche per l'integrazione applicativa: generazione `UPSIZE.runtime.upsize`, configurazione licenza PGDBE, esecuzione `DbfUpsize`.
+
+I diagrammi seguenti riassumono architettura e sequenza operativa (utile per onboarding e review).
+
+#### Architettura: due entrypoint, stesso core
+
+```mermaid
+flowchart LR
+  A[pgupsize.exe] --> C[pgUpsizeCliCompat]
+  B[pgupsize-console.exe] --> C
+  C --> D[Moduli PGUpsize]
+  D --> E[DbfUpsize]
+```
+
+
+
+`pgUpsizeCliCompat` concentra variabili d'ambiente, messaggi di uscita e dettagli comuni tra i due eseguibili; i moduli centrali (`pgUpsize`, `pgUpsizeXml`, connessione, ecc.) sono condivisi anche con il flusso integrato in applicazione.
+
+#### Fasi: runtime XML e migrazione
+
+```mermaid
+flowchart TD
+  CFG["Input: env, INI, DBDD, path.ini"] --> XML["1. Genera UPSIZE.runtime.upsize"]
+  XML --> CHK{Dry-run attivo?}
+  CHK -->|Sì| STOP["Solo XML e log, nessun trasferimento dati"]
+  CHK -->|No| MIG["2. DbfUpsize verso PostgreSQL"]
+  MIG --> RC{Esito}
+  RC -->|OK| OK["Uscita 0"]
+  RC -->|Errore| OUT["Uscita 1, 2 o 3"]
+```
+
+
+
+In caso di errore su un `OrdListAdd` (CDX), il flusso puo rigenerare il runtime escludendo temporaneamente l'ordine problematico e ritentare, senza modificare in modo permanente la configurazione (vedi note operative più sotto).
 
 **Nota importante:** il binario `pgupsize.exe` non puo essere linkato come pura applicazione console (`/PM:VIO`): con le DLL attuali si ottiene `BASE/4314` (*Application was not linked using /PM:PM-switch*). Per uso da terminale integrato usare `pgupsize-console.exe`.
 
@@ -356,3 +391,4 @@ Se devi orientarti nel progetto:
 2. esplora `libreria/src/` per il core applicativo
 3. esplora `ide/SOURCE/` per il lato IDE
 4. consulta `libreria/docs/` per la documentazione tecnica del fork, in particolare per PGDBE
+
