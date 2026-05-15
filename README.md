@@ -32,7 +32,7 @@ Cartella dedicata al core condiviso di Visual dBsee.
 - `libreria/src/`
 Sorgenti della libreria, organizzati per area funzionale.
 - `libreria/include/`
-Header e file `.ch` usati in compilazione.
+Header e file `.ch` usati in compilazione (macro e definizioni condivise del prodotto). Tra questi compare anche **`ot4xb.ch`**, header del progetto **Open Tools for Xbase++** (OT4XB): in compilazione richiede la corrispondente `ot4xb.lib` / runtime OT4XB coerente con la versione indicata nel file (vedi commenti in cima a `ot4xb.ch`).
 - `libreria/output/`
 Output delle build della libreria, separati per variante di toolchain.
 - `libreria/uti/`
@@ -104,10 +104,11 @@ Gli script principali in root sono pensati per la compilazione della libreria:
 
 ### `build200-2598.bat`
 
-- imposta `PATH`, `INCLUDE` e `LIB` rispetto a `libreria/`
+- imposta `PATH`, `INCLUDE` e `LIB` rispetto a `libreria/` (include anche `libreria/SRC/EXTRA_CH`; `LIB` punta a `libreria/output/lib200-2598/rel`)
+- crea se mancanti `ide/Lib200-2598`, `ide/Lib200-2598/omf` e `ide/LIB`
 - richiama `libreria/src/gotutto200-2598.bat`
-- usa l'output separato `libreria/output/lib200-2598/rel`
-- copia le librerie generate dentro `ide/Lib200-2598`
+- copia l'intero output `libreria/output/lib200-2598/rel` in `ide/Lib200-2598` e la sottocartella `omf` in `ide/Lib200-2598/omf`
+- copia in **`ide/LIB`** (radice librerie IDE) le tre `DBLANG.lib`, `VDBSEE1O.lib`, `VDBSEE1S.lib` dalla build OMF (`rel/omf/`), così l'IDE resta allineato alla stessa variante senza dover cercare solo sotto `Lib200-2598`
 
 ## Varianti di output
 
@@ -377,7 +378,7 @@ Note operative:
 
 ## Note sul contenuto del repository
 
-- Il repository contiene materiale storico e varianti per piu versioni dell'ambiente Xbase++.
+- Il repository contiene materiale storico e varianti per più versioni dell'ambiente Xbase++.
 - Le build moderne possono usare output distinti per evitare di mischiare artefatti prodotti da toolchain diverse.
 - Quando si usa la toolchain `2.00.2598`, il percorso consigliato e' `libreria/output/lib200-2598/` con copia finale in `ide/Lib200-2598/`.
 - Alcune cartelle ospitano output di build o asset binari necessari al progetto.

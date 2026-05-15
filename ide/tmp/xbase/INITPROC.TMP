@@ -209,15 +209,16 @@ IF dfSetMain() == "ÛcTprgÛ"
       ddUpdDbf()
    ENDIF
       .endif
-      .if toExeEnv("nodbfgen")=="0"
-   ddIndex( IDX_CHECK )              ð   // Ricostruzione indici e creazione archivi
-      .endif
-   .endif
-   .inj exe6 // Dopo la Gestione Login
    IF dfPgRuntimeUsePostgres()
       dfPgSessionInit()
       dfPgCloseDbfWorkareas()
+   ELSE
+      .if toExeEnv("nodbfgen")=="0"
+      ddIndex( IDX_CHECK )           ð   // Ricostruzione indici e creazione archivi
+      .endif
    ENDIF
+   .endif
+   .inj exe6 // Dopo la Gestione Login
    dfInitScreenOff()
    .if oo_obj->TYP != "brw"
    IF !(cMode$DE_STATE_INK +DE_STATE_ADD +DE_STATE_MOD)
