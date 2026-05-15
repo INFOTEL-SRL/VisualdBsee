@@ -15,14 +15,14 @@
    #xtranslate DBGOTO(<x>) => DBGOTO_XPP(<x>)
 #endif
 
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 FUNCTION dfNet( cNetOpe   ,; // Funzione da eseguire.
                 nTimeOut  ,; // TimeOut o termine reiterati tentativi
                 nRecno    ,; // Record su cui fare il LOCK
                 lShowWin  ,; // Mostra la finestra di attesa
                 lCanBreak ,; // abilita interruzione timeout
                 lLocked    ) // by reference ritorna se ha fatto il lock
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
    LOCAL b
 
    b := dfSet({AI_XBASESTDFUNCTIONS,  AI_STDFUNC_DFNET})
@@ -43,14 +43,14 @@ RETURN dfNet1( cNetOpe   ,; // Funzione da eseguire.
                lCanBreak ,; // abilita interruzione timeout
                @lLocked   ) // by reference ritorna se ha fatto il lock
 
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 FUNCTION dfNet1(cNetOpe   ,; // Funzione da eseguire.
                 nTimeOut  ,; // TimeOut o termine reiterati tentativi
                 nRecno    ,; // Record su cui fare il LOCK
                 lShowWin  ,; // Mostra la finestra di attesa
                 lCanBreak ,; // abilita interruzione timeout
                 lLocked    ) // by reference ritorna se ha fatto il lock
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 LOCAL cStrErr, nSecond ,lRet , lActive, nStartSec, cRdd
 LOCAL nPrev, nNext
 //LOCAL bNetwork := dfSet(AI_NETWORKCB)
@@ -89,7 +89,7 @@ WHILE .T.
            // nella locklist
            IF !EOF() .AND. ASCAN(dfLockList(), nRecno) > 0
           #else
-           // In clipper lascio standard perchŠ DBFCDX ha la dfLockList bucata!
+           // In clipper lascio standard perchï¿½ DBFCDX ha la dfLockList bucata!
            IF !EOF() 
           #endif
 //              EVAL(bNetwork, cNetOpe, nRecno, 10, .T.)
@@ -206,7 +206,7 @@ ENDIF
 //           EVAL(bNetwork, cNetOpe, nRecno, 10, .T.)
            IF "-"+UPPER(cRdd)+"-" $ "-DBFCDXAX-DBFNTXAX-"
               // AXS ha un BUG nelle aperture in esclusiva del file
-              // Se in questi casi Š usata una DBAPPEND(.F.) l'unlock
+              // Se in questi casi ï¿½ usata una DBAPPEND(.F.) l'unlock
               // non rilascia il record lockato
               DBAPPEND( dfAXSExclusive() )  // Dipende dall'apertura
            ELSE
@@ -283,7 +283,7 @@ ENDIF
       //Mantis 2063 
       // simone 10/2/09
       // attendo un secondo per scaricare la CPU che altrimenti 
-      // pu• bloccare il PC, specialmente in ambiente Terminal Server
+      // puï¿½ bloccare il PC, specialmente in ambiente Terminal Server
       sleep(100) 
 
       IF nTimeout == 0                      // Tentativi infiniti sino al

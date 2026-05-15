@@ -79,8 +79,8 @@
 // con Xbase 1.82 uso solo la DLL e vado solo in anteprima
 // con Xbase 1.90
 // - report manager activex non installato uso solo la DLL e vado solo in anteprima
-// - report manager activex installato ma Š una versione vecchia (sotto la 2.3)
-//   che non supporta la propriet… "defaultPrinter" uso solo la DLL e vado solo in anteprima
+// - report manager activex installato ma ï¿½ una versione vecchia (sotto la 2.3)
+//   che non supporta la proprietï¿½ "defaultPrinter" uso solo la DLL e vado solo in anteprima
 // - repot manager activex installato e uso una versione recente (sopra la 2.3)
 //   attivo il menu di stampa, esportazione ecc.
 
@@ -177,9 +177,9 @@ CLASS METHOD dfReportManager:initClass()
    oAX := ::getAX()
 
    // simone 20/2/08
-   // se l'activeX è vecchio e non supporta la proprietà
+   // se l'activeX ï¿½ vecchio e non supporta la proprietï¿½
    // "defaultPrinter", accedo tramite DLL (metodo vecchio)
-   // perchè non posso impostare la stampante da utilizzare
+   // perchï¿½ non posso impostare la stampante da utilizzare
    // e quindi non posso andare in stampa diretta
    IF ! EMPTY(oAX) .AND. oAX:getidsofnames("defaultPrinter") != NIL
       ::aExportTypes := ::loadExportTypes(oAX)
@@ -273,7 +273,7 @@ METHOD dfReportManager:init(cRepName)
    ::cRepName := cRepName
 
    // Simone 28/01/2005
-   // mantis 0000509: In stampa Report Manager da una macchina dove non Š installato report manager si ha sempre un errore a causa 
+   // mantis 0000509: In stampa Report Manager da una macchina dove non ï¿½ installato report manager si ha sempre un errore a causa 
    ::check()
 RETURN self
 
@@ -401,7 +401,7 @@ METHOD dfReportManager:preview(cRepName, cRepTitle, cRepFormula, ;
          oThread := NIL
 
       RECOVER USING e
-         // C'Š stato un errore
+         // C'ï¿½ stato un errore
          ::setError( nJob )
       END SEQUENCE
       ERRORBLOCK(oErr)
@@ -445,7 +445,7 @@ METHOD dfReportManager:preview(cRepName, cRepTitle, cRepFormula, ;
       rp_close(nJob)
 
    RECOVER
-      // C'Š stato un errore
+      // C'ï¿½ stato un errore
       ::setError( nJob )
    END SEQUENCE
    ENDIF
@@ -588,7 +588,7 @@ METHOD dfReportManager:print(cRepName, cRepTitle, nRepCopy, cRepFormula, ;
             NEXT
          ENDIF
       RECOVER USING e
-         // C'Š stato un errore
+         // C'ï¿½ stato un errore
          ::setError(e)
 
       END SEQUENCE
@@ -607,7 +607,7 @@ METHOD dfReportManager:print(cRepName, cRepTitle, nRepCopy, cRepFormula, ;
 
          // simone 19/2/08
          // imposta la stampante da usare (da perfezionare
-         // perchŠ il file %appdata%\reportman.ini viene letto
+         // perchï¿½ il file %appdata%\reportman.ini viene letto
          // all'avvio di report manager, quindi se cambio stampante
          // non la rilegge)
          ::setRepProp(cRepName, NIL, nRepCopy)
@@ -629,7 +629,7 @@ METHOD dfReportManager:print(cRepName, cRepTitle, nRepCopy, cRepFormula, ;
       rp_close(nJob)
 
    RECOVER
-      // C'Š stato un errore
+      // C'ï¿½ stato un errore
       ::setError(nJob)
 
    END SEQUENCE
@@ -654,7 +654,7 @@ METHOD dfReportManager:print(cRepName, cRepTitle, nRepCopy, cRepFormula, ;
    dfPathSet( cDir )
 RETURN ::nErrCode
 
-// Funziona ma Š meglio gestire la struttura xExp con funzioni in C
+// Funziona ma ï¿½ meglio gestire la struttura xExp con funzioni in C
 METHOD dfReportManager:design(cRepName, xExp, cRepFormula, ;
                                 aTabLocation, oRMPrinter, aOpt)
    LOCAL nJob        := 0
@@ -705,7 +705,7 @@ METHOD dfReportManager:design(cRepName, xExp, cRepFormula, ;
      RunShell('"'+cRepName+'"', cExe)
 	
    RECOVER
-      // C'Š stato un errore
+      // C'ï¿½ stato un errore
       ::setError(nJob)
 
    END SEQUENCE
@@ -876,7 +876,7 @@ METHOD dfReportManager:exportTo(cRepName, xExp, cRepFormula, ;
          //rp_execute(nJob, cRepName, 1, 1)
 
       RECOVER USING e
-         // C'Š stato un errore
+         // C'ï¿½ stato un errore
          ::setError(e)
 
       END SEQUENCE
@@ -900,7 +900,7 @@ METHOD dfReportManager:exportTo(cRepName, xExp, cRepFormula, ;
       rp_close(nJob)
 
    RECOVER
-      // C'Š stato un errore
+      // C'ï¿½ stato un errore
       ::setError(nJob)
 
    END SEQUENCE
@@ -923,7 +923,7 @@ METHOD dfReportManager:exportTo(cRepName, xExp, cRepFormula, ;
 RETURN ::nErrCode
 
 // Simone 28/01/2005
-// mantis 0000509: In stampa Report Manager da una macchina dove non Š installato report manager si ha sempre un errore a causa 
+// mantis 0000509: In stampa Report Manager da una macchina dove non ï¿½ installato report manager si ha sempre un errore a causa 
 CLASS METHOD dfReportManager:check()
    LOCAL cPath
    LOCAL cText
@@ -966,7 +966,7 @@ CLASS METHOD dfReportManager:isLoaded()
 RETURN ::_rm_method != _RM_NONE // ! EMPTY( _reportManLoad( .T. ) )
 
 
-// imposta alcune proprietà direttamente nel file .rep
+// imposta alcune proprietï¿½ direttamente nel file .rep
 METHOD dfReportManager:setRepProp(cRepName, lMaxPreview, nRepCopy, oRMPrinter)
    LOCAL aVars := {}
    LOCAL cRep
@@ -1169,7 +1169,7 @@ int rp_execute(int hreport,char *outputfilename,int metafile,int compressed);
 
 int rp_setparamvalue(int hreport,char *paramname,int paramtype,
  void *paramvalue);
-   dove il paramtype pu• essere:
+   dove il paramtype puï¿½ essere:
       1: Null;
       3: integer
       5: double

@@ -115,7 +115,8 @@ LOCAL cU
 
    IF cU == "DBDD" .OR. cU == "DBHLP" .OR. ;
       cU == "DBLOGIN" .OR. cU == "DBTABD" .OR. ;
-      cU == "DBTAB"
+      cU == "DBTAB" .OR. cU == "DB3S" .OR. ;
+      cU == "DB_TMP"
       RETURN .T.
    ENDIF
 

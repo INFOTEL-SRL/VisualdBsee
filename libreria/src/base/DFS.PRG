@@ -73,7 +73,8 @@ IF SELECT() > 0 .AND. dfPgRddIs( RDDNAME() )
 
    lDidOrd := .F.
 
-   IF ORDNUMBER() != uOrd
+   IF VALTYPE(uOrd)=="C" .AND. UPPER(ORDNAME()) != UPPER(uOrd) .OR. ;
+      VALTYPE(uOrd)=="N" .AND. ORDNUMBER() != uOrd
 
       ORDSETFOCUS( uOrd )
 

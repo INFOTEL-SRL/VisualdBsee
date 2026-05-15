@@ -161,9 +161,7 @@ LOCAL nArea, nPrev, cAlias, cRdd, cUp, oS
       IF !EMPTY( ALIAS( nArea ) )
          cAlias := ALIAS( nArea )
          cUp    := UPPER( TRIM( cAlias ) )
-         IF cUp == "DBDD" .OR. cUp == "DBHLP" .OR. ;
-            cUp == "DBLOGIN" .OR. cUp == "DBTABD" .OR. ;
-            cUp == "DBTAB"
+         IF dfPgIsSystemDictionaryStem( cUp )
             LOOP
          ENDIF
          cRdd := ( cAlias )->( RDDNAME() )
@@ -201,9 +199,7 @@ LOCAL nArea, nPrev, cAlias, cRdd, cUp
       IF !EMPTY( ALIAS( nArea ) )
          cAlias := ALIAS( nArea )
          cUp    := UPPER( TRIM( cAlias ) )
-         IF cUp == "DBDD" .OR. cUp == "DBHLP" .OR. ;
-            cUp == "DBLOGIN" .OR. cUp == "DBTABD" .OR. ;
-            cUp == "DBTAB"
+         IF dfPgIsSystemDictionaryStem( cUp )
             LOOP
          ENDIF
          cRdd := ( cAlias )->( RDDNAME() )
