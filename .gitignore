@@ -18,3 +18,8 @@
 
 # Trace runtime upsize (generati da esecuzioni locali)
 *.pgtrace.log
+
+.agents/
+.claude/
+skills-lock.json
+.cursor/
