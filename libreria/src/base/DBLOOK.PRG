@@ -49,6 +49,7 @@ LOCAL cKey
 LOCAL nPgSavRec := 0
 LOCAL lPickSync := .F.   // scelta da browse/ddKey/dfTop: LK_SEEK va allineato al record corrente
 LOCAL lEmptySeekFree := .F. // LT_FREE + seek C vuoto: niente record "implicito" per !eof() lato chiamante
+LOCAL cExeWin := ""
 
 IF Act $ "uar-esc-Stb"         // These actions transform a LookUp
    RETURN .T.                  // to a free LookUp
@@ -158,11 +159,20 @@ DO CASE
                  aLook[LK_BREAK]         ) // Break
 
         ELSE
-           // Run-time Window
-           ddWin( aLook[LK_WINDOWORDER] ,; // Order
-                  aLook[LK_KEY]         ,; // Key
-                  aLook[LK_FILTER]      ,; // Filter
-                  aLook[LK_BREAK]        ) // Break
+           IF _ddWinDbgOn()
+              _ddWinDbgMsg( "dbLook win alias=" + cAlias + " ord=" + dfAny2Str( aLook[LK_WINDOWORDER] ) )
+           ENDIF
+           cExeWin := ddWinCustomStem( cAlias, aLook[LK_WINDOWORDER] )
+           IF ! EMPTY( cExeWin )
+              EVAL( &("{|A,B,C,D|" + cExeWin + "EXE(A,B,C,D)}" ), ;
+                    aLook[LK_WINDOWORDER], aLook[LK_KEY], ;
+                    aLook[LK_FILTER], aLook[LK_BREAK] )
+           ELSE
+              ddWin( aLook[LK_WINDOWORDER] ,; // Order
+                     aLook[LK_KEY]         ,; // Key
+                     aLook[LK_FILTER]      ,; // Filter
+                     aLook[LK_BREAK]        ) // Break
+           ENDIF
         ENDIF
         IF (lEsc:=Act=="esc")
            lFound := .F.
@@ -242,11 +252,11 @@ DO CASE
         DO CASE
            CASE aLook[LK_TYPE] == LT_MANDATORY    // Mandatory field
 
-                dbdd->(ORDSETFOCUS(2))
-                dbdd->(dbSeek("FIE"+ cAlias+ UPPER(aLook[LK_FIELD])))
-                dbdd->(ORDSETFOCUS(1))
-
-                cFieDes := TRIM(dbdd->field_des)
+                IF _ddDbddSeekFieField( cAlias, aLook[LK_FIELD] )
+                   cFieDes := TRIM(dbdd->field_des)
+                ELSE
+                   cFieDes := TRIM(aLook[LK_FIELD])
+                ENDIF
                 dbMsgErr( dfStdMsg(MSG_DBLOOK01)+ cFieDes +" " +dfStdMsg(MSG_DBLOOK02) )
 
            CASE aLook[LK_TYPE] == LT_NOTMANDATORY // Empty field ok
@@ -270,18 +280,21 @@ DO CASE
 
    CASE !lFound .AND. !lEsc                 // May continue with data entry
 
-        dbdd->(ORDSETFOCUS(2))
-        dbdd->(DBSEEK("DBF"+ cAlias))
-        cFleDes := strtran(TRIM(dbdd->Field_Des),":","")
+        IF _ddDbddSeekRecTyp( "DBF", cAlias )
+           cFleDes := strtran(TRIM(dbdd->Field_Des),":","")
+        ELSE
+           cFleDes := cAlias
+        ENDIF
 
-        dbdd->(ORDSETFOCUS(1))
-        dbdd->(DBSEEK("NDX"+ cAlias+str(aLook[LK_WINDOWORDER],3)))
-        cFleDes += ":" +strtran(TRIM(dbdd->Field_Des),":","")
+        IF _ddDbddSeekNdx( cAlias, aLook[LK_WINDOWORDER] )
+           cFleDes += ":" + strtran(TRIM(dbdd->Field_Des),":","")
+        ENDIF
 
-        dbdd->(ORDSETFOCUS(2))
-        dbdd->(dbSeek("FIE"+ cAlias+ UPPER(aLook[LK_FIELD])))
-        dbdd->(ORDSETFOCUS(1))
-        cFieDes := TRIM(dbdd->Field_Des)
+        IF _ddDbddSeekFieField( cAlias, aLook[LK_FIELD] )
+           cFieDes := TRIM(dbdd->Field_Des)
+        ELSE
+           cFieDes := TRIM(aLook[LK_FIELD])
+        ENDIF
         cFieTyp := dbdd->Field_Type
         cCode   := TRIM(PADR( aLook[LK_SEEK], 45))
 
@@ -508,16 +521,17 @@ LOCAL cWa, cField
 RETURN dfPgSeekFallbackScan( cWa, cField, aLook[LK_SEEK] )
 
 *******************************************************************************
-STATIC PROCEDURE _dbLookSeekOnOrder( cAliasPad, aLook, nOrd )
+STATIC PROCEDURE _dbLookSeekOnOrder( cAliasPad, aLook, xOrd )
 //*******************************************************************************
 LOCAL cWa, lPg, xSeek
 
    cWa := RTRIM( cAliasPad )
-   IF SELECT( cWa ) < 1 .OR. VALTYPE( nOrd ) != "N"
+   // PGDBE: ordine puo' essere numero (ORDNUMBER) o nome tag (ORDNAME), come ORDSETFOCUS().
+   IF SELECT( cWa ) < 1 .OR. ! ( VALTYPE( xOrd ) == "N" .OR. VALTYPE( xOrd ) == "C" )
       RETURN
    ENDIF
 
-   (cWa)->( ORDSETFOCUS( nOrd ) )
+   (cWa)->( ORDSETFOCUS( xOrd ) )
 
    xSeek := aLook[LK_SEEK]
    IF EMPTY( xSeek )

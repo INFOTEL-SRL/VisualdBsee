@@ -43,7 +43,7 @@ MEMVAR Act
 #define TAG_LIST_SEP "-"
 
 // array necessario per gestione del filtro (DFCOMPILE())
-// necessario se si implementano pi˘ ddKey aperte contemporaneamente
+// necessario se si implementano più ddKey aperte contemporaneamente
 STATIC aDDKeys := {}
 
 FUNCTION ddKeyArrFind(o)
@@ -213,7 +213,8 @@ PRIVATE  EnvId:="ddKey" ,SubId:=""                   //<<000149>> Identificativi
 //IF nWin==1
 
    IF dfUse(cAlias,NIL,aFile)
-   
+
+
       DEFAULT oSearch TO RecSearch():new(cAlias,cForm, nTBOrd, bTBKey, bTbFlt, bTbBrk ,NIL)
 
       // aggiungo alla lista
@@ -338,9 +339,9 @@ METHOD RecSearch:init(cAlias, cForm, n, key,flt,brk, aSettings)
    DEFAULT cForm  TO M->EnvId
    DEFAULT n      TO (cAlias)->(INDEXORD())   
    
-   // defaut a NIL perchË Ë gestito meglio quando si fa il merge con i codeblock 
+   // defaut a NIL perchù ù gestito meglio quando si fa il merge con i codeblock 
    // di filtro generati nella ::_SetFilter() 
-   // (se Ë NIL pu= mettere direttamente il codeblock generato)
+   // (se ù NIL pu= mettere direttamente il codeblock generato)
    DEFAULT flt    TO NIL 
    
    DEFAULT brk    TO {|| .F.}
@@ -353,7 +354,7 @@ METHOD RecSearch:init(cAlias, cForm, n, key,flt,brk, aSettings)
    ::cmbIdx := NIL
    ::cmbSearch := NIL
    ::lsbRec := NIL
-   ::cPrevFlt := NIL // inizializzo a NIL cosÏ forza il primo clearFilter nella ::create()
+   ::cPrevFlt := NIL // inizializzo a NIL cosù forza il primo clearFilter nella ::create()
    ::cPrevSea := ""
    ::lFilter := .F.
    //~ ::oFilter:= RecSearchFilter():new()
@@ -374,7 +375,7 @@ METHOD RecSearch:init(cAlias, cForm, n, key,flt,brk, aSettings)
          nErr := aSettings[nInd]:load( ::oData, cAlias, cForm, aSettings[nInd], ::aKFB)
          IF nErr >= 0
             EXIT
-         ELSEIF nErr != -10  // se errore non Ë form non trovata nel file XML
+         ELSEIF nErr != -10  // se errore non ù form non trovata nel file XML
             dbMsgErr(dfStdMsg(MSG_ERRSYS11)+" "+cAlias+" ("+ALLTRIM(STR(nErr))+")")
          ENDIF
       NEXT
@@ -390,7 +391,7 @@ METHOD RecSearch:init(cAlias, cForm, n, key,flt,brk, aSettings)
       nErr := RecSearchDataXML():load( ::oData, cAlias, cForm, aSettings[nInd], ::aKFB)
       IF nErr >= 0 
          EXIT
-      ELSEIF nErr != -10  // se errore non Ë form non trovata nel file XML
+      ELSEIF nErr != -10  // se errore non ù form non trovata nel file XML
          dbMsgErr(dfStdMsg(MSG_ERRSYS11)+" "+aSettings[nInd]+" ("+ALLTRIM(STR(nErr))+")")
       ENDIF
    NEXT
@@ -424,7 +425,7 @@ METHOD RecSearch:exe(cSearch)
    IF ! EMPTY(aTables)
       // apertura tabelle collegate
       FOR n := 1 TO LEN(aTables)
-         // se tabella principale la salto perchä non devo ripristinare il record nella dfClose()!
+         // se tabella principale la salto perchù non devo ripristinare il record nella dfClose()!
          IF ! UPPER(ALLTRIM(aTables[n])) == UPPER(ALLTRIM(::cAlias))
             IF ! dfUse(aTables[n], NIL, aFile)
                lOk := .F.
@@ -445,9 +446,9 @@ METHOD RecSearch:exe(cSearch)
     lRet := ::Get(DE_STATE_MOD,cSearch )
 
       // simone 02/10/09 - XL981
-      // il destroy ä lento se c'ä il filtro attivo
-      // perchä nel destroy() richiama il setSize che 
-      // fa un forceStable nella listbox e questo puï 
+      // il destroy ù lento se c'ù il filtro attivo
+      // perchù nel destroy() richiama il setSize che 
+      // fa un forceStable nella listbox e questo puù 
       // essere lento
       nRecno := (::cAlias)->(RECNO())
       ::clearFilter()
@@ -479,7 +480,7 @@ METHOD RecSearch:calcOffSet(oWin)
       nPos += oWin:toolBarHeight
    ELSE
       //luca:Mantis 2222 del 29/05/2013
-      //Correzione posizione campi di ricerca troppo alti quando l'altezza della toolbar ä diversa dallo standard 26 px.
+      //Correzione posizione campi di ricerca troppo alti quando l'altezza della toolbar ù diversa dallo standard 26 px.
       ///////////////////////////////////////  
    	  IF oWin:toolBarHeight <> TOOLBAR_DEFAULT_HEIGHT
    	     nPos -= int(oWin:toolBarHeight -TOOLBAR_DEFAULT_HEIGHT)
@@ -510,7 +511,7 @@ METHOD RecSearch:create(cSearch)
    LOCAL aResizeList
    LOCAL cFocus := ""
    //aInh   := arrInh                                  //<<000055>> Riassegna array campi ereditati
-   //cState := cMode                                   //<<000056>> Riassegna lo stato sulla modalitÖ operativa
+   //cState := cMode                                   //<<000056>> Riassegna lo stato sulla modalitù operativa
 
    oWin := ::Act()                                     //<<000058>> Attivazione oggetto
 
@@ -534,7 +535,7 @@ METHOD RecSearch:create(cSearch)
    //////////////////////////////////////
 
 /*
-   // aggiusta dimensioni se non c'ä toolbar o statuline
+   // aggiusta dimensioni se non c'ù toolbar o statuline
    aSize := oWin:currentSize()
    IF oWin:UseMainToolbar()
       aSize[2] -= oWin:toolBarHeight
@@ -544,7 +545,7 @@ METHOD RecSearch:create(cSearch)
    ENDIF
    oWin:setSize(aSize, .F.)
 */
-   // aggiusta dimensioni se non c'ä toolbar o statuline
+   // aggiusta dimensioni se non c'ù toolbar o statuline
    nPos := ::calcOffSet(oWin)
 
    // invio su listbox = seleziona e chiude
@@ -555,7 +556,7 @@ METHOD RecSearch:create(cSearch)
    nX := oXbp:currentPos()[1]+oXbp:currentSize()[1]
    nX += 4
 
-   // se toolbar e/o statusbar su menu principale sposto tutto pió in alto
+   // se toolbar e/o statusbar su menu principale sposto tutto più in alto
    IF nPos != 0
       oXbp := oWin:searchObj("btnDelFilter")[1]
       aPos := oXbp:currentPos()
@@ -592,7 +593,7 @@ METHOD RecSearch:create(cSearch)
 //FUNCTION _AddUsrControl  (oWin, cUsrClass, aUsrPos, aUsrSize,nPage,lEdit, cActs)
 //FUNCTION dfUserControlNew(oWin, oParent, nPage, aCtrl, cUsrClass, xEdit, cActs)
 
-   // metto i combo dove c'ä la listbox
+   // metto i combo dove c'ù la listbox
    oParent     := oWin:searchObj("lsbRec")[1]:setParent()
    ///////////////////////////////////////////////////////
    IF IsMemberVar(oWin:getCtrlArea(.T.),"aResizeList")
@@ -773,7 +774,7 @@ METHOD RecSearch:Act()                                  // [ 03 ] <<000065>>INIZ
 
    IF oWin!=NIL
       RETURN oWin
-   ENDIF                       //<<000068>> Si ritorna l'oggetto se giÖ inizializzato
+   ENDIF                       //<<000068>> Si ritorna l'oggetto se giù inizializzato
 
    M_Cless()                                            //<<000069>> Stato di attesa con mouse a clessidra
 
@@ -1059,7 +1060,7 @@ METHOD RecSearch:Act()                                  // [ 03 ] <<000065>>INIZ
     //////////////////////////////////////
    //Mantis 2194
    //Abilitata la gestione Full screen sulla apertura ddkey 
-   // abilito il fitcolumns solo se c'ä spazio vuoto a destra
+   // abilito il fitcolumns solo se c'ù spazio vuoto a destra
    IF nTotWidth <= 60  .OR.;
      (nTotWidth <= 120  .AND. !empty(dfSet("XbaseddKeyWinopenfullscreen")) .AND. dfSet("XbaseddKeyWinopenfullscreen") == "YES" )
       lsbRec:lFitColumns := .T.
@@ -1251,7 +1252,7 @@ METHOD RecSearch:Get(cState, cSearch)
 
    DO WHILE( .T. )
       ////////////////////////////////////////////////////////////////////
-      //Luca 14/10/2015 inserito per prossimo rilascio perche ä capitato un errore in questa fase sul caricamento di un caption .
+      //Luca 14/10/2015 inserito per prossimo rilascio perche ù capitato un errore in questa fase sul caricamento di un caption .
       Sleep(10) 
       ////////////////////////////////////////////////////////////////////
       IF ! tbGet( oWin , NIL ,DE_STATE_MOD)       //  Modulo gestore delle get
@@ -1482,7 +1483,7 @@ METHOD RecSearch:_SetFilter(cFlt, lSaveRec)
 /*
          // es. XbaseDDKeyTextSearchMax=0 disabilita
          //     XbaseDDKeyTextSearchMax=10 abilita 10 parole
-         // non funziona con ADS perchË c'Ë errore 
+         // non funziona con ADS perchù c'ù errore 
          // in creazione indice
          IF ! EMPTY( dfSet("XbaseDDKeyTextSearchMax") )
             nMax := VAL(dfSet("XbaseDDKeyTextSearchMax"))
@@ -1578,14 +1579,14 @@ METHOD RecSearch:_SetFilter(cFlt, lSaveRec)
 
          // Simone 01/03/10 XL1869
          // se il record corrente non rientra nel filtro dell'indice
-         // faccio un TOP perchä altrimenti nella tbRtr() verrebbe 
+         // faccio un TOP perchù altrimenti nella tbRtr() verrebbe 
          // fatto uno skip ed essendo un record che non rientra 
          // nell'indice va a EOF e quindi mostra gli ultimi record 
          // invece dei primi
          IF (::cAlias)->(! EMPTY(ORDFOR()) .AND. ! EVAL( dfCompile( ORDFOR() )))
             tbTop(lsbRec)
          ELSE
-         // faccio 2 tbStab perchä se il record corrente
+         // faccio 2 tbStab perchù se il record corrente
          // non rientra nel filtro allora al primo giro non ce la fa!
          //tbStab(lsbRec, .T.)
          tbRtr(lsbRec)
@@ -1753,7 +1754,7 @@ METHOD RecSearch:Mcr( oWin ) // Modify
    ELSE
       cExe := ::oData:cEdit
       // simone 10/12/09 
-      // aggiunta possibilit‡ di cambiare/disattivare edit di default
+      // aggiunta possibilitù di cambiare/disattivare edit di default
       IF EMPTY(cExe)
          cExe := ::oData:cGlobalEdit
       ENDIF
@@ -1800,7 +1801,7 @@ METHOD RecSearch:Anr( oWin ) // Append
    ::_syncBrowseRec( oWin )
    cExe := ::oData:cEdit
    // simone 10/12/09 
-   // aggiunta possibilit‡ di cambiare/disattivare edit di default
+   // aggiunta possibilitù di cambiare/disattivare edit di default
    IF EMPTY(cExe)
       cExe := ::oData:cGlobalEdit
    ENDIF
@@ -1926,8 +1927,9 @@ CLASS METHOD RecSearchDataDBDD:LoadIdx(cAlias,cForm)
 
    cAlias := UPPER(PADR(cAlias, 8))
 
-   dbdd->(ORDSETFOCUS_XPP(1))                       // posiziono dbdd
-   dbdd->(DBSEEK( "NDX"+cAlias))
+   IF ! _ddDbddSeekRecTyp( "NDX", cAlias )
+      RETURN aKey
+   ENDIF
    WHILE "NDX"+cAlias == UPPER(dbDD->rectyp+dbDD->file_name) .AND. ;
          !dbdd->(EOF())
       IF UPPER(dbDD->Field_type)#"S" // if not Search Key
@@ -1944,7 +1946,7 @@ CLASS METHOD RecSearchDataDBDD:LoadIdx(cAlias,cForm)
 //      ENDIF
 
                     // Riformatto per WIN400
-      AADD( aKey, { VAL(STR(DBDD->NdxIncN))  ,; // Numero idx
+      AADD( aKey, { _ddDbddNdxSlotFromRow( cAlias ) ,; // Numero idx (NdxIncN o FILE_ALI)
                     ALLTRIM(DBDD->FIELD_DES) }) // description
 
       dbdd->(DBSKIP())
@@ -1960,14 +1962,25 @@ CLASS METHOD RecSearchDataDBDD:LoadLsbFields(cAli,cForm)
    LOCAL cHead
    LOCAL bBlock
    LOCAL cAlias
+   LOCAL nSavOrd
+   LOCAL lPg
    
    nTbOrd  := (cAli)->(INDEXORD())
    cAlias := UPPER(PADR(cAli, 8))
 
-   dbdd->(ORDSETFOCUS_XPP(1))     // Controllo se devo creare la finestra
-   dbdd->(dbSeek( "FIE"+cAlias ))
+   IF ! _ddDbddSeekRecTyp( "FIE", cAlias )
+      RETURN aCol
+   ENDIF
 
-   cKey  := UPPER( ORDKEY( nTbOrd ) )
+   lPg := dfPgRddIs( ( cAli )->( RDDNAME() ) )
+   nSavOrd := ( cAli )->( INDEXORD() )
+   IF lPg
+      ( cAli )->( ORDSETFOCUS( nTbOrd ) )
+   ENDIF
+   cKey  := UPPER( ORDKEY() )
+   IF lPg .AND. nSavOrd != nTbOrd
+      ( cAli )->( ORDSETFOCUS( nSavOrd ) )
+   ENDIF
    WHILE !dbdd->(eof()) .AND. "FIE"+cAlias == UPPER(dBdd->RecTyp+dBdd->file_name)
 
       IF dbdd->field_win == "1"
@@ -1994,8 +2007,9 @@ CLASS METHOD RecSearchDataDBDD:LoadGetFields(cAli,cForm)
    
    cAlias := UPPER(PADR(cAli, 8))
 
-   dbdd->(ORDSETFOCUS_XPP(1))     // Controllo se devo creare la finestra
-   dbdd->(dbSeek( "FIE"+cAlias ))
+   IF ! _ddDbddSeekRecTyp( "FIE", cAlias )
+      RETURN aCol
+   ENDIF
 
    WHILE !dbdd->(eof()) .AND. "FIE"+cAlias == UPPER(dBdd->RecTyp+dBdd->file_name)
 
@@ -2067,7 +2081,7 @@ RETURN cFlt
         enableEcr=".F." >                                                               OPZIONALE
 
    <settings
-      form  = "GesAna1-GesAna2"    OPZIONALE lista forms, il carattere da usare per separare ä solo il "-"
+      form  = "GesAna1-GesAna2"    OPZIONALE lista forms, il carattere da usare per separare ù solo il "-"
       check = "empty(%key%) .or. (valtype(%key%)$'CM' .and. %key%=='C') .or. (valtype(%key%)$'B' .and. eval(%key%)=='C')" OPZIONALE
       table = "Anagraf"
       relatedTables="progmag-caumaga-docmovd"  OPZIONALE lista tabella ad aprire
@@ -2243,7 +2257,7 @@ CLASS METHOD RecSearchDataXML1_0:load(oRecSearch, oXml, cAlias, cForm, aKFB)
    ENDIF
 
    // simone 10/12/09 
-   // aggiunta possibilit‡ di cambiare/disattivare edit di default
+   // aggiunta possibilitù di cambiare/disattivare edit di default
    IF ! EMPTY(oXml:globalEdit)
       oRecSearch:cGlobalEdit := oXml:globalEdit
    ENDIF
@@ -2836,7 +2850,7 @@ RETURN bEval
 //   IF EMPTY(c)
 //      RETURN {||.T.} 
 //   ENDIF
-//   //allora ä giÖ formatato come codeblock
+//   //allora ù giù formatato come codeblock
 //   c := Alltrim(c)
 //   IF LEFT(c,1 ) == "|" .AND. AT("|",c, 2 ) >0
 //      bEval := &("{"+c+"}")

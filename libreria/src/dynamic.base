@@ -34,9 +34,11 @@
    <<FILELIST("%CUR%CFUNC\*.prg")>>
    <<FILELIST("%CUR%BASE\*.prg")>>
    <<FILELIST("%CUR%VDB\*.prg")>>
-   <<FILELIST("%CUR%PG\*.prg")>>
    <<FILELIST("%CUR%PG\Runtime\*.prg")>>
-   <<FILELIST("%CUR%PG\Upsize\*.prg")>>
+   // Upsize core in DLL; escludere CLI standalone (MAIN/stub duplicati vs BASE/INITAPPS)
+   %CUR%PG\Upsize\pgUpsize.prg
+   %CUR%PG\Upsize\pgUpsizeConn.prg
+   %CUR%PG\Upsize\pgUpsizeXml.prg
 
 [VDBSEE1S.DLL]
    // non cambiare l'ordine di queste LIB senno' non funziona bene!

@@ -73,8 +73,8 @@ IF SELECT() > 0 .AND. dfPgRddIs( RDDNAME() )
 
    lDidOrd := .F.
 
-   IF VALTYPE(uOrd)=="C" .AND. UPPER(ORDNAME()) != UPPER(uOrd) .OR. ;
-      VALTYPE(uOrd)=="N" .AND. ORDNUMBER() != uOrd
+   IF ( VALTYPE(uOrd)=="C" .AND. UPPER(ORDNAME()) != UPPER(RTRIM(uOrd)) ) .OR. ;
+      ( VALTYPE(uOrd)=="N" .AND. ORDNUMBER() != uOrd )
 
       ORDSETFOCUS( uOrd )
 
@@ -150,7 +150,8 @@ IF SELECT() > 0 .AND. dfPgRddIs( RDDNAME() )
 
          ENDIF
 
-         IF !lDidOrd .AND. ORDNUMBER() == uOrd
+         IF !lDidOrd .AND. ( ( VALTYPE(uOrd)=="N" .AND. ORDNUMBER() == uOrd ) .OR. ;
+              ( VALTYPE(uOrd)=="C" .AND. UPPER(ORDNAME()) == UPPER(RTRIM(uOrd)) ) )
 
             ORDSETFOCUS( uOrd )
 
@@ -230,11 +231,20 @@ RETURN
 
 *******************************************************************************
 
-FUNCTION _dfSPgHtKey( cWa8, nOrd, cSeekT )
+FUNCTION _dfSPgHtKey( cWa8, uOrd, cSeekT )
 
 //*******************************************************************************
+LOCAL cOrdPart
 
-RETURN RTRIM( cWa8 ) + "|" + STR( nOrd, 4, 0 ) + "|" + UPPER( cSeekT )
+   IF VALTYPE( uOrd ) == "N"
+      cOrdPart := STR( uOrd, 4, 0 )
+   ELSEIF VALTYPE( uOrd ) == "C"
+      cOrdPart := UPPER( RTRIM( uOrd ) )
+   ELSE
+      cOrdPart := "?"
+   ENDIF
+
+RETURN RTRIM( cWa8 ) + "|" + cOrdPart + "|" + UPPER( cSeekT )
 
 
 

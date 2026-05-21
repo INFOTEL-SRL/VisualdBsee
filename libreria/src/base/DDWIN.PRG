@@ -16,6 +16,7 @@
    #xtranslate DBGOTO(<x>) => DBGOTO_XPP(<x>)
 #endif
 
+// ddWin debug (opz. log file): DDFILE _ddWinDbg* + dbstart.ini XbaseDdWinDebug=YES
 PROCEDURE ddWin( nTbOrd ,; // Indice dal quale prendere i dati
                  bTbKey ,; // Chiave
                  bTbFlt ,; // Filtro
@@ -23,11 +24,25 @@ PROCEDURE ddWin( nTbOrd ,; // Indice dal quale prendere i dati
                  cAct   ,; // Azioni di sgancio
                  nIndPos ) // Eventuale indice per finestra. Settato da DDKEY
    LOCAL b
+
+   DEFAULT nTbOrd TO INDEXORD()
+   nTbOrd := _ddDbddOrdFromContext( ALIAS(), nTbOrd )
+   IF VALTYPE( nTbOrd ) == "N" .AND. nTbOrd < 1
+      nTbOrd := 1
+   ENDIF
+
+   IF _ddWinDbgOn()
+      _ddWinDbgMsg( "ddWin ENTRY alias=" + ALIAS() + " nTbOrd=" + dfAny2Str( nTbOrd ) )
+   ENDIF
+
    //b := dfSet({AI_XBASESTDFUNCTIONS,  AI_STDFUNC_DDKEY})
    // 09:15:42 sabato 27 ottobre 2018
    // errato uso della AI_STDFUNC_DDKEY al posto di AI_STDFUNC_DDWIN
    b := dfSet({AI_XBASESTDFUNCTIONS,  AI_STDFUNC_DDWIN})
    IF VALTYPE(b)=="B"
+      IF _ddWinDbgOn()
+         _ddWinDbgMsg( "ddWin -> STDFUNC custom (non _ddWin)" )
+      ENDIF
       // simone 19/4/06
       // mantis 0001040: implementare nuova finestra di ricerca dati
       EVAL(b, nTbOrd   ,; //<<000037>> Indice
@@ -48,14 +63,14 @@ PROCEDURE ddWin( nTbOrd ,; // Indice dal quale prendere i dati
 
 RETURN
 
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 STATIC PROCEDURE _ddWin( nTbOrd ,; // Indice dal quale prendere i dati
                  bTbKey ,; // Chiave
                  bTbFlt ,; // Filtro
                  bTbBrk ,; // Break
                  cAct   ,; // Azioni di sgancio
                  nIndPos ) // Eventuale indice per finestra. Settato da DDKEY
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 LOCAL aCol    := {}                            // Array Oggetti Colonna
 LOCAL cAlias  := UPPER(PADR(ALIAS(),8))
 LOCAL nInd    := 1000
@@ -65,33 +80,52 @@ LOCAL cWin    := ""
 LOCAL cKey, cDefaultWin
 LOCAL aMtd    := {}
 LOCAL nSize, cHead, bBlock, nLeft, nRight
+LOCAL nSavOrd, lPgData, xKey
 //Mantis 746
 LOCAL nBottom := 23
 MEMVAR EnvId
 PRIVATE EnvId := ALLTRIM(cAlias)
 
 DEFAULT nTbOrd  TO INDEXORD()
+// PGDBE: ORDNUMBER include indici sistema (__record, __deleted, pkey); per DBDD usare INDEXORD.
+IF VALTYPE( nTbOrd ) == "N" .AND. nTbOrd < 1
+   nTbOrd := 1
+ENDIF
 DEFAULT nIndPos TO nTbOrd
 
-dbdd->(ORDSETFOCUS(1))     // Controllo se devo creare la finestra
-                           // o (come diceva il buon Testo') comprarla
-                           // gia' fatta
+nTbOrd      := _ddDbddOrdFromContext( cAlias, nTbOrd )
+nIndPos     := nTbOrd
+cDefaultWin := ddWinCustomStem( cAlias, nTbOrd )
+IF ! EMPTY( cDefaultWin )
+   cWin := "{|A,B,C,D|" + cDefaultWin + "EXE(A,B,C,D)}"
+ENDIF
 
-dBdd->(dbSeek( "NDX" +cAlias +STR(nTbOrd,3) ))
-cDefaultWin := ddIndexWin()
-IF !EMPTY(cDefaultWin) .AND. dfIsFun( cDefaultWin +"exe()" )
-   cWin := "{|A,B,C,D|" +cDefaultWin +"EXE(A,B,C,D)}"
+IF _ddWinDbgOn()
+   _ddWinDbgMsg( "_ddWin alias=" + cAlias + " nTbOrd=" + dfAny2Str( nTbOrd ) + ;
+          " stem=" + cDefaultWin + " cWin=" + IIF( EMPTY( cWin ), "(generica)", "EXE" ) + ;
+          " rdd=" + RDDNAME() )
 ENDIF
 
 IF EMPTY(cWin) // La faccio
 
-   dbdd->(dbSeek( "DBF"+cAlias ))
-   cInt := dfStdMsg(MSG_DDWIN01)+[ ]+TRIM(dbdd->field_des)+[ (a)]
+   IF _ddDbddSeekRecTyp( "DBF", cAlias )
+      cInt := dfStdMsg(MSG_DDWIN01)+[ ]+TRIM(dbdd->field_des)+[ (a)]
+   ELSE
+      cInt := dfStdMsg(MSG_DDWIN01)+[ ]+cAlias+[ (a)]
+   ENDIF
 
-   dbdd->(dbSeek( "FIE"+cAlias ))
+   _ddDbddSeekRecTyp( "FIE", cAlias )
 
    nSize := 0
-   cKey  := UPPER( ORDKEY( nTbOrd ) )
+   lPgData := dfPgRddIs( RDDNAME() )
+   nSavOrd := INDEXORD()
+   IF lPgData
+      ORDSETFOCUS( nTbOrd )
+   ENDIF
+   cKey  := UPPER( ORDKEY() )
+   IF lPgData .AND. nSavOrd != nTbOrd
+      ORDSETFOCUS( nSavOrd )
+   ENDIF
    WHILE !dbdd->(eof()) .AND. "FIE"+cAlias == UPPER(dBdd->RecTyp+dBdd->file_name)
 
       IF dbdd->field_win = [1]
@@ -134,8 +168,27 @@ IF EMPTY(cWin) // La faccio
                    WHEN {||dfSet(AI_FILEMODIFY) .AND. EVAL( dfSet( AI_FILEINSERTCB ), ALLTRIM(cAlias), DE_STATE_ADD )} ;
                    BLOCK {|oWin|ddWinAtr( oWin )} MESSAGE dfStdMsg(MSG_DE_STATE_ADD)
 
-      // Setto l'indice
-      SET ORDER TO nIndPos
+      // Setto l'indice (PGDBE: ORDSETFOCUS piu' affidabile di SET ORDER TO su alcune tabelle sistema)
+      IF dfPgRddIs( RDDNAME() )
+         ORDSETFOCUS( nIndPos )
+      ELSE
+         SET ORDER TO nIndPos
+      ENDIF
+
+      IF lPgData .AND. bTbKey != NIL .AND. VALTYPE( bTbKey ) == "B"
+         xKey := EVAL( bTbKey )
+         IF xKey != NIL .AND. ! ( VALTYPE( xKey ) == "C" .AND. EMPTY( RTRIM( xKey ) ) )
+            IF VALTYPE( xKey ) == "C"
+               dfS( INDEXORD(), xKey )
+            ELSE
+               DBSEEK( xKey )
+            ENDIF
+         ELSE
+            DBGOTOP()
+         ENDIF
+      ELSE
+         DBGOTOP()
+      ENDIF
 
       dfWin( ,nLeft,nBottom,nRight,; // Coordinate
              bTbKey,bTbFlt,bTbBrk,; // Chiave Filtro Break
@@ -148,9 +201,9 @@ ELSE // La compro gia' fatta
 ENDIF
 RETURN
 
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 STATIC PROCEDURE ddWinEtr( oWin ) // Erase
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 LOCAL cDel := ALLTRIM(ALIAS()) +"DID()" // Metodo del dbRid per cancellazione
 LOCAL lDel := .F.
 
@@ -176,9 +229,9 @@ ENDIF
 dfPopAct()
 RETURN
 
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 STATIC PROCEDURE ddWinMtr( oWin ) // Modify
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 dfPushAct()
 IF Bof() .OR. Eof()
    dbMsgErr( dfStdMsg(MSG_DDWIN05) )
@@ -190,9 +243,9 @@ ENDIF
 dfPopAct()
 RETURN
 
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 STATIC PROCEDURE ddWinAtr( oWin ) // Append
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 LOCAL nRec:=RECNO(), cAlias := ALIAS()
 dfPushAct()
 IF ddDe( DE_STATE_ADD )

@@ -711,17 +711,17 @@ WHILE .T.
                                  cFlt := ALLTRIM(cAlias) +"->" +cVarName +"==" +cFlt
                               ENDIF
                            ENDIF
-                           (cAlias)->(ddKeyWin( nOrd, bKey, bFilter, bBreak, cFlt, cRealAlias ))
+                           (cAlias)->(ddKeyWin( NDX_PROG, bKey, bFilter, bBreak, cFlt, cRealAlias ))
 
                       CASE Act = "C08"
                            cFlt:=(cAlias)->(ddQry())
                            IF !EMPTY(cFlt)
-                              (cAlias)->(ddKeyWin( nOrd, bKey, bFilter, bBreak, cFlt, cRealAlias ))
+                              (cAlias)->(ddKeyWin( NDX_PROG, bKey, bFilter, bBreak, cFlt, cRealAlias ))
                            ENDIF
                            IF Act=="esc"; Act:="rep"; ENDIF
 
                       CASE Act $ "win-S07-C07-S08"
-                           (cAlias)->(ddKeyWin( nOrd, bKey, bFilter, bBreak, NIL, cRealAlias ))
+                           (cAlias)->(ddKeyWin( NDX_PROG, bKey, bFilter, bBreak, NIL, cRealAlias ))
                    ENDCASE
 
                    IF Act#"rep"
@@ -834,7 +834,7 @@ IF lCond
    IF lKey
       cKey  := ORDKEY(nOrd)
    ELSE
-      cKey  := ORDKEY(nInd)
+      cKey  := ORDKEY(nOrd)
    ENDIF
  #ifdef __XPP__
    aInd  := dfOrdList_XPP()
@@ -1010,11 +1010,11 @@ ENDIF
 IF EMPTY cNewFilter ASSIGN ".T."
 cNewFilter := DFCOMPILE( cNewFilter )
 
-// Se ho attiva una KEY NON posso spostare l'indice
+// La finestra deve seguire l'indice scelto nella DDKEY; su PGDBE INDEXORD() puo' restare 1.
 IF lKey
    nViewIndex := nOrd
 ELSE
-   nViewIndex := nInd
+   nViewIndex := nOrd
 ENDIF
 
 IF lCond

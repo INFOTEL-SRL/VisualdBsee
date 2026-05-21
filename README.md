@@ -142,9 +142,28 @@ Esempi:
 ```bat
 scripts\copy-build-artifacts.bat lib200-2598 C:\dest\bin
 scripts\copy-build-artifacts.bat lib200-2598 C:\dest\exe C:\dest\lib
+scripts\copy-build-artifacts.bat lib200-2598 C:\src\alcoli\EXE C:\src\alcoli\lib
 ```
 
-Se la destinazione LIB non viene passata, DLL e LIB vengono copiate nella stessa cartella. Gli eseguibili `pgupsize.exe` e `pgupsize-console.exe` vengono copiati nella destinazione DLL quando esistono nell'output della variante scelta.
+Se la destinazione LIB non viene passata, DLL e LIB vengono copiate nella stessa cartella.
+
+Per progetti host (es. **alcoli** `Make.xpj`: `..\lib\vdbsee1o.lib` + `vdbsee1s.lib`):
+
+- **Runtime** in `EXE\`: `VDBSEE1O.DLL` (moduli `BASE\`: `ddWin`, `DDFILE`, `DBLOOK`, PG…) e `VDBSEE1S.DLL`
+- **Link** in `lib\`: import COFF da `omf\` (`dblang.lib`, `VDBSEE1O.lib`, `VDBSEE1S.lib`)
+
+Lo script **blocca** la copia se `VDBSEE1O.DLL` in output e' piu' vecchia di `VDBSEE1S.DLL` (build DYNAMIC di `VDBSEE1O` non rifatta). In quel caso:
+
+Aprire prima il prompt **Alaska Xbase++ 2.00.2598** (serve `xppload` nel PATH), poi dalla root repo:
+
+```bat
+scripts\rebuild-vdbsee1o-2598.bat
+scripts\copy-build-artifacts.bat lib200-2598 C:\src\alcoli\EXE C:\src\alcoli\lib
+```
+
+`rebuild-vdbsee1o-2598.bat` imposta anche `libreria\uti` nel PATH (`strtran.exe`, richiesto da `gotutto200-2598.bat`).
+
+Gli eseguibili `pgupsize.exe` e `pgupsize-console.exe` vengono copiati nella destinazione DLL quando esistono nell'output della variante scelta.
 
 ## Template IDE rilevanti
 

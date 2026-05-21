@@ -45,7 +45,7 @@ cd %cur%%rel%
 pbuild dynamic.xpj %2 %3 %4 >> %DMMLOG%
 cd %XX%
 if ERRORLEVEL 1 GOTO :error
-del %cur%%rel%\%DMMLOG%
+if exist %cur%%rel%\%DMMLOG% copy /Y %cur%%rel%\%DMMLOG% %cur%%DMMLOG% >nul
 del %cur%%rel%\dynamic.xpj
 del dynamic.xpj
 @echo on
