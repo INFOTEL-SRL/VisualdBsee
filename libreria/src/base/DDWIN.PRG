@@ -120,11 +120,11 @@ IF EMPTY(cWin) // La faccio
    lPgData := dfPgRddIs( RDDNAME() )
    nSavOrd := INDEXORD()
    IF lPgData
-      ORDSETFOCUS( nTbOrd )
+      _ddDbddOrdSetFocus( cAlias, nTbOrd )
    ENDIF
    cKey  := UPPER( ORDKEY() )
-   IF lPgData .AND. nSavOrd != nTbOrd
-      ORDSETFOCUS( nSavOrd )
+   IF lPgData
+      ( cAlias )->( ORDSETFOCUS( nSavOrd ) )
    ENDIF
    WHILE !dbdd->(eof()) .AND. "FIE"+cAlias == UPPER(dBdd->RecTyp+dBdd->file_name)
 

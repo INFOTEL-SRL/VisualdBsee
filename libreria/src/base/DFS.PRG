@@ -17,7 +17,7 @@ FUNCTION dfS( uOrd, uSeek, lSoft )
 
 * ?????????????????????????????????????????????????????????????????????????????
 
-LOCAL lRet, cFld, cWa, lDidOrd, cSeekT, cHkey, nSel, cSeekUse, cOrdKey
+LOCAL lRet, cFld, cWa, lDidOrd, cSeekT, cHkey, nSel, cSeekUse, cOrdKey, nPhys
 
 // simone 31/01/08
 
@@ -71,6 +71,15 @@ LOCAL lRet, cFld, cWa, lDidOrd, cSeekT, cHkey, nSel, cSeekUse, cOrdKey
 
 IF SELECT() > 0 .AND. dfPgRddIs( RDDNAME() )
 
+   cWa := PADR( UPPER( ALIAS() ), 8 )
+
+   IF VALTYPE( uOrd ) == "N" .AND. uOrd >= 1
+      nPhys := _ddDbddPgPhysOrdFromUserSlot( cWa, uOrd )
+      IF nPhys > 0
+         uOrd := nPhys
+      ENDIF
+   ENDIF
+
    lDidOrd := .F.
 
    IF ( VALTYPE(uOrd)=="C" .AND. UPPER(ORDNAME()) != UPPER(RTRIM(uOrd)) ) .OR. ;
@@ -81,8 +90,6 @@ IF SELECT() > 0 .AND. dfPgRddIs( RDDNAME() )
       lDidOrd := .T.
 
    ENDIF
-
-   cWa := PADR( UPPER( ALIAS() ), 8 )
 
    // PGDBE: uSeek puo' non essere "C" (memo, numerico, NIL da NULL SQL) pur essendo una chiave testo in indice.
    // Il vecchio test escludeva il ramo PG -> solo DBSEEK(uSeek) e record codici sbagliato (stessa C_DES su tutte le righe browse).

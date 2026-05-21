@@ -443,6 +443,132 @@ LOCAL n, cFA, cStem, cTail
 
 RETURN 0
 
+// Riga KEY: FILE_ALI spesso "1"/"2" (NdxIncN vuoto)
+FUNCTION _ddDbddKeyRowSlot( cAlias )
+LOCAL n
+
+   n := VAL( ALLTRIM( dbdd->FILE_ALI ) )
+   IF n > 0
+      RETURN n
+   ENDIF
+
+RETURN _ddDbddNdxSlotFromRow( cAlias )
+
+STATIC FUNCTION _ddDbddFieldValU( cWa, cField )
+LOCAL nPos, xVal
+
+   IF SELECT( cWa ) < 1 .OR. EMPTY( cField )
+      RETURN ""
+   ENDIF
+
+   IF dfPgRddIs( ( cWa )->( RDDNAME() ) )
+      RETURN dfPgSeekFieldValU( PADR( cWa, 8 ), cField )
+   ENDIF
+
+   nPos := ( cWa )->( FIELDPOS( cField ) )
+   IF nPos < 1
+      RETURN ""
+   ENDIF
+
+   xVal := ( cWa )->( FIELDGET( nPos ) )
+   IF VALTYPE( xVal ) == "C" .OR. VALTYPE( xVal ) == "M"
+      RETURN UPPER( RTRIM( xVal ) )
+   ENDIF
+
+RETURN UPPER( RTRIM( dfAny2Str( xVal, "" ) ) )
+
+STATIC FUNCTION _ddDbddFieldHasNeedle( cWa, cField, cNeedle )
+LOCAL cU, cV
+
+   cU := UPPER( RTRIM( cNeedle ) )
+   IF EMPTY( cU )
+      RETURN .F.
+   ENDIF
+
+   cV := _ddDbddFieldValU( cWa, cField )
+   RETURN cU $ cV .OR. AT( cU, cV ) > 0
+
+STATIC FUNCTION _ddDbddRowPassFilter( bFilter, bBreak )
+
+   IF VALTYPE( bBreak ) == "B" .AND. EVAL( bBreak )
+      RETURN .F.
+   ENDIF
+
+   IF VALTYPE( bFilter ) == "B" .AND. ! EVAL( bFilter )
+      RETURN .F.
+   ENDIF
+
+RETURN .T.
+
+// ddKey campo C: soft seek poi prima riga che contiene la stringa (non solo uguale)
+FUNCTION _ddDbddKeySeekContains( cAlias, nSlot, cNeedle, cField, bFilter, bBreak )
+LOCAL cWa, nSav, lOk := .F.
+
+   cWa := UPPER( ALLTRIM( cAlias ) )
+   IF SELECT( cWa ) == 0 .OR. EMPTY( RTRIM( cNeedle ) ) .OR. EMPTY( cField )
+      RETURN .F.
+   ENDIF
+
+   nSav := ( cWa )->( RECNO() )
+   _ddDbddOrdSetFocus( cWa, nSlot )
+   ( cWa )->( dfS( nSlot, cNeedle, .T. ) )
+
+   DO WHILE ! ( cWa )->( EOF() )
+      IF _ddDbddRowPassFilter( bFilter, bBreak ) .AND. ;
+         _ddDbddFieldHasNeedle( cWa, cField, cNeedle )
+         lOk := .T.
+         EXIT
+      ENDIF
+      ( cWa )->( DBSKIP() )
+   ENDDO
+
+   IF ! lOk
+      ( cWa )->( DBGOTOP() )
+      DO WHILE ! ( cWa )->( EOF() )
+         IF _ddDbddRowPassFilter( bFilter, bBreak ) .AND. ;
+            _ddDbddFieldHasNeedle( cWa, cField, cNeedle )
+            lOk := .T.
+            EXIT
+         ENDIF
+         ( cWa )->( DBSKIP() )
+      ENDDO
+   ENDIF
+
+   IF ! lOk
+      ( cWa )->( DBGOTO( nSav ) )
+   ENDIF
+
+RETURN lOk
+
+// ddKey: seek riuscita e record coerente (PG: verifica campo, non macro NDX_PIC)
+FUNCTION _ddDbddKeySeekOk( cAlias, nSlot, uKeyVal, cKeyExp, lFound )
+LOCAL cWa, cFld, cKeyU, uFld
+
+   IF ! lFound .OR. ( cAlias )->( EOF() )
+      RETURN .F.
+   ENDIF
+
+   IF EMPTY( uKeyVal )
+      RETURN .T.
+   ENDIF
+
+   cWa := UPPER( ALLTRIM( cAlias ) )
+   IF dfPgRddIs( ( cWa )->( RDDNAME() ) )
+      cFld := dfPgOrdResolveField( UPPER( ALLTRIM( ( cWa )->( ORDKEY() ) ) ), nSlot, uKeyVal )
+      IF ! EMPTY( cFld )
+         RETURN dfPgSeekVerifyRow( PADR( cWa, 8 ), cFld, uKeyVal )
+      ENDIF
+      RETURN .T.
+   ENDIF
+
+   cKeyU := UPPER( RTRIM( dfAny2Str( uKeyVal, "" ) ) )
+   IF VALTYPE( cKeyExp ) == "C" .AND. ! ( "+" $ cKeyExp .OR. "-" $ cKeyExp )
+      uFld := ( cWa )->( &cKeyExp )
+      RETURN UPPER( RTRIM( dfAny2Str( uFld, "" ) ) ) == cKeyU
+   ENDIF
+
+RETURN .T.
+
 STATIC FUNCTION _ddDbddFileAliU()
 LOCAL cFA
 
@@ -610,6 +736,52 @@ LOCAL n, nSlot, nSav, nFocus
    ( cWa )->( ORDSETFOCUS( nSav ) )
 
 RETURN 0
+
+// PGDBE: slot utente DBDD (1,2,...) -> ORDNUMBER fisico (salta __record/__deleted/pkey)
+FUNCTION _ddDbddPgPhysOrdFromUserSlot( cWa, nUserSlot )
+LOCAL n, nSlot, nSav, cOn
+
+   IF SELECT( cWa ) == 0 .OR. nUserSlot < 1
+      RETURN 0
+   ENDIF
+
+   nSav  := ( cWa )->( INDEXORD() )
+   nSlot := 0
+
+   FOR n := 1 TO ( cWa )->( ORDCOUNT() )
+      ( cWa )->( ORDSETFOCUS( n ) )
+      cOn := _ddPgOrdLabel( cWa, n )
+      IF _ddPgOrdIsSystem( cOn )
+         LOOP
+      ENDIF
+      nSlot++
+      IF nSlot == nUserSlot
+         ( cWa )->( ORDSETFOCUS( nSav ) )
+         RETURN n
+      ENDIF
+   NEXT
+
+   ( cWa )->( ORDSETFOCUS( nSav ) )
+
+RETURN 0
+
+// ORDSETFOCUS: su PGDBE nUserOrd e' slot dizionario, non ORDNUMBER grezzo
+FUNCTION _ddDbddOrdSetFocus( cAlias, nUserOrd )
+LOCAL cWa, nPhys
+
+   cWa := UPPER( ALLTRIM( cAlias ) )
+   IF SELECT( cWa ) == 0
+      RETURN .F.
+   ENDIF
+
+   IF dfPgRddIs( ( cWa )->( RDDNAME() ) )
+      nPhys := _ddDbddPgPhysOrdFromUserSlot( cWa, nUserOrd )
+      IF nPhys > 0
+         RETURN ( cWa )->( ORDSETFOCUS( nPhys ) )
+      ENDIF
+   ENDIF
+
+RETURN ( cWa )->( ORDSETFOCUS( nUserOrd ) )
 
 // PGDBE: ORDNAME spesso vuoto; usa INDEXKEY come etichetta indice
 STATIC FUNCTION _ddPgOrdLabel( cWa, nOrd )

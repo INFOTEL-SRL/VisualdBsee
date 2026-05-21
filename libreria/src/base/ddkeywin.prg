@@ -934,8 +934,9 @@ METHOD RecSearch:Act()                                  // [ 03 ] <<000065>>INIZ
 
 
    lsbRec:W_TITLE      := dfStdMsg1(MSG1_DDKEYWIN0100)                    //<<000011>> Titolo oggetto browse
-   IF ! EMPTY(::nIndex)
-      lsbRec:W_ORDER := ::nIndex
+   IF ! EMPTY( ::nIndex )
+      _ddDbddOrdSetFocus( cAlias, ::nIndex )
+      lsbRec:W_ORDER := ( cAlias )->( INDEXORD() )
    ENDIF
    lsbRec:W_KEY        := bKey                         //<<000013>> Non esegue la seek
    lsbRec:W_FILTER     := bFlt                          //<<000015>> CodeBlock per il filtro
@@ -1343,7 +1344,8 @@ METHOD RecSearch:SetIndex()
    IF c >= 1 .AND. c <= LEN(::oData:aIdx)
       c := ::oData:aIdx[c]
       IF ! c[1]  == ::lsbRec:W_ORDER
-         tbSetKey(::lsbRec, c[1], NIL, ::lsbRec:W_FILTER)
+         _ddDbddOrdSetFocus( ::cAlias, c[1] )
+         tbSetKey(::lsbRec, ( ::cAlias )->( INDEXORD() ), NIL, ::lsbRec:W_FILTER)
          tbTop(::lsbRec)
          //tbBrwRefresh(::lsbRec, .T.) // posiziona la primo record
       ENDIF
