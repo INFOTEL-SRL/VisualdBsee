@@ -63,20 +63,21 @@ echo.
 
 set "ERR=0"
 
-REM --- DLL runtime obbligatorie (ddWin e' in VDBSEE1O, non solo in VDBSEE1S) ---
-set "REQ_DLL=VDBSEE1O VDBSEE1S"
-for %%N in (%REQ_DLL%) do (
-   if not exist "%SRC%\%%N.DLL" (
-      echo ERRORE: manca %%N.DLL in %SRC%
-      echo   Serve build DYNAMIC completata ^(gotutto / build200-2598^).
+REM --- DLL runtime obbligatorie (ddWin e' in VDBSEE1O lettera O, non in VDBSEE1S solo) ---
+REM Token tra virgolette: in CMD "VDBSEE1O" senza quote puo' diventare VDBSEE10 / redirect 1>
+for %%N in ("VDBSEE1O" "VDBSEE1S") do (
+   set "DLLSTEM=%%~N"
+   if not exist "%SRC%\!DLLSTEM!.DLL" (
+      echo ERRORE: manca !DLLSTEM!.DLL in %SRC%
+      echo   Serve build DYNAMIC completata ^(gotutto200-2598.bat in libreria\src^).
       set "ERR=1"
    ) else (
-      copy /Y "%SRC%\%%N.DLL" "%DST%\%%N.DLL" >nul
+      copy /Y "%SRC%\!DLLSTEM!.DLL" "%DST%\!DLLSTEM!.DLL" >nul
       if errorlevel 1 (
-         echo ERRORE copia DLL %%N.DLL
+         echo ERRORE copia DLL !DLLSTEM!.DLL
          set "ERR=1"
       ) else (
-         echo OK DLL %%N.DLL
+         echo OK DLL !DLLSTEM!.DLL
       )
    )
 )
@@ -123,31 +124,31 @@ if exist "%SRC%\pgupsize-console.exe" (
 echo.
 
 REM --- LIB di link per ALC.exe: omf\ e' la sorgente corretta (COFF / ALINK) ---
-set "LINK_LIBS=dblang DBLANG VDBSEE1O VDBSEE1S"
-for %%N in (%LINK_LIBS%) do (
+for %%N in ("dblang" "DBLANG" "VDBSEE1O" "VDBSEE1S") do (
+   set "LIBSTEM=%%~N"
    set "COPIED=0"
-   if exist "%SRCOMF%\%%N.lib" (
-      copy /Y "%SRCOMF%\%%N.lib" "%LIBDST%\%%N.lib" >nul
+   if exist "%SRCOMF%\!LIBSTEM!.lib" (
+      copy /Y "%SRCOMF%\!LIBSTEM!.lib" "%LIBDST%\!LIBSTEM!.lib" >nul
       if errorlevel 1 (
-         echo ERRORE copia LIB %%N.lib da omf
+         echo ERRORE copia LIB !LIBSTEM!.lib da omf
          set "ERR=1"
       ) else (
-         echo OK LIB %%N.lib ^(omf^)
+         echo OK LIB !LIBSTEM!.lib ^(omf^)
          set "COPIED=1"
       )
    )
-   if "!COPIED!"=="0" if exist "%SRC%\%%N.lib" (
-      copy /Y "%SRC%\%%N.lib" "%LIBDST%\%%N.lib" >nul
+   if "!COPIED!"=="0" if exist "%SRC%\!LIBSTEM!.lib" (
+      copy /Y "%SRC%\!LIBSTEM!.lib" "%LIBDST%\!LIBSTEM!.lib" >nul
       if errorlevel 1 (
-         echo ERRORE copia LIB %%N.lib da rel
+         echo ERRORE copia LIB !LIBSTEM!.lib da rel
          set "ERR=1"
       ) else (
-         echo OK LIB %%N.lib ^(rel^)
+         echo OK LIB !LIBSTEM!.lib ^(rel^)
          set "COPIED=1"
       )
    )
    if "!COPIED!"=="0" (
-      echo ERRORE: %%N.lib non trovato in %SRCOMF% ne' in %SRC%
+      echo ERRORE: !LIBSTEM!.lib non trovato in %SRCOMF% ne' in %SRC%
       set "ERR=1"
    )
 )
@@ -155,7 +156,7 @@ for %%N in (%LINK_LIBS%) do (
 REM LIB aggiuntive in rel\ (non sostituiscono le core gia' copiate)
 for %%F in ("%SRC%\*.lib") do (
    set "SKIP=0"
-   for %%N in (%LINK_LIBS%) do if /I "%%~nF"=="%%N" set "SKIP=1"
+   for %%N in ("dblang" "DBLANG" "VDBSEE1O" "VDBSEE1S") do if /I "%%~nF"=="%%~N" set "SKIP=1"
    if "!SKIP!"=="0" if exist "%%~fF" (
       if not exist "%LIBDST%\%%~nxF" (
          copy /Y "%%~fF" "%LIBDST%\%%~nxF" >nul
@@ -171,9 +172,9 @@ for %%F in ("%SRC%\*.lib") do (
 
 REM Se DLL e LIB sono la stessa cartella, duplica anche le core .lib li
 if /I "%DST%"=="%LIBDST%" (
-   for %%N in (%LINK_LIBS%) do (
-      if exist "%LIBDST%\%%N.lib" (
-         copy /Y "%LIBDST%\%%N.lib" "%DST%\%%N.lib" >nul
+   for %%N in ("dblang" "DBLANG" "VDBSEE1O" "VDBSEE1S") do (
+      if exist "%LIBDST%\%%~N.lib" (
+         copy /Y "%LIBDST%\%%~N.lib" "%DST%\%%~N.lib" >nul
          if errorlevel 1 set "ERR=1"
       )
    )

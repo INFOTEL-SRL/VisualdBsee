@@ -148,9 +148,9 @@ LOCAL cStem, cBlk
 
 RETURN .F.
 
-* �����������������������������������������������������������������������������
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 FUNCTION ddFilePos( cFile, lErrMsg )
-* �����������������������������������������������������������������������������
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 LOCAL lRet := .T.
 
 DEFAULT lErrMsg TO .T.
@@ -165,18 +165,18 @@ IF !dbdd->(FOUND())
 ENDIF
 RETURN lRet
 
-* �����������������������������������������������������������������������������
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 FUNCTION ddFileDriver()
-* �����������������������������������������������������������������������������
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 LOCAL cDriver := UPPER(ALLTRIM(dbdd->Field_Name))
 IF EMPTY(cDriver) .OR. ASCAN( RDDLIST(), {|cSubDriver|cSubDriver==cDriver} )==0
    cDriver := RDDSETDEFAULT()
 ENDIF
 RETURN cDriver        // Driver
 
-* �����������������������������������������������������������������������������
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 FUNCTION ddFileName()
-* �����������������������������������������������������������������������������
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 LOCAL cFile := "", cVarName
 DO CASE
    CASE EMPTY(dbdd->file_ali)                  // alias non impostato in dBsee
@@ -196,23 +196,23 @@ DO CASE
 ENDCASE
 RETURN UPPER(ALLTRIM(cFile))                   // Nome del File
 
-* �����������������������������������������������������������������������������
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 FUNCTION ddFileIsTab()
-* �����������������������������������������������������������������������������
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 RETURN dbdd->FILE_TYP=="1"                     // E' tabella
 
-* �����������������������������������������������������������������������������
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 FUNCTION ddFilePath()
-* �����������������������������������������������������������������������������
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 LOCAL cPath 
 
 // simone 13/11/06 
-// mantis 0001165: aggiungere possibilit� di mappare un singolo dbf in un path specifico
+// mantis 0001165: aggiungere possibilitï¿½ di mappare un singolo dbf in un path specifico
 cPath := dfSet("UserPath_"+ALLTRIM(dbdd->file_name))
 IF EMPTY(cPath)
    cPath := dbDbfPath(VAL(dbdd->File_Path)) // Path del file da dbstart.ini
 ELSEIF LEFT(cPath, 1)=="@"
-   cPath := dbDbfPath(VAL(SUBSTR(cPath, 2))) // Path del file formato UserPath_NOMEDBF=@12 = 12�path da dbstart.ini
+   cPath := dbDbfPath(VAL(SUBSTR(cPath, 2))) // Path del file formato UserPath_NOMEDBF=@12 = 12ï¿½path da dbstart.ini
 ELSE
    cPath := dfPathChk(cPath)                 // Path del file formato UserPath_NOMEDBF=c:\pippo
 ENDIF
@@ -224,9 +224,9 @@ IF dfASDriver( ddFileDriver() )                // Se e' un file su AS400
 ENDIF
 RETURN cPath
 
-* �����������������������������������������������������������������������������
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 FUNCTION ddFilePathNum()
-* �����������������������������������������������������������������������������
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
   LOCAL xRet := dbdd->File_Path
   IF dfIsDigit(Alltrim(xRet)) 
      xRet := VAL(Alltrim(xRet))
@@ -235,20 +235,20 @@ FUNCTION ddFilePathNum()
   ENDIF 
 RETURN xRet
 
-* �����������������������������������������������������������������������������
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 FUNCTION ddFileDACConnID()
-* �����������������������������������������������������������������������������
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 LOCAL cPath
 LOCAL cID
 LOCAL nPath
 
 // simone 13/11/06
-// mantis 0001165: aggiungere possibilit� di mappare un singolo dbf in un path specifico
+// mantis 0001165: aggiungere possibilitï¿½ di mappare un singolo dbf in un path specifico
 cPath := dfSet("UserPath_"+ALLTRIM(dbdd->file_name))
 IF EMPTY(cPath)
    nPath := VAL(dbdd->File_Path)
 ELSEIF LEFT(cPath, 1)=="@"
-   nPath := (VAL(SUBSTR(cPath, 2))) // Path del file formato UserPath_NOMEDBF=@12 = 12�path da dbstart.ini
+   nPath := (VAL(SUBSTR(cPath, 2))) // Path del file formato UserPath_NOMEDBF=@12 = 12ï¿½path da dbstart.ini
 ENDIF
 IF nPath == NIL
    RETURN NIL
@@ -257,30 +257,30 @@ RETURN dfDACConnIDBuild(nPath)
 
 
 
-* �����������������������������������������������������������������������������
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 FUNCTION ddFileDesc()
-* �����������������������������������������������������������������������������
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 LOCAL cName := dbdd->Field_des
 IF EMPTY(cName)
    cName := dbdd->File_Name
 ENDIF
 RETURN ALLTRIM(cName)
 
-* �����������������������������������������������������������������������������
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 FUNCTION ddIndexExp()                          // Espressione di Indice
-* �����������������������������������������������������������������������������
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
    LOCAL cNdxExp
    LOCAL cKey
 
    IF ! dfSet(AI_INDEXSTRUCTDYN) // funzionamento standard?
       // Simone 29/3/07
-      // mantis 0001215: se la struttura di un indice � troppo lunga in creazione indice si possono avere errori runtime o indici errati
+      // mantis 0001215: se la struttura di un indice ï¿½ troppo lunga in creazione indice si possono avere errori runtime o indici errati
       RETURN ALLTRIM(dbdd->Field_Pic) +ALLTRIM(dbdd->Field_Pico)
    ENDIF
 
 
    // Simone 29/3/07
-   // mantis 0001215: se la struttura di un indice � troppo lunga in creazione indice si possono avere errori runtime o indici errati
+   // mantis 0001215: se la struttura di un indice ï¿½ troppo lunga in creazione indice si possono avere errori runtime o indici errati
    // ricalcolo la chiave dai singoli campi
    cNdxExp := ""
 
@@ -361,7 +361,7 @@ RETURN cS1
 
 
 
-* �����������������������������������������������������������������������������
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 FUNCTION _ddDbddSeekRecTyp( cPrefix, cAlias )
 LOCAL cKey, nSavDbddOrd, lRet := .F.
 
@@ -588,17 +588,25 @@ LOCAL cRet := _cDdDbddNdxFieldChk
 RETURN cRet
 
 STATIC FUNCTION _ddPgOrdIsSystem( cOrdName )
-LOCAL cU := UPPER( ALLTRIM( cOrdName ) )
+LOCAL cU
+
+   IF VALTYPE( cOrdName ) != "C"
+      RETURN .F.
+   ENDIF
+
+   cU := UPPER( ALLTRIM( cOrdName ) )
 
    IF EMPTY( cU )
       RETURN .F.
    ENDIF
 
-   IF "__" $ cU
-      RETURN .T.
+   * Indici utente upsize: tabella_campo_4seek / _4like — non sono di sistema
+   * (INDEXKEY puo' contenere la parola __record nell'espressione: non usare "__" $ cU)
+   IF "_4SEEK" $ cU .OR. "_4LIKE" $ cU
+      RETURN .F.
    ENDIF
 
-   IF RIGHT( cU, 6 ) == "_4LIKE"
+   IF "__RECORD" $ cU .OR. "__DELETED" $ cU
       RETURN .T.
    ENDIF
 
@@ -639,6 +647,56 @@ LOCAL cKey, cFld := "", nSavRec, nNdx, cFn
    ENDIF
 
 RETURN UPPER( cFld )
+
+STATIC FUNCTION _ddPgFieldFromOrdTag( cTag )
+LOCAL cU, n
+
+   cU := LOWER( ALLTRIM( cTag ) )
+   IF RIGHT( cU, 6 ) == "_4seek"
+      cU := LEFT( cU, LEN( cU ) - 6 )
+   ELSEIF RIGHT( cU, 6 ) == "_4like"
+      cU := LEFT( cU, LEN( cU ) - 6 )
+   ENDIF
+
+   n := AT( "_", cU )
+   IF n > 0
+      RETURN SUBSTR( cU, n + 1 )
+   ENDIF
+
+RETURN ""
+
+//* Slot utente DBDD (W_ORDER 1,2,…) -> nome campo PG per ORDER BY (non KEY001 grezzo)
+FUNCTION _ddDbddFieldForUserSlot( cAlias, nUserSlot )
+LOCAL cFld := "", cTag
+
+   IF SELECT( "dbdd" ) == 0 .OR. nUserSlot < 1
+      RETURN ""
+   ENDIF
+
+   IF _ddDbddSeekNdxScanSlot( cAlias, nUserSlot )
+      cFld := ALLTRIM( dbdd->field_name )
+      IF EMPTY( cFld )
+         cTag := _ddDbddFileAliU()
+         cFld := _ddPgFieldFromOrdTag( cTag )
+      ENDIF
+   ENDIF
+
+   IF EMPTY( cFld )
+      cFld := _ddDbddKeyFirstField( cAlias, nUserSlot )
+   ENDIF
+
+RETURN UPPER( ALLTRIM( cFld ) )
+
+FUNCTION tbPgSqlOrdField( cAlias, nUserSlot )
+   IF nUserSlot < 1
+      RETURN ""
+   ENDIF
+   IF SELECT( "dbdd" ) == 0
+      IF ! dbCfgOpen( "dbdd" ) .AND. ! dbCfgOpen( "dbDD" )
+         RETURN ""
+      ENDIF
+   ENDIF
+RETURN _ddDbddFieldForUserSlot( cAlias, nUserSlot )
 
 STATIC FUNCTION _ddDbddTagForSlot( cAlias, nSlot )
 LOCAL nNdx, nSav, cFA
@@ -721,21 +779,205 @@ LOCAL n, nSlot, nSav, nFocus
    nSlot := 0
 
    FOR n := 1 TO ( cWa )->( ORDCOUNT() )
-      ( cWa )->( ORDSETFOCUS( n ) )
-      IF _ddPgOrdIsSystem( ( cWa )->( ORDNAME() ) )
+      IF ! _dfPgOrdSetFocusN( cWa, n )
+         LOOP
+      ENDIF
+      IF _ddPgOrdIsSystem( _ddPgOrdReadLabel( cWa ) )
          LOOP
       ENDIF
       nSlot++
       nFocus := ( cWa )->( INDEXORD() )
       IF nFocus == nIndexOrd
-         ( cWa )->( ORDSETFOCUS( nSav ) )
+         _dfPgOrdRestoreFocus( cWa, nSav )
          RETURN nSlot
       ENDIF
    NEXT
 
-   ( cWa )->( ORDSETFOCUS( nSav ) )
+   _dfPgOrdRestoreFocus( cWa, nSav )
 
 RETURN 0
+
+// PG upsize: nome tag indice (es. clifor + rag_soc -> clifor_rag_soc_4seek)
+STATIC FUNCTION _ddDbddPgTagFromField( cWa, cFld )
+LOCAL cTbl, cTag
+
+   IF SELECT( cWa ) == 0 .OR. EMPTY( cFld )
+      RETURN ""
+   ENDIF
+
+   cTbl := Lower( AllTrim( cWa ) )
+   cTag := cTbl + "_" + Lower( AllTrim( cFld ) ) + "_4seek"
+
+RETURN cTag
+
+//* PGDBE: ORDSETFOCUS(n) protetto (evita BASE/2311 su indici non attivabili).
+STATIC FUNCTION _dfPgOrdSetFocusN( cWa, nOrd )
+LOCAL nCnt, nWant, nGot
+
+   IF SELECT( cWa ) == 0 .OR. VALTYPE( nOrd ) != "N" .OR. nOrd < 1
+      RETURN .F.
+   ENDIF
+
+   nWant := Int( nOrd )
+   nCnt  := ( cWa )->( ORDCOUNT() )
+   IF nCnt < 1 .OR. nWant > nCnt
+      RETURN .F.
+   ENDIF
+
+   * PGDBE: ORDSETFOCUS ritorna C (nome indice precedente), non L — non usare come .T./.F.
+   BEGIN SEQUENCE
+      ( cWa )->( ORDSETFOCUS( nWant ) )
+   RECOVER
+      RETURN .F.
+   END SEQUENCE
+
+   nGot := ( cWa )->( INDEXORD() )
+
+RETURN ( nGot == nWant )
+
+STATIC FUNCTION _dfPgOrdRestoreFocus( cWa, nSav )
+   IF SELECT( cWa ) == 0 .OR. VALTYPE( nSav ) != "N" .OR. nSav < 1
+      RETURN NIL
+   ENDIF
+   _dfPgOrdSetFocusN( cWa, nSav )
+RETURN NIL
+
+STATIC FUNCTION _ddPgOrdReadLabel( cWa )
+LOCAL cOn, cKey
+
+   IF SELECT( cWa ) == 0
+      RETURN ""
+   ENDIF
+
+   cOn := ( cWa )->( ORDNAME() )
+   IF VALTYPE( cOn ) != "C" .OR. EMPTY( cOn )
+      cKey := ( cWa )->( INDEXKEY() )
+      IF VALTYPE( cKey ) == "C"
+         cOn := ALLTRIM( cKey )
+      ELSE
+         cOn := ""
+      ENDIF
+   ENDIF
+
+RETURN cOn
+
+// PGDBE: ORDSETFOCUS accetta solo ORDNUMBER (N), non nome tag (C) — scan per trovare n fisico
+STATIC FUNCTION _ddDbddPgPhysOrdFromPgTag( cWa, cPgTag )
+LOCAL n, nSav, cOn, cNeed, cNm
+
+   IF EMPTY( cPgTag ) .OR. SELECT( cWa ) == 0
+      RETURN 0
+   ENDIF
+
+   cNeed := UPPER( ALLTRIM( cPgTag ) )
+   nSav  := ( cWa )->( INDEXORD() )
+
+   FOR n := 1 TO ( cWa )->( ORDCOUNT() )
+      IF ! _dfPgOrdSetFocusN( cWa, n )
+         LOOP
+      ENDIF
+      cOn := _ddPgOrdReadLabel( cWa )
+      IF _ddPgOrdIsSystem( cOn )
+         LOOP
+      ENDIF
+      cNm := ""
+      IF ValType( ( cWa )->( ORDNAME() ) ) == "C"
+         cNm := UPPER( ALLTRIM( ( cWa )->( ORDNAME() ) ) )
+      ENDIF
+      IF EMPTY( cNm )
+         cNm := UPPER( ALLTRIM( cOn ) )
+      ENDIF
+      IF cNm == cNeed .OR. cNeed $ cNm
+         _dfPgOrdRestoreFocus( cWa, nSav )
+         RETURN n
+      ENDIF
+   NEXT
+
+   _dfPgOrdRestoreFocus( cWa, nSav )
+
+RETURN 0
+
+// ORDSETFOCUS su indice PG upsize (via ORDNUMBER fisico)
+STATIC FUNCTION _ddDbddOrdSetFocusPgTag( cWa, cFld )
+LOCAL cPgTag, nPhys
+
+   IF ValType( cFld ) != "C"
+      RETURN .F.
+   ENDIF
+
+   cPgTag := _ddDbddPgTagFromField( cWa, cFld )
+   nPhys  := _ddDbddPgPhysOrdFromPgTag( cWa, cPgTag )
+   IF _ddWinDbgOn()
+      _ddWinDbgMsg( "_ddDbddOrdSetFocus PG pgTag=[" + cPgTag + "] physOrd=" + dfAny2Str( nPhys ) )
+   ENDIF
+   IF nPhys > 0
+      RETURN _ddDbddOrdSetFocusPhys( cWa, nPhys )
+   ENDIF
+
+RETURN .F.
+
+// PGDBE: trova ORDNUMBER fisico il cui INDEXKEY/ORDNAME contiene il campo DBDD (es. rag_soc -> *_rag_soc_4seek)
+STATIC FUNCTION _ddDbddPgPhysOrdFromField( cWa, cFld )
+LOCAL n, nSav, cOn, cFldU, cNeed, cPgTag, nOrd
+
+   cFldU := UPPER( ALLTRIM( cFld ) )
+   IF EMPTY( cFldU ) .OR. SELECT( cWa ) == 0
+      RETURN 0
+   ENDIF
+
+   cNeed := "_" + cFldU + "_"
+   nSav  := ( cWa )->( INDEXORD() )
+
+   cPgTag := _ddDbddPgTagFromField( cWa, cFld )
+   IF ! EMPTY( cPgTag )
+      nOrd := _ddDbddPgPhysOrdFromPgTag( cWa, cPgTag )
+      IF _ddWinDbgOn()
+         _ddWinDbgMsg( "  PhysOrdPgTag [" + cPgTag + "] physOrd=" + dfAny2Str( nOrd ) + ;
+                " ordcnt=" + dfAny2Str( ( cWa )->( ORDCOUNT() ) ) )
+      ENDIF
+      IF nOrd > 0
+         RETURN nOrd
+      ENDIF
+   ENDIF
+
+   FOR n := 1 TO ( cWa )->( ORDCOUNT() )
+      IF ! _dfPgOrdSetFocusN( cWa, n )
+         LOOP
+      ENDIF
+      cOn := UPPER( _ddPgOrdReadLabel( cWa ) )
+      IF _ddPgOrdIsSystem( cOn )
+         LOOP
+      ENDIF
+      IF cNeed $ cOn .OR. cFldU $ cOn .OR. RIGHT( cOn, 6 ) == "_4SEEK" .AND. cFldU $ cOn
+         _dfPgOrdRestoreFocus( cWa, nSav )
+         RETURN n
+      ENDIF
+   NEXT
+
+   _dfPgOrdRestoreFocus( cWa, nSav )
+
+RETURN 0
+
+STATIC FUNCTION _ddDbddOrdSetFocusPhys( cWa, nPhys )
+LOCAL lOk := .F., cOrd
+
+   IF nPhys < 1
+      RETURN .F.
+   ENDIF
+
+   IF ( cWa )->( INDEXORD() ) == nPhys
+      RETURN .T.
+   ENDIF
+
+   lOk := _dfPgOrdSetFocusN( cWa, nPhys )
+   IF lOk
+      cOrd := _ddPgOrdReadLabel( cWa )
+   ELSE
+      cOrd := ""
+   ENDIF
+   _ddWinDbgMsg( "_ddDbddOrdSetFocusPhys n=" + dfAny2Str( nPhys ) + " ok=" + dfAny2Str( lOk ) + ;
+          " INDEXORD=" + dfAny2Str( (cWa)->(INDEXORD()) ) + " label=[" + LEFT( cOrd, 60 ) + "]" )
+RETURN ( lOk .AND. ( cWa )->( INDEXORD() ) > 0 )
 
 // PGDBE: slot utente DBDD (1,2,...) -> ORDNUMBER fisico (salta __record/__deleted/pkey)
 FUNCTION _ddDbddPgPhysOrdFromUserSlot( cWa, nUserSlot )
@@ -749,25 +991,134 @@ LOCAL n, nSlot, nSav, cOn
    nSlot := 0
 
    FOR n := 1 TO ( cWa )->( ORDCOUNT() )
-      ( cWa )->( ORDSETFOCUS( n ) )
-      cOn := _ddPgOrdLabel( cWa, n )
+      IF ! _dfPgOrdSetFocusN( cWa, n )
+         LOOP
+      ENDIF
+      cOn := _ddPgOrdReadLabel( cWa )
+      IF _ddWinDbgOn()
+         _ddWinDbgMsg( "  PhysOrd n=" + dfAny2Str(n) + " label=[" + cOn + "] sys=" + ;
+                dfAny2Str( _ddPgOrdIsSystem( cOn ) ) )
+      ENDIF
       IF _ddPgOrdIsSystem( cOn )
          LOOP
       ENDIF
       nSlot++
       IF nSlot == nUserSlot
-         ( cWa )->( ORDSETFOCUS( nSav ) )
+         _dfPgOrdRestoreFocus( cWa, nSav )
          RETURN n
       ENDIF
    NEXT
 
-   ( cWa )->( ORDSETFOCUS( nSav ) )
+   _dfPgOrdRestoreFocus( cWa, nSav )
 
 RETURN 0
 
+//* ORDLISTADD su PGDBE: ignora errori e tag gia' presenti.
+STATIC FUNCTION _dfPgOrdListAddSafe( cWa, cBag )
+LOCAL n, bErr, cNeed, cOn
+
+   IF SELECT( cWa ) == 0 .OR. EMPTY( cBag )
+      RETURN .F.
+   ENDIF
+
+   cNeed := UPPER( ALLTRIM( cBag ) )
+   FOR n := 1 TO ( cWa )->( ORDCOUNT() )
+      cOn := ""
+      IF ValType( ( cWa )->( ORDNAME() ) ) == "C"
+         cOn := UPPER( ALLTRIM( ( cWa )->( ORDNAME() ) ) )
+      ENDIF
+      IF EMPTY( cOn )
+         cOn := UPPER( ALLTRIM( _ddPgOrdLabel( cWa, n ) ) )
+      ENDIF
+      IF cNeed == cOn .OR. cNeed $ cOn
+         RETURN .T.
+      ENDIF
+   NEXT
+
+   bErr := ERRORBLOCK( {|e| Break( e )} )
+   BEGIN SEQUENCE
+      DBSELECTAREA( cWa )
+      ORDLISTADD( cBag )
+   RECOVER
+      ERRORBLOCK( bErr )
+      RETURN .F.
+   END SEQUENCE
+   ERRORBLOCK( bErr )
+
+RETURN .T.
+
+//* PGDBE: dopo dbfopen con DacSession ORDCOUNT() e' spesso 0 — aggancia indici upsize (*_4seek).
+FUNCTION dfPgEnsureWorkareaIndexes( cAlias, cStem, aNdx )
+LOCAL cWa, nSav, n, nMax, cTag, cFld, cStemL, lAny
+
+   cWa := UPPER( ALLTRIM( cAlias ) )
+   IF SELECT( cWa ) == 0
+      RETURN .F.
+   ENDIF
+   IF ! dfPgRddIs( ( cWa )->( RDDNAME() ) )
+      RETURN .T.
+   ENDIF
+   IF ( cWa )->( ORDCOUNT() ) > 0
+      RETURN .T.
+   ENDIF
+
+   nSav   := ( cWa )->( INDEXORD() )
+   cStemL := Lower( AllTrim( cStem ) )
+   IF EMPTY( cStemL )
+      cStemL := Lower( AllTrim( cWa ) )
+   ENDIF
+   lAny   := .F.
+
+   DBSELECTAREA( cWa )
+
+   IF _dfPgOrdListAddSafe( cWa, cStemL )
+      lAny := .T.
+   ENDIF
+   IF cStemL != Lower( AllTrim( cWa ) )
+      IF _dfPgOrdListAddSafe( cWa, Lower( AllTrim( cWa ) ) )
+         lAny := .T.
+      ENDIF
+   ENDIF
+
+   nMax := 15
+   IF ValType( aNdx ) == "A"
+      nMax := Max( nMax, Len( aNdx ) )
+   ENDIF
+
+   FOR n := 1 TO nMax
+      cFld := _ddDbddFieldForUserSlot( cAlias, n )
+      IF EMPTY( cFld ) .AND. n > IIF( ValType( aNdx ) == "A", Len( aNdx ), 0 )
+         EXIT
+      ENDIF
+      IF ! EMPTY( cFld )
+         cTag := cStemL + "_" + Lower( AllTrim( cFld ) ) + "_4seek"
+         IF _dfPgOrdListAddSafe( cWa, cTag )
+            lAny := .T.
+         ENDIF
+         cTag := cStemL + "_" + Lower( AllTrim( cFld ) ) + "_4like"
+         IF _dfPgOrdListAddSafe( cWa, cTag )
+            lAny := .T.
+         ENDIF
+      ENDIF
+      IF ValType( aNdx ) == "A" .AND. n <= Len( aNdx ) .AND. ! EMPTY( aNdx[n] )
+         IF _dfPgOrdListAddSafe( cWa, Lower( AllTrim( aNdx[n] ) ) )
+            lAny := .T.
+         ENDIF
+      ENDIF
+   NEXT
+
+   _dfPgOrdRestoreFocus( cWa, nSav )
+
+   IF _ddWinDbgOn()
+      _ddWinDbgMsg( "dfPgEnsureWorkareaIndexes wa=" + cWa + " stem=" + cStemL + ;
+             " ordcnt=" + dfAny2Str( ( cWa )->( ORDCOUNT() ) ) + " added=" + dfAny2Str( lAny ) )
+   ENDIF
+
+RETURN ( cWa )->( ORDCOUNT() ) > 0
+
 // ORDSETFOCUS: su PGDBE nUserOrd e' slot dizionario, non ORDNUMBER grezzo
 FUNCTION _ddDbddOrdSetFocus( cAlias, nUserOrd )
-LOCAL cWa, nPhys
+LOCAL cWa, nPhys, cTag, cFld
 
    cWa := UPPER( ALLTRIM( cAlias ) )
    IF SELECT( cWa ) == 0
@@ -775,13 +1126,115 @@ LOCAL cWa, nPhys
    ENDIF
 
    IF dfPgRddIs( ( cWa )->( RDDNAME() ) )
+      IF _ddDbddPgUserNdxSlot( cWa, ( cWa )->( INDEXORD() ) ) == nUserOrd
+         RETURN .T.
+      ENDIF
+      IF ( cWa )->( ORDCOUNT() ) == 0
+         dfPgEnsureWorkareaIndexes( cAlias, cWa, {} )
+      ENDIF
+      cFld := _ddDbddFieldForUserSlot( cAlias, nUserOrd )
+      cTag := _ddDbddTagForSlot( cAlias, nUserOrd )
+      IF _ddWinDbgOn()
+         _ddWinDbgMsg( "_ddDbddOrdSetFocus PG slot=" + dfAny2Str( nUserOrd ) + ;
+                " field=" + dfAny2Str( cFld ) + " tag=" + dfAny2Str( cTag ) + ;
+                " ordcnt=" + dfAny2Str( ( cWa )->( ORDCOUNT() ) ) )
+      ENDIF
+      IF ! EMPTY( cTag )
+         nPhys := _ddDbddPgPhysOrdFromPgTag( cWa, cTag )
+         IF _ddWinDbgOn()
+            _ddWinDbgMsg( "_ddDbddOrdSetFocus PG legacyTag=" + cTag + " physOrd=" + dfAny2Str( nPhys ) )
+         ENDIF
+         IF nPhys > 0
+            RETURN _ddDbddOrdSetFocusPhys( cWa, nPhys )
+         ENDIF
+      ENDIF
+      IF ! EMPTY( cFld )
+         nPhys := _ddDbddPgPhysOrdFromField( cWa, cFld )
+         _ddWinDbgMsg( "_ddDbddOrdSetFocus PG field=" + cFld + " physOrd=" + dfAny2Str( nPhys ) )
+         IF nPhys > 0
+            RETURN _ddDbddOrdSetFocusPhys( cWa, nPhys )
+         ENDIF
+         IF _ddDbddOrdSetFocusPgTag( cWa, cFld )
+            RETURN .T.
+         ENDIF
+      ENDIF
       nPhys := _ddDbddPgPhysOrdFromUserSlot( cWa, nUserOrd )
       IF nPhys > 0
-         RETURN ( cWa )->( ORDSETFOCUS( nPhys ) )
+         _ddWinDbgMsg( "_ddDbddOrdSetFocus PG slot=" + dfAny2Str( nUserOrd ) + " physOrd=" + dfAny2Str( nPhys ) )
+         RETURN _ddDbddOrdSetFocusPhys( cWa, nPhys )
       ENDIF
+      IF ! EMPTY( cFld ) .AND. _ddDbddOrdSetFocusPgTag( cWa, cFld )
+         RETURN .T.
+      ENDIF
+      IF ! EMPTY( cTag ) .AND. ! EMPTY( cFld )
+         nPhys := _ddDbddPgPhysOrdFromPgTag( cWa, Lower( AllTrim( cWa ) ) + "_" + ;
+                Lower( AllTrim( cFld ) ) + "_4seek" )
+         IF nPhys > 0
+            RETURN _ddDbddOrdSetFocusPhys( cWa, nPhys )
+         ENDIF
+      ENDIF
+      _ddWinDbgMsg( "_ddDbddOrdSetFocus PG: nessun indice per slot=" + dfAny2Str( nUserOrd ) )
+      RETURN .F.
    ENDIF
 
 RETURN ( cWa )->( ORDSETFOCUS( nUserOrd ) )
+
+//* PGDBE: prima di DBGOTOP/skip filtro, riallinea indice utente (non __record/pkey).
+PROCEDURE dfPgOrdSyncBeforeTop( nAlias )
+LOCAL cWa, nPhys, nSav, cOn
+
+   IF VALTYPE( nAlias ) != "N" .OR. nAlias < 1
+      nAlias := SELECT()
+   ENDIF
+   IF nAlias < 1 .OR. ! dfPgRddIs( ( nAlias )->( RDDNAME() ) )
+      RETURN
+   ENDIF
+
+   cWa  := ( nAlias )->( ALIAS() )
+   nSav := ( nAlias )->( INDEXORD() )
+   IF nSav > 0
+      IF _dfPgOrdSetFocusN( cWa, nSav )
+         cOn := _ddPgOrdReadLabel( cWa )
+         IF ! _ddPgOrdIsSystem( cOn )
+            RETURN
+         ENDIF
+      ENDIF
+   ENDIF
+
+   nPhys := _ddDbddPgPhysOrdFromUserSlot( cWa, 1 )
+   IF nPhys > 0
+      _dfPgOrdSetFocusN( cWa, nPhys )
+   ENDIF
+RETURN
+
+//* PGDBE: DBGOTOP/DbGoTop = ordine fisico; dfS(slot,"") = primo record nell'indice attivo.
+PROCEDURE dfPgGoTopInIndex( nAlias )
+LOCAL cWa, nSlot, nSav
+
+   IF VALTYPE( nAlias ) != "N" .OR. nAlias < 1
+      nAlias := SELECT()
+   ENDIF
+   IF nAlias < 1 .OR. ! dfPgRddIs( ( nAlias )->( RDDNAME() ) )
+      IF nAlias > 0
+         ( nAlias )->( DBGOTOP() )
+      ENDIF
+      RETURN
+   ENDIF
+
+   dfPgOrdSyncBeforeTop( nAlias )
+
+   cWa   := ( nAlias )->( ALIAS() )
+   nSav  := ( nAlias )->( INDEXORD() )
+   nSlot := _ddDbddPgUserNdxSlot( cWa, nSav )
+   IF nSlot < 1
+      nSlot := 1
+   ENDIF
+
+   dfS( nSlot, "", .T. )
+   IF ( nAlias )->( EOF() )
+      ( nAlias )->( DbGoTop() )
+   ENDIF
+RETURN
 
 // PGDBE: ORDNAME spesso vuoto; usa INDEXKEY come etichetta indice
 STATIC FUNCTION _ddPgOrdLabel( cWa, nOrd )
@@ -792,24 +1245,18 @@ LOCAL cOn, cKey, nSav
    ENDIF
 
    nSav := ( cWa )->( INDEXORD() )
-   ( cWa )->( ORDSETFOCUS( nOrd ) )
-   cOn := ( cWa )->( ORDNAME() )
-   IF VALTYPE( cOn ) != "C" .OR. EMPTY( cOn )
-      cKey := ( cWa )->( INDEXKEY() )
-      IF VALTYPE( cKey ) == "C"
-         cOn := ALLTRIM( cKey )
-      ELSE
-         cOn := ""
-      ENDIF
+   IF ! _dfPgOrdSetFocusN( cWa, nOrd )
+      RETURN ""
    ENDIF
-   ( cWa )->( ORDSETFOCUS( nSav ) )
+   cOn := _ddPgOrdReadLabel( cWa )
+   _dfPgOrdRestoreFocus( cWa, nSav )
 
 RETURN cOn
 
 // PG: INDEXORD su indice utente (salta __record/__deleted/pkey)
 // Ritorna { nPhysOrd, cOrdName, cTag, nSlot }
 STATIC FUNCTION _ddDbddPgResolveOrd( cAlias, cWa, nOrd )
-LOCAL nSav, n, cOn, cStem, cOrdName, cTag, nSlot, nRet
+LOCAL nSav, n, cOn, cStem, cOrdName, cTag, nSlot, nRet, nPgPhys
 
    cOrdName := ""
    cTag     := ""
@@ -824,29 +1271,36 @@ LOCAL nSav, n, cOn, cStem, cOrdName, cTag, nSlot, nRet
    nSav  := ( cWa )->( INDEXORD() )
 
    IF VALTYPE( nOrd ) == "N" .AND. nOrd >= 1
+      nPgPhys := _ddDbddPgPhysOrdFromUserSlot( cWa, nOrd )
+      IF nPgPhys > 0
+         nOrd := nPgPhys
+      ENDIF
       cOn := _ddPgOrdLabel( cWa, nOrd )
       IF ! EMPTY( cOn ) .AND. ! _ddPgOrdIsSystem( cOn )
          cOrdName := cOn
          cTag     := _ddDbddPgFileAliFromOrdName( cStem, cOrdName )
          nSlot    := _ddDbddPgUserNdxSlot( cWa, nOrd )
-         ( cWa )->( ORDSETFOCUS( nSav ) )
+         _dfPgOrdRestoreFocus( cWa, nSav )
          RETURN { nOrd, cOrdName, cTag, nSlot }
       ENDIF
    ENDIF
 
    FOR n := 1 TO ( cWa )->( ORDCOUNT() )
-      cOn := _ddPgOrdLabel( cWa, n )
+      IF ! _dfPgOrdSetFocusN( cWa, n )
+         LOOP
+      ENDIF
+      cOn := _ddPgOrdReadLabel( cWa )
       IF EMPTY( cOn ) .OR. _ddPgOrdIsSystem( cOn )
          LOOP
       ENDIF
       cOrdName := cOn
       cTag     := _ddDbddPgFileAliFromOrdName( cStem, cOrdName )
       nSlot    := _ddDbddPgUserNdxSlot( cWa, n )
-      ( cWa )->( ORDSETFOCUS( nSav ) )
+      _dfPgOrdRestoreFocus( cWa, nSav )
       RETURN { n, cOrdName, cTag, nSlot }
    NEXT
 
-   ( cWa )->( ORDSETFOCUS( nSav ) )
+   _dfPgOrdRestoreFocus( cWa, nSav )
 
 RETURN { nRet, cOrdName, cTag, nSlot }
 
@@ -1157,7 +1611,7 @@ LOCAL cU := ALLTRIM( cSym )
 
 RETURN .F.
 
-// GET con focus (es. rag_soc) � anche scan objCtrl se focus perso su F7
+// GET con focus (es. rag_soc) ï¿½ anche scan objCtrl se focus perso su F7
 STATIC FUNCTION _ddDbddActiveFieldName()
 LOCAL oGet, oDlg, n, oCtrl, aCtrl, nPos
 
@@ -1220,15 +1674,24 @@ LOCAL n, nSav, cKey, cFld, nUser, cOn, lPg
    nUser := 0
 
    FOR n := 1 TO ( cWa )->( ORDCOUNT() )
-      ( cWa )->( ORDSETFOCUS( n ) )
-      cOn := _ddPgOrdLabel( cWa, n )
+      IF lPg
+         IF ! _dfPgOrdSetFocusN( cWa, n )
+            LOOP
+         ENDIF
+         cOn := _ddPgOrdReadLabel( cWa )
+      ELSE
+         IF ! _dfPgOrdSetFocusN( cWa, n )
+            LOOP
+         ENDIF
+         cOn := _ddPgOrdReadLabel( cWa )
+      ENDIF
       IF lPg .AND. _ddPgOrdIsSystem( cOn )
          LOOP
       ENDIF
       nUser++
       cKey := UPPER( ALLTRIM( ( cWa )->( ORDKEY() ) ) )
       IF ! EMPTY( cKey ) .AND. cFld $ cKey
-         ( cWa )->( ORDSETFOCUS( nSav ) )
+         _dfPgOrdRestoreFocus( cWa, nSav )
          IF lPg
             RETURN _ddDbddPgUserNdxSlot( cWa, n )
          ENDIF
@@ -1236,7 +1699,7 @@ LOCAL n, nSav, cKey, cFld, nUser, cOn, lPg
       ENDIF
    NEXT
 
-   ( cWa )->( ORDSETFOCUS( nSav ) )
+   _dfPgOrdRestoreFocus( cWa, nSav )
 
 RETURN 0
 
@@ -1452,7 +1915,7 @@ LOCAL cFldU, cBlock
 RETURN .F.
 
 FUNCTION ddIndexWin()                          // Finestra sull'indice
-* �����������������������������������������������������������������������������
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 LOCAL cRet := _ddDbddNdxFieldChkTake()
 
    IF EMPTY( cRet )
@@ -1461,9 +1924,9 @@ LOCAL cRet := _ddDbddNdxFieldChkTake()
 
 RETURN cRet
 
-* �����������������������������������������������������������������������������
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 FUNCTION ddIndexName( cFileName )              // Nome dell'indice
-* �����������������������������������������������������������������������������
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 LOCAL cRet
 
 DEFAULT cFileName TO ""
@@ -1481,17 +1944,17 @@ ENDIF
 
 RETURN cRet
 
-* �����������������������������������������������������������������������������
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 FUNCTION ddFldLOOK()                           // LookUp sul campo
-* �����������������������������������������������������������������������������
-RETURN ddGetSlot( dbdd->SLOT, "��", 1)
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+RETURN ddGetSlot( dbdd->SLOT, "ï¿½ï¿½", 1)
 
-* �����������������������������������������������������������������������������
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 FUNCTION ddFldFLLOOK()                         // Destinazione del Lookup
-* �����������������������������������������������������������������������������
-RETURN UPPER(ddGetSlot( dbdd->SLOT, "��", 3))
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+RETURN UPPER(ddGetSlot( dbdd->SLOT, "ï¿½ï¿½", 3))
 
-* �����������������������������������������������������������������������������
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 FUNCTION ddFldFLInh()                          // Campo da ereditare
-* �����������������������������������������������������������������������������
-RETURN UPPER(ddGetSlot( dbdd->SLOT, "��", 6))
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+RETURN UPPER(ddGetSlot( dbdd->SLOT, "ï¿½ï¿½", 6))

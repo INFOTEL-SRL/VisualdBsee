@@ -49,8 +49,8 @@ if exist %cur%%rel%\%DMMLOG% copy /Y %cur%%rel%\%DMMLOG% %cur%%DMMLOG% >nul
 del %cur%%rel%\dynamic.xpj
 del dynamic.xpj
 @echo on
-aimplib %REL%\VDBSEE1S.DEF /coff /o%REL%\omf\VDBSEE1S.lib
-aimplib %REL%\VDBSEE1O.DEF /coff /o%REL%\omf\VDBSEE1O.lib
+aimplib "%REL%\VDBSEE1S.DEF" /coff /o"%REL%\omf\VDBSEE1S.lib"
+aimplib "%REL%\VDBSEE1O.DEF" /coff /o"%REL%\omf\VDBSEE1O.lib"
 del uuid.lib
 goto exit
 

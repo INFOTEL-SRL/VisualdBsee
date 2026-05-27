@@ -6,9 +6,9 @@
 #INCLUDE "dfWin.ch"
 #INCLUDE "dfmsg.ch"
 
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±
 FUNCTION _TbFSkip( oTbr, n2Skip ) // dbSkip
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±
 LOCAL nSkip := (oTbr:W_ALIAS)->(dfSkip( n2Skip, oTbr:W_FILTER, oTbr:W_BREAK ))
 IF nSkip == 0
    DO CASE
@@ -29,31 +29,53 @@ IF nSkip == 0
 ENDIF
 RETURN nSkip
 
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±
+// PGDBE: W_ORDER = slot DBDD; ORDNUMBER = ordine fisico (__record, pkey, â€¦).
+FUNCTION tbWaOrdSetFocus( cAlias, nOrd )
+LOCAL cWa, lRet
+
+   cWa := UPPER( ALLTRIM( cAlias ) )
+   IF SELECT( cWa ) == 0 .OR. VALTYPE( nOrd ) != "N" .OR. nOrd < 1
+      RETURN .F.
+   ENDIF
+
+   IF dfPgRddIs( ( cWa )->( RDDNAME() ) )
+      lRet := .F.
+      BEGIN SEQUENCE
+         lRet := _ddDbddOrdSetFocus( cWa, nOrd )
+      RECOVER
+         lRet := .F.
+      END SEQUENCE
+      RETURN lRet
+   ENDIF
+
+   IF ( cWa )->( ORDNUMBER() ) != nOrd
+      ( cWa )->( ORDSETFOCUS( nOrd ) )
+   ENDIF
+
+RETURN .T.
+
+* Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±
 PROCEDURE _TbBTop( oTbr ) // GoTop
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-// Simone 28/10/09 
-// non uso ORDSETFOCUS_XPP perchè controllo prima (è più veloce)
-IF (oTbr:W_ALIAS)->(ORDNUMBER()) != oTbr:W_ORDER
-(oTbr:W_ALIAS)->(ORDSETFOCUS(oTbr:W_ORDER))
+* Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±
+tbWaOrdSetFocus( oTbr:W_ALIAS, oTbr:W_ORDER )
+IF dfPgRddIs( ( oTbr:W_ALIAS )->( RDDNAME() ) )
+   dfPgGoTopInIndex( SELECT( oTbr:W_ALIAS ) )
+ELSE
+   ( oTbr:W_ALIAS )->( dfTop( oTbr:W_KEY, oTbr:W_FILTER, oTbr:W_BREAK ) )
 ENDIF
-(oTbr:W_ALIAS)->(dfTop( oTbr:W_KEY, oTbr:W_FILTER, oTbr:W_BREAK ))
 RETURN
 
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±
 PROCEDURE _TbBBottom( oTbr ) // GoBottom
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-// Simone 28/10/09 
-// non uso ORDSETFOCUS_XPP perchè controllo prima (è più veloce)
-IF (oTbr:W_ALIAS)->(ORDNUMBER()) != oTbr:W_ORDER
-(oTbr:W_ALIAS)->(ORDSETFOCUS(oTbr:W_ORDER))
-ENDIF
+* Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±
+tbWaOrdSetFocus( oTbr:W_ALIAS, oTbr:W_ORDER )
 (oTbr:W_ALIAS)->(dfBottom( oTbr:W_KEY, oTbr:W_FILTER, oTbr:W_BREAK ))
 RETURN
 
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±
 STATIC FUNCTION dfAliasDesc( cAlias )
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±
 LOCAL cName := cAlias
 IF ddFilePos( cAlias )
    cName := ddFileDesc()

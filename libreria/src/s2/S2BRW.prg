@@ -11,9 +11,9 @@
 //
 //
 // Function/Procedure Prototype Table  -  Last Update: 06/11/98 @ 17.17.20
-// 
+// ÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂ
 // Return Value         Function/Arguments
-//   
+// ÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂ  ÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂÂ
 // self                 METHOD S2XbpBrowser:Create( oParent, oOwner, aPos, aSize, aPP, lVisible )
 // ::Show()             METHOD S2XbpBrowser:DispItm()
 // self                 METHOD S2XbpBrowser:Init( oParent, oOwner, aPos, aSize, aPP, lVisible )
@@ -38,7 +38,7 @@
 #include "dfSet.ch"
 
 // Simone 14/9/2005
-// mantis 0000883: poter definire header delle colonne su pi righe
+// mantis 0000883: poter definire header delle colonne su piÂ righe
 #define HEADER_MULTILINE_SEPARATOR ";"
 #define FOOTER_MULTILINE_SEPARATOR ";"
 
@@ -312,7 +312,7 @@ RETURN aCols
 //
 // ritorna .T.
 // se la somma delle dimensioni delle colonne < spazio totale del browse
-// cio se c' spazio vuoto a destra
+// cioÂ se c'Â spazio vuoto a destra
 METHOD _THISXBP_NAME:isFitColumns()
    LOCAL oBrowse := self
    LOCAL nWidth := oBrowse:currentSize()[1]
@@ -332,7 +332,7 @@ METHOD _THISXBP_NAME:isFitColumns()
    //_aOrigWidth[1] -> Larghezza originaria listbox
    //_aOrigWidth[2] -> Larghezza originaria colonne
 
-   // se in origine c' spazio vuoto a destra abilito il riempimento
+   // se in origine c'Â spazio vuoto a destra abilito il riempimento
    IF ::_aOrigWidth[1] - ::_aOrigWidth[2] > 0
       ::_lFitColumns := .T.
       RETURN ::_lFitColumns
@@ -342,7 +342,7 @@ METHOD _THISXBP_NAME:isFitColumns()
       nWidth-= ::oVSCroll:currentSize()[1]
    ENDIF
 
-   // se c' spazio vuoto a destra abilito il riempimento
+   // se c'Â spazio vuoto a destra abilito il riempimento
    ::_lFitColumns  := ::_aOrigWidth[2] < nWidth
 
 RETURN ::_lFitColumns
@@ -417,8 +417,8 @@ EXPORTED:
 
    VAR cMes
 
-   METHOD Init, Create, navigate, keyboard //, , Configure //, forceStable, addColumn, insColumn
-   METHOD DispItm, hasFocus //, itemSelected //, itemMarked
+   METHOD Init, Create, navigate, keyboard, forceStable //, , Configure //, addColumn, insColumn
+   METHOD DispItm, hasFocus, itemSelected //, itemMarked
 
    METHOD tbAddColumn, tbInsColumn
    METHOD tbColWidth, initColumnData
@@ -475,17 +475,8 @@ EXPORTED:
    INLINE METHOD tbDown(n)
       LOCAL x
       n := IIF(n==NIL,1,n)
-      IF ::cMes == "DDKEY_PG_SAFE_NAV" .AND. !EMPTY( ::W_ALIAS ) .AND. ;
-         dfPgRddIs( ( ::W_ALIAS )->( RDDNAME() ) )
-         EVAL( ::SkipBlock, n )
-         tbStab( self, .T. )
-      ELSE
-         ::navigate(XBPBRW_Navigate_Skip, n)
-         ///////////////////////
-         //Mantis 1059
-         ::Forcestable()
-         ///////////////////////
-      ENDIF
+      ::navigate(XBPBRW_Navigate_Skip, n)
+      ::Forcestable()
 //      DEFAULT n TO 1
 //      FOR x := 1 TO n
 //         ::down()
@@ -495,17 +486,8 @@ EXPORTED:
    INLINE METHOD tbUp(n)
       LOCAL x
       n := IIF(n==NIL,-1,-n)
-      IF ::cMes == "DDKEY_PG_SAFE_NAV" .AND. !EMPTY( ::W_ALIAS ) .AND. ;
-         dfPgRddIs( ( ::W_ALIAS )->( RDDNAME() ) )
-         EVAL( ::SkipBlock, n )
-         tbStab( self, .T. )
-      ELSE
-         ::navigate(XBPBRW_Navigate_Skip, n)
-         ///////////////////////
-         //Mantis 1059
-         ::Forcestable()
-         ///////////////////////
-      ENDIF
+      ::navigate(XBPBRW_Navigate_Skip, n)
+      ::Forcestable()
 //      DEFAULT n TO 1
 //      FOR x := 1 TO n
 //         ::up()
@@ -606,8 +588,20 @@ METHOD S2XbpBrowser:Init( oParent, oOwner, aPos, aSize, aPP, lVisible )
    // {XBP_PP_FGCLR, XBPSYSCLR_INACTIVETITLETEXT     }, ;
    // {XBP_PP_BGCLR, XBPSYSCLR_INACTIVETITLETEXTBGND  }  }
 
+   IF ValType( ::phyPosBlock ) != "B"
+      ::phyPosBlock := {| | 0 }
+   ENDIF
+   IF ValType( ::phyPosSet ) != "B"
+      ::phyPosSet := {|n| NIL }
+   ENDIF
+   IF ValType( ::goPhyPosBlock ) != "B"
+      ::goPhyPosBlock := ::phyPosSet
+   ENDIF
+
    ::XbpBrowse:init( oParent, oOwner, aPos, aSize, aPP, lVisible )
-   ::hitTopBlock     := {|| ::hitTop := .T., ::stable    :=.F. , ::hitBottom := .T., EVAL(::phyPosSet, EVAL(::phyPosBlock)) }
+   ::hitTopBlock     := {|| ::hitTop := .T., ::stable := .F., ::hitBottom := .T., ;
+      IIF( ValType( ::phyPosSet ) == "B" .AND. ValType( ::phyPosBlock ) == "B", ;
+           EVAL( ::phyPosSet, EVAL( ::phyPosBlock ) ), NIL ) }
    ::hitBottomBlock  := {|| ::hitTop := .F., ::stable    :=.F. , ::hitBottom := .T. }
    ::stableBlock     := {|| ::hitTop := .F., ::hitBottom :=.F. , ::stable    := .T. }
    // ::setFontCompoundName(APPLICATION_FONT)
@@ -774,7 +768,7 @@ METHOD S2XbpBrowser:Create( oParent, oOwner, aPos, aSize, aPresParam, lVisible )
       ENDIF
 
       // Simone 14/9/2005
-      // mantis 0000883: poter definire header delle colonne su pi righe
+      // mantis 0000883: poter definire header delle colonne su piÂ righe
       //nRows := ::CalcHeadRows()
       nRows := ::setHeadRows()
       IF nRows > 1
@@ -812,7 +806,7 @@ METHOD S2XbpBrowser:Create( oParent, oOwner, aPos, aSize, aPresParam, lVisible )
       // Riassegno per far eseguire il setLeftFrozen nel metodo freeze
       ::freeze := ::freeze
 
-      // Ricalcolo larghezza colonne perch se ce n' una con :width < 5
+      // Ricalcolo larghezza colonne perchÂ se ce n'Â una con :width < 5
       // non funziona
       // workaround PDR 109-2581
       AEVAL(::aWorkAround, {|a| a[1]:setSize(a[2]) })
@@ -849,20 +843,14 @@ IF ::keyboardEnabled
 ENDIF
 RETURN self
 
-
-// 21/12/99: QUESTO E' OK MA FUORI STANDARD DBSEE, PERCIO' TOLTO
-// METHOD S2XbpBrowser:itemSelected()
-//    // Se ho selezionato e c' una colonna di TAG e ho il cursore
-//    // a riga oppure ero sulla colonna del tag effettuo la selezione
-//    IF ::nTagColumn > 0 .AND. ;
-//       (::cursorMode == XBPBRW_CURSOR_ROW .OR. ;
-//        ::colPos == ::nTagColumn )
-//
-//       ::tbTag( .F. )
-//    ELSE
-//       ::XbpBrowse:itemSelected()
-//    ENDIF
-// RETURN self
+METHOD S2XbpBrowser:itemSelected()
+   IF ::nTagColumn > 0 .AND. ;
+         ( ::cursorMode == XBPBRW_CURSOR_ROW .OR. ::colPos == ::nTagColumn )
+      ::tbTag( .F. )
+   ELSE
+      ::XbpBrowse:itemSelected()
+   ENDIF
+RETURN self
 
 // METHOD S2XbpBrowser:itemMarked()
 //    ::XbpBrowse:itemMarked()
@@ -881,7 +869,7 @@ RETURN self
 // RETURN self
 
 METHOD S2XbpBrowser:navigate(n, s)
-   ::XbpBrowse:navigate(n, s)
+   ::XbpBrowse:navigate( n, s )
    ::calcInfo()
 RETURN self
 
@@ -939,7 +927,7 @@ METHOD S2XbpBrowser:configureColumns()
 
          IF ::nHeadRows > 0
             // Simone 14/9/2005
-            // mantis 0000883: poter definire header delle colonne su pi righe
+            // mantis 0000883: poter definire header delle colonne su piÂ righe
             IF ::nHeadRows == 1
                oCol:width := MAX(oCol:width, LEN(dfAny2Str( cHead )))
             ELSE
@@ -992,7 +980,7 @@ METHOD S2XbpBrowser:configureColumns()
 
       oCol:configure(nil,nil,nil,aSz,oCol:aPP)
 
-      // Lo faccio sempre perch con il font TAHOMA
+      // Lo faccio sempre perchÂ con il font TAHOMA
       // ho il problema anche se la larghezza >= 5!
       // workaround PDR 109-2581
       //IF oCol:width < 5
@@ -1072,13 +1060,8 @@ RETURN lRet
 METHOD S2XbpBrowser:UseTagColumn()
 RETURN ::aTAG != NIL .AND. VALTYPE(::aTAG)== "A"
 
-// METHOD S2XbpBrowser:forceStable()
-//    LOCAL lRet := .F.
-//
-//    ::tbTotal()
-//    lRet := ::XbpBrowse:forceStable()
-//
-// RETURN lRet
+METHOD S2XbpBrowser:forceStable()
+RETURN ::XbpBrowse:forceStable()
 
 // Esegue il codeblock WC_FOOTERINFOBLOCK di tutte le colonne
 METHOD S2XbpBrowser:calcInfo()
@@ -1101,7 +1084,7 @@ METHOD S2XbpBrowser:calcInfo()
    NEXT
 
    IF lExec
-      // Se  cambiato qualcosa
+      // Se Â cambiato qualcosa
       // riaggiorno
 
       ::calcFootRows()
@@ -1112,7 +1095,7 @@ RETURN self
 
 METHOD S2XbpBrowser:tbStab( lForce )
 
-// Commentato perch fa dei FLASH terribili
+// Commentato perchÂ fa dei FLASH terribili
 // #ifdef _XBASE15_
 //    ::nDispLoop++
 //
@@ -1132,11 +1115,12 @@ METHOD S2XbpBrowser:tbStab( lForce )
    ::refreshAll()
 
    IF lForce != NIL .AND. lForce
+      ::stable := .F.
       ::forceStable()
    ENDIF
    ::calcInfo()
 
-// Commentato perch fa dei FLASH terribili
+// Commentato perchÂ fa dei FLASH terribili
 // #ifdef _XBASE15_
 //    ::nDispLoop--
 //
@@ -1221,7 +1205,7 @@ METHOD S2XbpBrowser:__tbInsColumn(nColPos, bBlock, nWidth, cId, cPrompt, ;
    // perche durante l'inizializzazione viene chiamato il
    // codeblock bInfo ecc. e se il codeblock fa riferimento
    // con la tbGetcolumn alla colonna corrente, la colonna
-   // corrente non viene trovata perche ancora non  aggiunta
+   // corrente non viene trovata perche ancora non Â aggiunta
    // all'array ::atempcolumn
    // (vedi funz. showTot() in gesdocb.prg di gioia )
    oCol := ::InitColumnData(oCol, bBlock, nWidth, cId, cPrompt, ;
@@ -1345,7 +1329,7 @@ METHOD S2XbpBrowser:tbTotal( lDisplay )      // Totali di colonna
      // PGDBE: tbEval attraversa tutta la tabella (lento su browse grandi). Saltare solo
      // lo scan footer; ::Browser:tbReset() deve restare completo (colonne calcolate/decodifica).
      // Scan completo: dfSet("XbaseBrowseFooterTotalsOnPG","YES")
-     lSkipScan := ( SELECT() > 0 ) .AND. dfPgRddIs( RDDNAME() ) .AND. ;
+     lSkipScan := ( SELECT() > 0 ) .AND. "PGDBE" $ UPPER( RTRIM( RDDNAME() ) ) .AND. ;
                     !( dfSet( "XbaseBrowseFooterTotalsOnPG" ) == "YES" )
      IF !lSkipScan
         EVAL(::bEval, {||::dfTotalInc()} )   // Effettuo dei totali
@@ -1425,7 +1409,7 @@ METHOD S2XbpBrowser:dfTAGTotalDec()     // Dec dei Totali  Colonne Tag
 RETURN self
 
 METHOD S2XbpBrowser:dfTotalInc()     // Inc dei Totali
-   // tbEval posiziona gi il record; WC_TOTALVALUE legge i campi correnti.
+   // tbEval posiziona giÂ il record; WC_TOTALVALUE legge i campi correnti.
    // Evitare EVAL(BLOCK): per colonne con lookup (dfS) o calcoli pesanti
    // raddoppiava il costo su ogni riga (PGDBE / browse foglio presenze).
    AEVAL( ::aTotal, {|oSub| oSub:WC_FOOTERTOTALBLOCK+=EVAL(oSub:WC_TOTALVALUE)})
@@ -1543,7 +1527,7 @@ METHOD S2XbpBrowser:tbTag( lDown )
 
 RETURN
 
-//non  mai stata utilizzata
+//non Â mai stata utilizzata
 //METHOD S2XbpBrowser:__Tag(nPos)
 //   IF LEN(::aTag)>0 .AND. nPOs>0
 //      EVAL(::phyPosSet, nPos )
@@ -1686,7 +1670,7 @@ METHOD S2XbpBrowser:_setColorBack(nColor)
 RETURN self
 
 // Cerca l'oggetto che contiene il background
-// pu essere chiamato solo dopo il :create()
+// puÂ essere chiamato solo dopo il :create()
 METHOD S2XbpBrowser:findBackground()
   LOCAL oBack
   LOCAL aChild

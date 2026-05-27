@@ -11,9 +11,9 @@
 // ------------------------------------------------------------------------
 //
 // Function/Procedure Prototype Table  -  Last Update: 07/10/98 @ 12.24.49
-// ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+// Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„
 // Return Value         Function/Arguments
-// ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ  ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+// Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„  Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„
 // self                 METHOD S2Browse:Create( oParent, oOwner, aPos, aSize, aPP, lVisible )
 // self                 METHOD S2Browse:Init( nTop, nLeft, nBott, nRight, nType, ;
 // RETURN NIL           METHOD S2Browse:W_TAGARRAY( xVal )
@@ -69,10 +69,10 @@ PROTECTED:
           { "*--", NIL                                         }, ;
           { "esc", {TOOLBAR_ESC_H    , TOOLBAR_ESC_H    }, NIL }, ;
           { "*--", NIL                                         }, ;
-          { {|| ::tbTop()   }, {TOOLBAR_GOTOP    , TOOLBAR_GOTOP    }, NIL, dfStdMsg(MSG_TBGETKEY18)+"  ("+dbAct2Mne("hom")+")" }, ;
-          { {|| ::browser:Up()  , ::browser:refreshCurrent() }, {TOOLBAR_PREV     , TOOLBAR_PREV     }, NIL, dfStdMsg(MSG_TBGETKEY16)+"  ("+dbAct2Mne("uar")+")" }, ;
-          { {|| ::browser:Down(), ::browser:refreshCurrent() }, {TOOLBAR_NEXT     , TOOLBAR_NEXT     }, NIL, dfStdMsg(MSG_TBGETKEY17)+"  ("+dbAct2Mne("dar")+")" }, ;
-          { {|| ::tbBottom()}, {TOOLBAR_GOBOTTOM , TOOLBAR_GOBOTTOM }, NIL, dfStdMsg(MSG_TBGETKEY19)+"  ("+dbAct2Mne("end")+")" }, ;
+          { {|| EVAL(::GoTopBlock),    ::tbReset() }, {TOOLBAR_GOTOP    , TOOLBAR_GOTOP    }, NIL, dfStdMsg(MSG_TBGETKEY18)+"  ("+dbAct2Mne("hom")+")" }, ;
+          { {|| ::tbUp(1),             ::tbReset() }, {TOOLBAR_PREV     , TOOLBAR_PREV     }, NIL, dfStdMsg(MSG_TBGETKEY16)+"  ("+dbAct2Mne("uar")+")" }, ;
+          { {|| ::tbDown(1),           ::tbReset() }, {TOOLBAR_NEXT     , TOOLBAR_NEXT     }, NIL, dfStdMsg(MSG_TBGETKEY17)+"  ("+dbAct2Mne("dar")+")" }, ;
+          { {|| EVAL(::GoBottomBlock), ::tbReset() }, {TOOLBAR_GOBOTTOM , TOOLBAR_GOBOTTOM }, NIL, dfStdMsg(MSG_TBGETKEY19)+"  ("+dbAct2Mne("end")+")" }, ;
           { "*--", NIL                                         }, ;
           { "hlp", {TOOLBAR_HELP_H   , TOOLBAR_HELP_H   }, NIL }, ;
           { "ush", {TOOLBAR_KEYHELP_H, TOOLBAR_KEYHELP_H}, NIL }  }
@@ -291,14 +291,17 @@ METHOD S2Browse:Init( nTop, nLeft, nBott, nRight, nType, ;
    AADD(::objCtrl, oLsb)
    ::Browser := ::objCtrl[1]
    //SD ::Browser:tabStop := .T.
-   ::Browser:itemSelected := {|| PostAppEvent(xbeP_User+EVENT_KEYBOARD, dbAct2Ksc("ret"), NIL, self) }
+   ::Browser:itemSelected := {|| PostAppEvent( xbeP_User + EVENT_KEYBOARD, dbAct2Ksc( "ret" ), NIL, self ) }
+
+   ::Browser:phyPosBlock   := {| | IIF( ! EMPTY( ::W_ALIAS ) .AND. SELECT( ::W_ALIAS ) > 0, ;
+                                    ( ::W_ALIAS )->( RecNo() ), 0 ) }
+   ::Browser:phyPosSet     := {|n| IIF( ! EMPTY( ::W_ALIAS ) .AND. SELECT( ::W_ALIAS ) > 0, ;
+                                    ( ::W_ALIAS )->( DbGoTo_XPP( n ) ), NIL ) }
+   ::Browser:goPhyPosBlock := ::Browser:phyPosSet
 
    ::GoTopBlock    := {|    |_tbBTop(self)                                                }
-   ::SkipBlock     := {|nRec|(::W_ALIAS)->(dfSkip( nRec, ::W_FILTER, ::W_BREAK ))}
+   ::SkipBlock     := {|nRec| _TbFSkip( self, nRec )                                       }
    ::GoBottomBlock := {|    |_tbBBottom(self)                                             }
-
-   ::Browser:phyPosSet     := {|n| (::W_ALIAS)->(DBGOTO_XPP( n )) }
-   ::Browser:phyPosBlock   := {| | (::W_ALIAS)->(Recno()) }
 
    // Navigation code blocks for the vertical scroll bar
    // --------------------------------------------------
@@ -307,8 +310,8 @@ METHOD S2Browse:Init( nTop, nLeft, nBott, nRight, nType, ;
    // ::Browser:lastPosBlock  := {| | (::W_ALIAS)->(LastRec())    }
    // ::Browser:firstPosBlock := {| | 1 }
 
-   // DbGoPosition() funziona male se c'Š chiave filtro e break
-   // perchŠ non le considera
+   // DbGoPosition() funziona male se c'Å  chiave filtro e break
+   // perchÅ  non le considera
    // ::Browser:goPosBlock    := {|n| (::W_ALIAS)->(DbGoPosition(n))   }
 
    //::Browser:posBlock      := {| | (::W_ALIAS)->(DbPosition_XPP())   }
@@ -391,7 +394,7 @@ METHOD S2Browse:Create( oParent, oOwner, aPos, aSize, aPP, lVisible )
    aSize[1]+=4
 
    IF ::Browser:vScroll // .AND. ! ::W_OBJSTABLE
-      aSize[1] += 16 // Allargo un po' se c'Š la scrollbar verticale
+      aSize[1] += 16 // Allargo un po' se c'Å  la scrollbar verticale
    ENDIF
 
    IF ::lFullScreen
@@ -405,7 +408,7 @@ METHOD S2Browse:Create( oParent, oOwner, aPos, aSize, aPP, lVisible )
          aPos[1]  -= IIF(::UseMainToolbar(), 0, ::toolBarWidth) / 2
       ELSE
          // Simone 22/3/06
-         // mantis 0001016: poter impostare altezza toolbar a livello di progetto per usare icone più grandi
+         // mantis 0001016: poter impostare altezza toolbar a livello di progetto per usare icone piÃ¹ grandi
          aSize[2] += IIF(::UseMainToolbar(), 0, ::toolBarHeight)
          aPos[2]  -= IIF(::UseMainToolbar(), 0, ::toolBarHeight) / 2
       ENDIF
@@ -473,7 +476,7 @@ METHOD S2Browse:Create( oParent, oOwner, aPos, aSize, aPP, lVisible )
          aSize[1] -= IIF(::UseMainToolbar(), 0, ::toolBarWidth) // toolbar a destra
       ELSE
          // Simone 22/3/06
-         // mantis 0001016: poter impostare altezza toolbar a livello di progetto per usare icone più grandi
+         // mantis 0001016: poter impostare altezza toolbar a livello di progetto per usare icone piÃ¹ grandi
          ::ToolBarCreate(::toolBarHeight, ::MessageHeight)
          aSize[2] -= IIF(::UseMainToolbar(), 0, ::toolBarHeight)  // toolbar in alto
       ENDIF
@@ -526,7 +529,7 @@ METHOD S2Browse:Create( oParent, oOwner, aPos, aSize, aPP, lVisible )
    IF ::W_LINECURSOR
       ::Browser:cursorMode := XBPBRW_CURSOR_ROW
    ELSE
-      //Luca 11/04/2016: per Xbase 2.00 il defualt Š diventato su ROW invece che cell, pertanto Š necessario definire elese...
+      //Luca 11/04/2016: per Xbase 2.00 il defualt Å  diventato su ROW invece che cell, pertanto Å  necessario definire elese...
       ::Browser:cursorMode := XBPBRW_CURSOR_CELL
    ENDIF
    IF ::W_ROWLINESEPARATOR
@@ -534,7 +537,7 @@ METHOD S2Browse:Create( oParent, oOwner, aPos, aSize, aPP, lVisible )
    ENDIF
 
    // Simone 14/9/2005
-   // mantis 0000883: poter definire header delle colonne su più righe
+   // mantis 0000883: poter definire header delle colonne su piÃ¹ righe
    ::Browser:setHeadRows( ::W_HEADERROWS )
 
    ::Browser:Create(NIL, NIL, NIL, aSize, aPP)
@@ -655,7 +658,7 @@ RETURN self
 
 // SIMONE 19/11/02 GERR 3538
 // In Xbase 1.5-1.7 richiamare il metodo padre da problemi!
-// ho duplicato il codice della S2Form:tbConfig ed Š ok.
+// ho duplicato il codice della S2Form:tbConfig ed Å  ok.
 
 METHOD S2Browse:tbConfig()
 
@@ -687,8 +690,8 @@ METHOD S2Browse:tbConfig()
          ::menuInFormScan(::W_MENUARRAY)
       ENDIF
 
-      // la bitmap di sfondo non Š attiva per il multipagina
-      // perchŠ non funziona bene.
+      // la bitmap di sfondo non Å  attiva per il multipagina
+      // perchÅ  non funziona bene.
       IF LEN(::W_PAGELABELS) <= 1
 
          xVal := ::bitmapBG
@@ -780,7 +783,7 @@ METHOD S2Browse:tbStab( lForce )
 
     ::OptChk()
 
-// Commentato perchŠ fa dei FLASH terribili
+// Commentato perchÅ  fa dei FLASH terribili
 // #ifdef _XBASE15_
 //    ::nDispLoop2++
 //
@@ -789,7 +792,10 @@ METHOD S2Browse:tbStab( lForce )
 //    ENDIF
 // #endif
 
-   SetAppFocus(::Browser)
+   IF ::Browser != NIL .AND. isMethod( ::Browser, "status" ) .AND. ;
+         ::Browser:status() == XBP_STAT_CREATE
+      SetAppFocus( ::Browser )
+   ENDIF
 
    ::W_IS2TOTAL := .T.
 
@@ -819,7 +825,9 @@ METHOD S2Browse:tbStab( lForce )
    // ENDIF
 
    IF ::W_OBJREFRESH //.OR. ! ::browser:STABLE
-      ::Browser:tbStab()
+      IF ::Browser != NIL
+         ::Browser:tbStab()
+      ENDIF
       //::W_OBJREFRESH := .F.
    ENDIF
 
@@ -834,7 +842,7 @@ METHOD S2Browse:tbStab( lForce )
    ::W_IS2TOTAL := .F.
    tbRecCng( self ) // Aggiorno W_CURRENTREC
 
-// Commentato perchŠ fa dei FLASH terribili
+// Commentato perchÅ  fa dei FLASH terribili
 // #ifdef _XBASE15_
 //    ::nDispLoop2--
 //
@@ -859,11 +867,14 @@ METHOD S2Browse:tbReset( lFreeze )
    // ::Browser:forceStable()
    //::Browser:tbStab()
 
-   // PGDBE: non saltare ::Browser:tbReset() � senza tbTotal/tbEval lo stato del browse
+   // PGDBE: non saltare ::Browser:tbReset() — senza tbTotal/tbEval lo stato del browse
    // resta incoerente e colonne con block (es. codici->dfS + C_DES) non decodificano.
    // L'ottimizzazione "niente scan tabella" e' in S2BRW.prg ::tbTotal() (dfSet XbaseBrowseFooterTotalsOnPG).
 
-   ::Browser:tbReset( lFreeze )
+   IF ::Browser != NIL .AND. isMethod( ::Browser, "status" ) .AND. ;
+         ::Browser:status() == XBP_STAT_CREATE
+      ::Browser:tbReset( lFreeze )
+   ENDIF
 
 RETURN NIL
 
@@ -951,12 +962,12 @@ METHOD S2Browse:tbInk()
          // Imposta variabili pubbliche ACT, A e SA
          dbActSet( mp1 )
 
-         IF ! TYPE("BackFun") == "U" // Se Š definita la variabile BackFun
+         IF ! TYPE("BackFun") == "U" // Se Å  definita la variabile BackFun
             dfFun2Do(M->BackFun)     // la eseguo
          ENDIF
 
          IF ACT == "A01"              .AND. ;
-            ! TYPE("dfHotFun") == "U" .AND. ;   // Se Š definita la variabile dfHotFun
+            ! TYPE("dfHotFun") == "U" .AND. ;   // Se Å  definita la variabile dfHotFun
             dfFun2Do(M->dfHotFun)               // la eseguo
             LOOP
          ENDIF
@@ -1045,12 +1056,9 @@ METHOD S2Browse:tbInk()
       ////////////////////////////////////////////////////////////////
       ENDIF
 
-      //////////////////////////////////////
-      //Mantis 2189
       IF !EMPTY(oXbp)
          oXbp:HandleEvent(nEvent, mp1, mp2)
-      ENDIF 
-      //////////////////////////////////////
+      ENDIF
 
    ENDDO
 

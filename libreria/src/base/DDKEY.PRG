@@ -56,7 +56,7 @@ FUNCTION ddKey( nRow      ,;  // riga inizio box descrizioni
                 bBreak    ,;  // Break
                 bEval     ,;  // Eval before seek
                 lLockIndex )  // Abilita solo l'indice corrente
-* 
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 LOCAL lRet 
 LOCAL nIndex           := (ALIAS())->(OrdNumber())
 LOCAL cALIAS           := ALIAS()
@@ -120,7 +120,7 @@ ENDIF
 RETURN  lRet
 
 
-* 
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 FUNCTION ddKey1( nRow      ,;  // riga inizio box descrizioni
                 nCol      ,;  // colonna inizio box descrizioni
                 nOrd      ,;  // Numero indice corrente
@@ -129,7 +129,7 @@ FUNCTION ddKey1( nRow      ,;  // riga inizio box descrizioni
                 bBreak    ,;  // Break
                 bEval     ,;  // Eval before seek
                 lLockIndex )  // Abilita solo l'indice corrente
-* 
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 ////////////////////////////////////////////////////////////////////
 
 #ifndef __XPP__
@@ -243,9 +243,9 @@ ENDIF
 tbAddObj()
 nArrLen := LEN(aKey)
 
-*?
-*Working variables
-*
+*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½?
+*ï¿½Working variablesï¿½
+*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 nNdx := MAX( ASCAN( aKey, {|aNdx| aNdx[1]==nOrd} ), 1 )
 IF !EMPTY( dfSet(AI_DDKEYMESSAGE) )
    dfUsrInfo( dfSet(AI_DDKEYMESSAGE) )
@@ -259,9 +259,9 @@ nGet := 1                      // Current get element
 WHILE .T.
 
    aKeyPar[3] := nRow                        // ?
-   aKeyPar[4] := nCol                        //   Coordinate video
-   aKeyPar[5] := aKeyPar[3] + aKeyPar[2] + 1 //   elenco indici
-   aKeyPar[6] := aKeyPar[4] + aKeyPar[1] + 1 // 
+   aKeyPar[4] := nCol                        //  ï¿½ Coordinate video
+   aKeyPar[5] := aKeyPar[3] + aKeyPar[2] + 1 //  ï¿½ elenco indici
+   aKeyPar[6] := aKeyPar[4] + aKeyPar[1] + 1 // ï¿½ï¿½
 
    _ddDbddOrdSetFocus( cAlias, NDX_PROG )
 
@@ -306,9 +306,9 @@ WHILE .T.
               aKeyPar[10] := MAXCOL()-2
            ENDIF
 
-           *?
-           *Display Key Elements
-           *
+           *ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½?
+           *ï¿½Display Key Elementsï¿½
+           *ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
            @ aKeyPar[7]+1, aKeyPar[8]-2 SAY dfFontStr( "ScrollDownArrow" );
                                             COLOR aColor[AC_KEY_BOX]
 
@@ -422,7 +422,7 @@ WHILE .T.
            nLenEsc := LEN(dfStdMsg(MSG_DFAUTOFORM02))
 
            IF nStyle == AI_DDKEYMODE_STD
-              nBtnOffset:=4  // Stile standard, sposto i pulsanti di OK pi in basso
+              nBtnOffset:=4  // Stile standard, sposto i pulsanti di OK piï¿½ in basso
            ELSE
               nBtnOffset:=0
            ENDIF
@@ -474,7 +474,7 @@ WHILE .T.
               nNdx := nOldNdx
            ENDIF
 
-           // 12:26:32 marted 04 luglio 2000
+           // 12:26:32 martedï¿½ 04 luglio 2000
            // Imposto l'indice corretto
            // Con Xbase++, avendo una form, occorre reimpostare tale valore
            // all'uscita della form, altrimenti le seek e le finestre sono
@@ -680,13 +680,13 @@ WHILE .T.
                                  // Pertanto l'unico modo di ereditare i campi in modo
                                  // corretto e' l'approssimazione
 
-                                 // Sistemazione Trigger, che  corretto nel caso di
+                                 // Sistemazione Trigger, che ï¿½ corretto nel caso di
                                  // lookup singoli, ma sbagliato in caso di lookup su piu' campi
                                  NDX_GET[nGet][GET_BUFFER] :=;
                                         (NDX_GET[nGet][GET_LOOK])->(&(NDX_GET[nGet][GET_ERE]))
 
                                  // Provo a sistemare gli altri per approssimazione
-                                 // Questo giro  necessario nel caso di lookup su piu'
+                                 // Questo giro ï¿½ necessario nel caso di lookup su piu'
                                  // campi
                                  FOR nPos := 1 TO LEN(NDX_GET)
                                      nFieldPos := (NDX_GET[nGet][GET_LOOK])->(FIELDPOS(NDX_GET[nPos][GET_NAME]))
@@ -762,7 +762,7 @@ ELSE
       lRet := lFound // Ritorna .T. se trova chiave precisa
    ELSE
       /////////////////////////////////////////////////////////////////////////////////////////////////////////
-      //suggerimento di un cliente:Inserito questo codice in quanto il controllo non  necessario
+      //suggerimento di un cliente:Inserito questo codice in quanto il controllo non ï¿½ necessario
       // Mantis 2181
       //* norissoftware
       //* lRet := nRecno#(cAlias)->(RECNO()) // Cambiando record ho avuto un      
@@ -779,14 +779,14 @@ ENDIF                                 // posizionamento
 
 RETURN lRet
 
-* 
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 STATIC FUNCTION ddKeyWin( nOrd       ,; // Finestra sul file e indice corrente
                            bKey       ,;
                            bFilter    ,;
                            bBreak     ,;
                            cNewFilter ,;
                            cRealAlias  )
-* 
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 LOCAL cKey, nInd := INDEXORD(), nMaxInd, aInd := {}, cFile, nRec
 LOCAL cAlias := ALIAS(), lCond, nEvery, nViewIndex, nRealIndex
 LOCAL lKey := (bKey!=NIL .AND. EVAL(bKey)!=NIL) // Ho un filtro
@@ -861,9 +861,9 @@ IF lCond
    #ifdef __XPP__
       // 13/12/2002 Simone
       // Tolto perche con nomi di file lunghi da problemi.
-      //  stata aggiunta la dfOrdList_XPP()
+      // ï¿½ stata aggiunta la dfOrdList_XPP()
 
-      // 13:49:32 marted 04 luglio 2000
+      // 13:49:32 martedï¿½ 04 luglio 2000
       // Aggiorno l'array degli indici mettendoci il path
       // In clipper FORSE non serve, ma devo controllare
       //ddFilePos( dfAlias2Name( ALIAS() ) )
@@ -945,7 +945,7 @@ IF lCond
    ENDIF
 
    ////////////////////////////
-   //SE CI  STATO UN ERRRORE IN CREAZIONE INDICE ALLORA Esco dalla procedura 
+   //SE CI ï¿½ STATO UN ERRRORE IN CREAZIONE INDICE ALLORA Esco dalla procedura 
    ////////////////////////////
    IF !lRet 
       RETURN lRet
@@ -981,7 +981,7 @@ IF lCond
 
    ////////////////////////////////////////////////
    //Luca+Simone 19/01/2011
-   //Inserito perch si  notato con ADS 9.1 che se l'indice filtrato non aveva record allora 
+   //Inserito perchï¿½ si ï¿½ notato con ADS 9.1 che se l'indice filtrato non aveva record allora 
    //la tabella rimaneva a BOF() = .T.  senza impostare il EOF() == .T.  .
    //La funzione DBGOTO_XPP(-1) forza la tabella ad andare a a EOF()
    ////////////////////////////////////////////////
@@ -1005,8 +1005,8 @@ IF dfAsDriver( RDDNAME() ) .AND.;
    //Win400 adds a new feature to filters, the skill of includeude a virtual
    //ordering to the database file  and the filter expression altogether; the
    //ordering expression is defined adding next to the filter expression the
-   //clause .AND. ORDERBY(FieldList) where FieldList is the list of fields that
-   //define the ordering criteria all of them separated by , (comma). The order
+   //clause ï¿½.AND. ORDERBY(FieldList)ï¿½ where FieldList is the list of fields that
+   //define the ordering criteria all of them separated by ï¿½,ï¿½ (comma). The order
    //yet generated is activated as the order 0 not affecting the behavior of all
    //the other active indexes, in this way it is possible to search for records
    //using the normal method (SEEK command or DBSEEK() function
@@ -1085,9 +1085,9 @@ IF M->Act=="esc"; M->Act:="rep"; ENDIF
 
 RETURN lRet
 
-* 
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 STATIC FUNCTION dfChkNext()
-* 
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 LOCAL lRet := .F.
 IF NEXTKEY()!=0
    IF NEXTKEY()==K_ESC
@@ -1097,9 +1097,9 @@ IF NEXTKEY()!=0
 ENDIF
 RETURN lRet
 
-* 
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 STATIC FUNCTION LoadArr(cAlias, nRow, nCol, aKey, aKeyPar, lLockIndex, nOrd )
-* 
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 LOCAL nRec                             // General record number
 LOCAL cName                            // General field name
 LOCAL cSig                             // Get lookup sign
@@ -1115,9 +1115,9 @@ LOCAL nKeySlot, cKeyBlk
 
 ASIZE(aKey, 0)
 
-*?
-*Load Main Array
-*
+*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½?
+*ï¿½Load Main Arrayï¿½
+*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 dbdd->(ORDSETFOCUS(1))                       // posiziono dbdd
 dbdd->(DBSEEK( "NDX"+cAlias))
 WHILE "NDX"+cAlias == UPPER(dbDD->rectyp+dbDD->file_name) .AND. ;
@@ -1147,9 +1147,9 @@ WHILE "NDX"+cAlias == UPPER(dbDD->rectyp+dbDD->file_name) .AND. ;
    dbdd->(DBSKIP())
 ENDDO
 
-*?
-*Load GET parameters
-*
+*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½?
+*ï¿½Load GET parametersï¿½
+*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 nArrLen := LEN(aKey)
 FOR i := 1 TO nArrLen                            // per ogni key
    nMaxLen := 0
@@ -1213,11 +1213,11 @@ FOR i := 1 TO nArrLen                            // per ogni key
 
       nMaxLen := MAX( nMaxLen, LEN(ALLTRIM(DBDD->FIELD_DES))+ LEN(cSig) )
 
-      cToken := CHR(177) // 
+      cToken := CHR(177) // ï¿½
       #ifdef __XPP__
       // Solo per Xbase++
       IF !EMPTY(DBDD->FIELD_PICO) .AND. !(cToken$DBDD->FIELD_PICO)
-         cToken := CHR(221) // Con ADS il 177  modificato in 221
+         cToken := CHR(221) // Con ADS il 177 ï¿½ modificato in 221
       ENDIF
       #endif
 
@@ -1246,9 +1246,9 @@ FOR i := 1 TO nArrLen                            // per ogni key
                          MAX(aKey[i][7],LEN(dfAny2Str(aSub[4],aSub[7]))) })
    aKey[i][7] += nMaxLen
 NEXT
-* ?
-* Creazione array operativa
-* 
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½?
+* ï¿½Creazione array operativaï¿½
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 *
 dbdd->(ORDSETFOCUS(1))
 dBdd->(dbSeek("DBF"+cAlias))
@@ -1259,18 +1259,18 @@ aKeyPar[1] := dBdd->FIELD_LEN          // Descrizione massima dei nomi degli ind
 aKeyPar[2] := dBdd->File_nCnt -nRemove // Numero di indici TOGLIERE (copia in 12)
 
 aKeyPar[3] := nRow                        // ?
-aKeyPar[4] := nCol                        //   Coordinate video
-aKeyPar[5] := aKeyPar[3] + aKeyPar[2] + 1 //   elenco indici
-aKeyPar[6] := aKeyPar[4] + aKeyPar[1] + 1 // 
+aKeyPar[4] := nCol                        //  ï¿½ Coordinate video
+aKeyPar[5] := aKeyPar[3] + aKeyPar[2] + 1 //  ï¿½ elenco indici
+aKeyPar[6] := aKeyPar[4] + aKeyPar[1] + 1 // ï¿½ï¿½
 
 aKeyPar[7] := 0                        // ?
-aKeyPar[8] := 0                        //   Coordinate video
-aKeyPar[9] := 0                        //   elenco chiavi
-aKeyPar[10]:= 0                        // 
+aKeyPar[8] := 0                        //  ï¿½ Coordinate video
+aKeyPar[9] := 0                        //  ï¿½ elenco chiavi
+aKeyPar[10]:= 0                        // ï¿½ï¿½
 
 aKeyPar[11] := NIL                     // Variabile di SaveScreen TOGLIERE
 aKeyPar[12] := aKeyPar[2]              // numero indici
-aKeyPar[13] := VAL(ddGetSlot(dBdd->Slot,"",1)) // massima lunghezza des. indici
+aKeyPar[13] := VAL(ddGetSlot(dBdd->Slot,"ï¿½ï¿½",1)) // massima lunghezza des. indici
 
 aKeyPar[14] := 0                       // Lunghezza get chiave TOGLIERE
 aKeyPar[15] := 0                       // Numero chiavi
@@ -1279,9 +1279,9 @@ aKeyPar[16] := 0                       // Massima lunghezza descrizione chiavi
 aKeyPar[17] := NIL                     // Finestra su indice corrente
 RETURN .T.
 
-* 
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 STATIC PROCEDURE ddKeyHlp() // Help sulle chiavi
-* 
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 LOCAL aOpt := {}
 
 ADDKEY "win" TO aOpt MESSAGE dfStdMsg(MSG_DDKEY05)
@@ -1340,7 +1340,7 @@ RETURN
        ENDIF
 
        // Aggiunge il menu, nascosto se standard o 
-       // visibile se lo stile  Enhanced
+       // visibile se lo stile ï¿½ Enhanced
        ATTACH "1" TO MENU aMnu AS MN_LABEL    ; // ACTMNU.TMP
                BLOCK    {||nMenu }  ; // Condizione di stato di attivazione
                PROMPT   dfStdMsg(MSG_DDWIT04)                           ; // Etichetta

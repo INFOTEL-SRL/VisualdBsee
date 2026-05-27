@@ -15,9 +15,9 @@
 //#define __LOG__
 //#define __LOG_SKIP__
 
-* 
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 FUNCTION dfSkip( n2Skip, bFilter, bBreak ) // dbSkip
-* 
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 LOCAL nSkipped := 0, nActRec := IF(EOF(),0,RECNO())
 LOCAL nAlias := SELECT()
 LOCAL nPgBrW
@@ -58,7 +58,7 @@ DO CASE
               dbGoto( nActRec )
               // Simone 02/11/09
               // mantis 0002106: problema con ADS e set filter 
-              // FIX perch con ADS se c' SET FILTER attivo
+              // FIX perchï¿½ con ADS se c'ï¿½ SET FILTER attivo
               // il dbgoto() non resetta il flag di EOF()
               IF EOF()
                  dbSkip(-1) // fa reset del EOF()
@@ -141,7 +141,7 @@ DO CASE
                  dbGoto( nActRec )
                  // Simone 02/11/09
                  // mantis 0002106: problema con ADS e set filter 
-                 // FIX perch con ADS se c' SET FILTER attivo
+                 // FIX perchï¿½ con ADS se c'ï¿½ SET FILTER attivo
                  // il dbgoto() non resetta il flag di BOF()
                  IF BOF()
                     dbSkip(1) // fa reset del BOF()
@@ -154,7 +154,7 @@ DO CASE
               dbGoto( nActRec )
               // Simone 02/11/09
               // mantis 0002106: problema con ADS e set filter 
-              // FIX perch con ADS se c' SET FILTER attivo
+              // FIX perchï¿½ con ADS se c'ï¿½ SET FILTER attivo
               // il dbgoto() non resetta il flag di BOF()
               IF BOF()
                  dbSkip(1) // fa reset del BOF()
@@ -189,9 +189,9 @@ ENDCASE
 #endif
 
 RETURN nSkipped
-* 
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 PROCEDURE dfTop( bKey, bFilter, bBreak ) // GoTop
-* 
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 LOCAL lEof := .F.
 LOCAL nAlias := SELECT()
 LOCAL uSeekVal, lSeekOk, cFld, cWaPad, nPgTopW
@@ -201,7 +201,11 @@ LOCAL uSeekVal, lSeekOk, cFld, cWaPad, nPgTopW
 #endif
 
 IF bKey == NIL       // se row_key e' vuota
-   DBGOTOP()            // vado al primo record
+   IF nAlias > 0 .AND. dfPgRddIs( ( nAlias )->( RDDNAME() ) )
+      dfPgGoTopInIndex( nAlias )
+   ELSE
+      DBGOTOP()            // vado al primo record
+   ENDIF
 ELSE
    // simone 21/1/2010
    // XL 1709
@@ -258,7 +262,13 @@ IF !lEof // Solo se non sono a EOF
    // XL 1709
    // salvo e ripristino alias in caso il codeblock lo cambi
    IF ! (nAlias)->(EVAL( bFilter ))             // Se non sono in filtro
-      dfSkip( 1, bFilter, bBreak )   // Skippo di 1
+      * // PGDBE: scan filtro illimitato da DBGOTOP blocca UI (es. ddWin+F_FIL su FIL_DES).
+      IF bKey == NIL .AND. nAlias > 0 .AND. dfPgRddIs( (nAlias)->( RDDNAME() ) ) .AND. ;
+            !( dfSet( "XbasePgDfTopFilterWalk" ) == "NO" )
+         _dfPgTopSeekFirstFilter( nAlias, bFilter, bBreak )
+      ELSE
+         dfSkip( 1, bFilter, bBreak )   // Skippo di 1
+      ENDIF
    ENDIF
 
    // PGDBE: cambio master (bKey) puo' lasciare il cursore su riga ancora con break .T.
@@ -308,9 +318,35 @@ ENDIF
 
 RETURN
 
-* 
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+
+STATIC PROCEDURE _dfPgTopSeekFirstFilter( nAlias, bFilter, bBreak )
+LOCAL nMax, nWalk := 0
+
+nMax := Val( dfSet( "XbasePgDfTopFilterMax" ) )
+IF nMax < 1
+   nMax := 800
+ENDIF
+DO WHILE (nAlias)->( ! EVAL( bFilter ) ) .AND. !(nAlias)->( Eof() ) .AND. nWalk < nMax
+   (nAlias)->( DbSkip( 1 ) )
+   IF (nAlias)->( EVAL( bBreak ) )
+      IF dfPgRddIs( (nAlias)->( RDDNAME() ) ) .AND. ;
+            !( dfSet( "XbasePgDfSkipWalkPastBreak" ) == "NO" )
+         DO WHILE (nAlias)->( EVAL( bBreak ) ) .AND. !(nAlias)->( Eof() ) .AND. nWalk < nMax
+            (nAlias)->( DbSkip( 1 ) )
+            nWalk++
+         ENDDO
+      ENDIF
+   ENDIF
+   nWalk++
+ENDDO
+IF (nAlias)->( ! EVAL( bFilter ) )
+   (nAlias)->( DBGOTO( 0 ) )
+ENDIF
+RETURN
+
 PROCEDURE dfBottom( bKey, bFilter, bBreak ) // GoBottom
-* 
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 LOCAL nActRec, uKey
 LOCAL nAlias := SELECT()
 

@@ -90,7 +90,14 @@ IF DFISSELECT( cAlias )               // Se il file e' aperto
          (cAlias)->(DBCLOSEAREA())
       ELSE
          SELECT ( cAlias )
-         SET ORDER TO nNdx
+         IF dfPgRddIs( ( cAlias )->( RDDNAME() ) )
+            dfPgEnsureWorkareaIndexes( cAlias, cFName, {} )
+            IF nNdx > 0
+               _ddDbddOrdSetFocus( cAlias, nNdx )
+            ENDIF
+         ELSE
+            SET ORDER TO nNdx
+         ENDIF
          RETURN .T.
       ENDIF
    ELSE
@@ -348,7 +355,12 @@ bErr := ERRORBLOCK()
 
       ERRORBLOCK( {|e| dfErrBreak(e, "//", .T.)} )
       BEGIN SEQUENCE
-         IF ValType( oSession ) != "O"
+         IF ValType( oSession ) == "O"
+            IF DFISSELECT( cAlias ) .AND. dfPgRddIs( ( cAlias )->( RDDNAME() ) )
+               DBSELECTAREA( cAlias )
+               dfPgEnsureWorkareaIndexes( cAlias, cFName, aNdx )
+            ENDIF
+         ELSE
 
             // Simone 20/11/09
             // correzione per utilizzo CDX
@@ -422,12 +434,16 @@ bErr := ERRORBLOCK()
            ENDIF
         ENDIF
 
-        IF lRet .AND. LEN(aNdx)>=nNdxNum
+        IF lRet .AND. nNdxNum > 0 .AND. LEN( aNdx ) >= nNdxNum
   #ifdef _LOG_OPEN_
            _logMsg("3", " prima setorder to "+dfAny2Str(nNdxNum), .T.)
   #endif
            BEGIN SEQUENCE
-              SET ORDER TO nNdxNum
+              IF ValType( oSession ) == "O" .AND. dfPgRddIs( ( cAlias )->( RDDNAME() ) )
+                 _ddDbddOrdSetFocus( cAlias, nNdxNum )
+              ELSE
+                 SET ORDER TO nNdxNum
+              ENDIF
            RECOVER
            END SEQUENCE
         ENDIF

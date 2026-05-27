@@ -73,6 +73,7 @@ IF SELECT() > 0 .AND. dfPgRddIs( RDDNAME() )
 
    cWa := PADR( UPPER( ALIAS() ), 8 )
 
+   * PGDBE: slot DBDD (N) -> ordine fisico indice *_4seek prima di ORDSETFOCUS/dfS
    IF VALTYPE( uOrd ) == "N" .AND. uOrd >= 1
       nPhys := _ddDbddPgPhysOrdFromUserSlot( cWa, uOrd )
       IF nPhys > 0
@@ -192,17 +193,18 @@ IF SELECT() > 0 .AND. dfPgRddIs( RDDNAME() )
 
    ENDIF
 
+   // PGDBE: DBSEEK("") fallisce su chiave vuota. Primo record indice = DbGoTop.
+   IF EMPTY( cSeekUse )
+      nSel := SELECT()
+      IF nSel > 0
+         ( nSel )->( DbGoTop() )
+      ENDIF
+      RETURN .T.
+   ENDIF
+
    // Se cSeekUse valorizzato ma cFld vuoto (chiave indice non dedotta), DBSEEK deve usare
    // la stringa normalizzata, non uSeek (tipo / NIL PG), altrimenti resta lo stesso record codici.
-   IF !EMPTY( cSeekUse )
-
-      lRet := DBSEEK( cSeekUse, lSoft )
-
-   ELSE
-
-      lRet := DBSEEK( uSeek, lSoft )
-
-   ENDIF
+   lRet := DBSEEK( cSeekUse, lSoft )
 
    IF !lRet .OR. EOF()
       dfPgSeekGotoMiss( cWa )

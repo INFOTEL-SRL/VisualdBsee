@@ -138,8 +138,12 @@ IF EMPTY(cWin) // La faccio
          bBlock := FIELDBLOCK(alltrim(dBdd->field_name))
          AADD(aCol,{ nAdd, { cHead, bBlock }})
          //Mantis 746
-         //nSize += MAX( LEN(cHead), LEN(dfAny2Str(EVAL(bBlock))) ) +1
-         nSize += LEN(dfAny2Str(EVAL(bBlock)))  +1
+         // PGDBE: non EVAL(bBlock) su FIL_DES per larghezza colonne (N fetch apertura ddWin).
+         IF lPgData
+            nSize += MAX( LEN(cHead), 12 ) + 1
+         ELSE
+            nSize += LEN(dfAny2Str(EVAL(bBlock)))  +1
+         ENDIF
       ENDIF
       dbdd->(DBSKIP())
    ENDDO
@@ -168,9 +172,9 @@ IF EMPTY(cWin) // La faccio
                    WHEN {||dfSet(AI_FILEMODIFY) .AND. EVAL( dfSet( AI_FILEINSERTCB ), ALLTRIM(cAlias), DE_STATE_ADD )} ;
                    BLOCK {|oWin|ddWinAtr( oWin )} MESSAGE dfStdMsg(MSG_DE_STATE_ADD)
 
-      // Setto l'indice (PGDBE: ORDSETFOCUS piu' affidabile di SET ORDER TO su alcune tabelle sistema)
+      // Setto l'indice (PGDBE: _ddDbddOrdSetFocus converte slot DBDD -> ordine fisico)
       IF dfPgRddIs( RDDNAME() )
-         ORDSETFOCUS( nIndPos )
+         _ddDbddOrdSetFocus( cAlias, nIndPos )
       ELSE
          SET ORDER TO nIndPos
       ENDIF
@@ -197,6 +201,20 @@ IF EMPTY(cWin) // La faccio
              aMtd, NIL, cAct )
    ENDIF
 ELSE // La compro gia' fatta
+   // PGDBE: nIndPos = slot utente DBDD; _ddDbddOrdSetFocus allinea tabella, EXE riceve slot (W_ORDER)
+   IF _ddWinDbgOn()
+      _ddWinDbgMsg( "_ddWin EXE branch: alias=" + cAlias + " nIndPos=" + dfAny2Str(nIndPos) + ;
+             " rdd=" + RDDNAME() + " isPg=" + dfAny2Str(dfPgRddIs(RDDNAME())) + ;
+             " INDEXORD=" + dfAny2Str(INDEXORD()) + " ORDNUMBER=" + dfAny2Str(ORDNUMBER()) )
+   ENDIF
+   IF dfPgRddIs( RDDNAME() )
+      _ddDbddOrdSetFocus( cAlias, nIndPos )
+      // nIndPos = slot DBDD utente (1,2,...) per tbSetKey/W_ORDER — non INDEXORD fisico
+      IF _ddWinDbgOn()
+         _ddWinDbgMsg( "_ddWin EXE after OrdSetFocus: userSlot=" + dfAny2Str(nIndPos) + ;
+                " INDEXORD=" + dfAny2Str(INDEXORD()) + " ORDNUMBER=" + dfAny2Str(ORDNUMBER()) )
+      ENDIF
+   ENDIF
    EVAL( &cWin, nIndPos, bTbKey, bTbFlt, bTbBrk )
 ENDIF
 RETURN

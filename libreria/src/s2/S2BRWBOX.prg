@@ -10,9 +10,9 @@
 // ------------------------------------------------------------------------
 //
 // Function/Procedure Prototype Table  -  Last Update: 06/11/98 @ 17.17.50
-// ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+// Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„
 // Return Value         Function/Arguments
-// ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ  ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+// Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„  Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„Ã„
 // RETURN               METHOD S2BrowseBox:Create( oParent, oOwner, aPos, aSize, aPP, lVisible )
 // self                 METHOD S2BrowseBox:Init( nTop, nLeft, nBott, nRight, nType, ;
 // RETURN NIL           METHOD S2BrowseBox:tbEval(bEval)
@@ -181,6 +181,13 @@ METHOD S2BrowseBox:Init( nTop, nLeft, nBott, nRight, nType, ;
    // DEFAULT aSize TO {oPos:nXWin, oPos:nYWin}
 
    * initialisation of base class
+   * phyPos PRIMA di S2Browser:init -> XbpBrowse:init chiama hitTop/EVAL su phyPos*
+
+   ::phyPosBlock   := {| | IIF( ! EMPTY( ::W_ALIAS ) .AND. SELECT( ::W_ALIAS ) > 0, ;
+                              ( ::W_ALIAS )->( RecNo() ), 0 ) }
+   ::phyPosSet     := {|n| IIF( ! EMPTY( ::W_ALIAS ) .AND. SELECT( ::W_ALIAS ) > 0, ;
+                              ( ::W_ALIAS )->( DbGoTo_XPP( n ) ), NIL ) }
+   ::goPhyPosBlock := ::phyPosSet
 
    ::S2Browser:init( oParent, oOwner, aPos, aSize, aPP, lVisible )
    ::S2Window:Init( nType )
@@ -188,13 +195,10 @@ METHOD S2BrowseBox:Init( nTop, nLeft, nBott, nRight, nType, ;
    //SD ::TabStop := .T.
 
    ::GoTopBlock    := {|    |_tbBTop(self)                                                }
-   ::SkipBlock     := {|nRec|(::W_ALIAS)->(dfSkip( nRec, ::W_FILTER, ::W_BREAK ))}
+   ::SkipBlock     := {|nRec| _TbFSkip( self, nRec )                                      }
    ::GoBottomBlock := {|    |_tbBBottom(self)                                             }
 
    ::bEval         := {|bBlk| ::tbEval(bBlk) }
-
-   ::phyPosSet     := {|n| (::W_ALIAS)->(DBGOTO_XPP( n )) }
-   ::phyPosBlock   := {| | (::W_ALIAS)->(Recno()) }
 
    // Navigation code blocks for the vertical scroll bar
    // --------------------------------------------------
@@ -203,8 +207,8 @@ METHOD S2BrowseBox:Init( nTop, nLeft, nBott, nRight, nType, ;
    // ::lastPosBlock  := {| | (::W_ALIAS)->(LastRec())    }
    // ::firstPosBlock := {| | 1 }
 
-   // DbGoPosition() funziona male se c'Š chiave filtro e break
-   // perchŠ non le considera
+   // DbGoPosition() funziona male se c'Å  chiave filtro e break
+   // perchÅ  non le considera
    // ::goPosBlock    := {|n| (::W_ALIAS)->(DbGoPosition(n))   }
 
    ::posBlock      := {| | (::W_ALIAS)->(dfNdxPosition())   }
@@ -318,7 +322,7 @@ METHOD S2BrowseBox:DoStabilize()
    LOCAL lRet := .T.
    LOCAL nEvent, mp1, mp2, oXbp
 
-// Commentato perchŠ fa dei FLASH terribili
+// Commentato perchÅ  fa dei FLASH terribili
 // #ifdef _XBASE15_
 //    ::nDispLoop++
 //
@@ -331,7 +335,7 @@ METHOD S2BrowseBox:DoStabilize()
    nEvent := dfNextAppEvent( @mp1, @mp2, @oXbp )
 
    // Evito il refresh dei control collegati al browse
-   // se il prossimo evento Š un tasto SU o GIU
+   // se il prossimo evento Å  un tasto SU o GIU
 
    IF oXbp == self .AND. ;
       nEvent == xbeP_Keyboard .AND. ;
@@ -354,7 +358,7 @@ METHOD S2BrowseBox:DoStabilize()
       tbSys(self, ::oForm)
    ENDIF
 
-// Commentato perchŠ fa dei FLASH terribili
+// Commentato perchÅ  fa dei FLASH terribili
 // #ifdef _XBASE15_
 //    ::nDispLoop--
 //
@@ -376,7 +380,7 @@ METHOD S2BrowseBox:Create( oParent, oOwner, aPos, aSize, aPP, lVisible )
       IF ::W_LINECURSOR
          ::cursorMode := XBPBRW_CURSOR_ROW
       ELSE
-         //Luca 11/04/2016: per Xbase 2.00 il defualt Š diventato su ROW invece che cell, pertanto Š necessario definire elese...
+         //Luca 11/04/2016: per Xbase 2.00 il defualt Å  diventato su ROW invece che cell, pertanto Å  necessario definire elese...
          ::cursorMode := XBPBRW_CURSOR_CELL
       ENDIF
 
@@ -385,7 +389,7 @@ METHOD S2BrowseBox:Create( oParent, oOwner, aPos, aSize, aPP, lVisible )
       ENDIF
 
       // Simone 14/9/2005
-      // mantis 0000883: poter definire header delle colonne su più righe
+      // mantis 0000883: poter definire header delle colonne su piÃ¹ righe
       ::setHeadRows( ::W_HEADERROWS )
 
       ::vScroll := dfAnd(::W_MOUSEMETHOD, W_MM_VSCROLLBAR) != 0
@@ -416,7 +420,7 @@ METHOD S2BrowseBox:tbStab( lForce )
             /////////////////////////////////////////////////////////////////
             ////Mantis 2236 -> Aggiornato il 23/10/2013
             ////Inserito per correzione del 11/10/2013 segnalato da Cavallone.
-            //IF LEN(xRet) < ::W_CURRENTREC //Se il numero dei righi da mostrare Š inferiore alla posizione del listbox
+            //IF LEN(xRet) < ::W_CURRENTREC //Se il numero dei righi da mostrare Å  inferiore alla posizione del listbox
             //   ::W_CURRENTREC := 1
             //ENDIF 
             //
@@ -449,7 +453,7 @@ METHOD S2BrowseBox:tbStab( lForce )
       ::OptChk()
 
       ::W_IS2TOTAL := .T.
-      ::S2Browser:tbStab(lForce)
+      ::S2Browser:tbStab( lForce )
       ::W_IS2TOTAL := .F.
       ::W_OBJREFRESH := .F.
       //tbRecCng( self ) // Aggiorno W_CURRENTREC   
@@ -522,7 +526,7 @@ METHOD S2BrowseBox:KeyBoard( nKey )
    ENDIF
 RETURN self
 
-// Aggiungo le varibili per compatibilit…
+// Aggiungo le varibili per compatibilitâ€¦
 CLASS S2BrowserCompatibility
    EXPORTED:
       VAR headSep, footSep, colSep

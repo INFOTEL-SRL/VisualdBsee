@@ -12,7 +12,7 @@
    #xtranslate DBGOTO(<x>) => DBGOTO_XPP(<x>)
 #endif
 
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±
 PROCEDURE tbSetKey( oTbr   ,; // Oggetto Browse
                     nTbOrd ,; // Ordine
                     bTbKey ,; // Block key
@@ -21,7 +21,7 @@ PROCEDURE tbSetKey( oTbr   ,; // Oggetto Browse
                     cStrKey,;
                     cStrFlt,;
                     cStrBrk )
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±
 IF !EMPTY(oTbr:W_ALIAS)
 
    // Controllo formale dei parametri
@@ -77,9 +77,8 @@ IF !EMPTY(oTbr:W_ALIAS)
    DEFAULT cStrBrk TO oTbr:W_DEF_STRBREAK
  #endif
 
-   (oTbr:W_ALIAS)->(ORDSETFOCUS_XPP( nTbOrd ))
-
    oTbr:W_ORDER  := nTbOrd
+   tbWaOrdSetFocus( oTbr:W_ALIAS, nTbOrd )
    oTbr:W_KEY    := bTbKey
    IF oTbr:W_KEY!=NIL .AND. EVAL(oTbr:W_KEY) == NIL
       oTbr:W_KEY := NIL      // Assegno un valore significativo
@@ -126,14 +125,15 @@ IF !EMPTY(oTbr:W_ALIAS)
               (oTbr:W_ALIAS)->(DBGOTO(0))         // Mando a EOF
       ENDCASE
    ENDIF
+
    tbRecCng( oTbr )                            // Memorizzo Record
 ENDIF
 
 RETURN
 
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±
 PROCEDURE tbValidRec( oTbr )
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±Â±
 LOCAL nOldType
 nOldType       := oTbr:WOBJ_TYPE  // Evito il messaggio di fine
 oTbr:WOBJ_TYPE := W_OBJ_BRW       // file sui form
