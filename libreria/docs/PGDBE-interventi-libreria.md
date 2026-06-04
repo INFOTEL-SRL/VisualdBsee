@@ -1,20 +1,27 @@
 # PostgreSQL (PGDBE) - Interventi sulla libreria Visual dBsee
 
-Questo documento resta la vista completa degli interventi PG applicati in `libreria/src`, ordinata per commit e area funzionale.
+**Ultimo aggiornamento:** maggio 2026 (branch `pg`, commit fino a `fcb8937`)
 
-Per uso rapido:
+Vista completa degli interventi PG in `libreria/src`, ordinata per commit e area funzionale.
 
-- panoramica chiavi runtime: `PGDBE-dfSet-riferimento-rapido.md`
-- verifica operativa: `PGDBE-checklist-riapplicazione.md`
+### Documenti correlati
+
+| Documento | Contenuto |
+|-----------|-----------|
+| [PGDBE-browse-ricerca-ordine-indice.md](./PGDBE-browse-ricerca-ordine-indice.md) | **Dettaglio** ordine indice in finestre ricerca (`ddKey`/`ddWin`), slot DBDD vs ordine fisico PG, test e build |
+| [PGDBE-dfSet-riferimento-rapido.md](./PGDBE-dfSet-riferimento-rapido.md) | Chiavi `dfSet` e INI PGUpsize |
+| [PGDBE-checklist-riapplicazione.md](./PGDBE-checklist-riapplicazione.md) | Checklist verifica / porting |
+| [README.md](./README.md) | Indice `libreria/docs` e tabella script `scripts/` |
 
 ## Obiettivo
 
-Portare la libreria Visual dBsee a lavorare in modo piu prevedibile con `PGDBE`, coprendo quattro aree principali:
+Portare la libreria Visual dBsee a lavorare in modo prevedibile con `PGDBE`, coprendo queste aree:
 
-- infrastruttura runtime PostgreSQL
-- seek e lookup su ordini PG
+- infrastruttura runtime PostgreSQL e migrazione DBF→PG (Upsize)
+- seek e lookup su ordini PG (`dfS`, `dbLook`)
 - report, query e output temporanei
-- navigazione browse e listbox 1:n
+- navigazione browse e listbox 1:n (`dfSkip`, master/dettaglio)
+- **ordine indice nelle finestre di ricerca** (`ddKey` → `ddWin` / EXE `fini*`): slot dizionario DBDD allineato agli indici fisici PG (`*_4seek`)
 
 ## Sequenza dei commit
 
@@ -39,6 +46,9 @@ Portare la libreria Visual dBsee a lavorare in modo piu prevedibile con `PGDBE`,
 | `a7c31d1` | `2026-05-04` | browse: proteggi indici e alias non disponibili | `DDUSE`, browse totals/top-bottom |
 | `f97114b` | `2026-05-04` | docs: aggiorna documentazione PGUpsize e PGDBE | README e docs PG |
 | `5ca83c7` | `2026-05-04` | build: aggiorna artefatti 2.00.2598 e pgupsize | output build, `pgupsize.exe`, template |
+| `3f3e084` | `2026-05` | fix: finestre ricerca custom da DBDD (ddWin, ddKey) | `DDWIN`, contesto slot DBDD |
+| `cb50a65` | `2026-05-21` | fix: ddKey PG seek parziale e slot DBDD FILE_ALI | `DDFILE`, `ddkeywin`, seek/ricerca |
+| `fcb8937` | `2026-05-27` | fix(pg): browse ricerca ordine indice, browse nativo, build 2598 | mapping indice, rimozione `tbPgBrowse*`, DLL |
 
 ## 1. Commit `b77f497` - runtime PostgreSQL
 
@@ -65,7 +75,7 @@ Portare la libreria Visual dBsee a lavorare in modo piu prevedibile con `PGDBE`,
 - Aggiornamenti ai file base di build per includere i moduli PG nella compilazione della libreria.
 - Adattamento di `DBCFGOPE.PRG` per aprire i dizionari locali con `DBFCDX` anche quando il driver di default e' PG.
 - Adattamento di `DDUSE.PRG` per instradare la sessione solo quando il runtime PG e' davvero attivo.
-- Presenza di uno script generico per copiare gli artefatti build verso una destinazione scelta esplicitamente, senza riferimenti rigidi a un progetto locale.
+- Script generico `copy-build-artifacts.bat` (path in CLI) e, in evoluzione doc 2026-05, `copy-to-host.bat` + `host-paths.bat.example` per copia rapida senza path nel repo.
 
 ### Effetto pratico
 
@@ -77,7 +87,6 @@ Portare la libreria Visual dBsee a lavorare in modo piu prevedibile con `PGDBE`,
 
 ### File toccati
 
-- `libreria/src/ide/SOURCE/DBLOOK.PRG`
 - `libreria/src/base/DBLOOK.PRG`
 - `libreria/src/base/DFS.PRG`
 
@@ -109,6 +118,15 @@ Questo commit affronta i casi in cui `DBSEEK` su PG posiziona il cursore in modo
 - Minor rischio di usare il record sbagliato dopo `dfS()` o `dbLook()`.
 - Lookup piu stabili su tabelle PG con ordini non banali.
 - Base tecnica riutilizzabile nei commit successivi su report e browse.
+
+### Estensioni successive su `DFS.PRG` (`cb50a65`, `fcb8937`)
+
+Il ramo PG di `dfS()` introdotto qui e' stato esteso per le **finestre di ricerca** (`ddKey` / `ddWin`):
+
+- Se il secondo argomento e' uno **slot numerico DBDD** (1, 2, …) e non un tag indice, su PGDBE viene risolto con `_ddDbddPgPhysOrdFromUserSlot()` **prima** di `ORDSETFOCUS`.
+- Evita che `dfS( alias, W_ORDER )` attivi l'ordine fisico `__record` (posizione 1 su PG) al posto dell'indice scelto in maschera.
+
+Mapping slot ↔ `ORDNUMBER`, focus griglia e build: [PGDBE-browse-ricerca-ordine-indice.md](./PGDBE-browse-ricerca-ordine-indice.md). Cronologia commit: §4b–4c.
 
 ## 3. Commit `fc99184` - report, query e output
 
@@ -202,6 +220,95 @@ Questo commit affronta i casi in cui `DBSEEK` su PG posiziona il cursore in modo
 - Meno rischio di schermate vuote o navigazione troncata.
 - Riduzione del costo di apertura browse su tabelle grandi.
 
+> **Nota:** il commit `8ea3bbd` riguarda browse **master/dettaglio** e `dfSkip`. L’ordine indice nelle **finestre di ricerca** (slot DBDD vs `__record`) è affrontato nei commit `3f3e084`, `cb50a65`, `fcb8937` (sezioni seguenti).
+
+## 4a. Commit `3f3e084` - finestre ricerca custom da DBDD (`ddWin`, `ddKey`)
+
+### File toccati
+
+- `libreria/src/base/DDWIN.PRG`
+- `libreria/src/base/ddkeywin.prg` (contesto indice / `W_ORDER`)
+
+### Problema
+
+Le finestre di ricerca generate da DBDD (`ddWin`, azione “finestra” da `ddKey`) ricevevano `nIndPos` = **slot utente** (1, 2, …). Su PGDBE, usare quel numero come `ORDSETFOCUS` o `SET ORDER TO` attiva l’ordine **fisico** omonimo (spesso `__record`), non il primo indice utente del dizionario.
+
+### Interventi
+
+- Ramo browse integrato in `_ddWin`: su PG, `_ddDbddOrdSetFocus( cAlias, nIndPos )` al posto di `ORDSETFOCUS( nIndPos )` / `SET ORDER TO nIndPos`.
+- Ramo finestra EXE già compilata (`EVAL( &cWin, … )`): prima di `EVAL`, `_ddDbddOrdSetFocus` allinea la workarea; il parametro indice passato alla EXE resta lo **slot DBDD** (coerente con `W_ORDER` e `tbSetKey`).
+
+### Effetto pratico
+
+- Apertura ricerca PG con indice dizionario coerente con DBF.
+- Base per i commit successivi su seek (`cb50a65`) e griglia browse (`fcb8937`).
+
+## 4b. Commit `cb50a65` - ddKey: seek PG, slot DBDD, FILE_ALI
+
+### File toccati
+
+- `libreria/src/base/DDFILE.PRG` (mapping slot, KEY indice, ricerca su campi C)
+- `libreria/src/base/ddkeywin.prg`
+- `libreria/src/base/DDKEY.PRG`
+- Artefatti build `VDBSEE1O.DLL` 2.00.2598
+
+### Interventi principali
+
+- Estensione mapping **slot utente DBDD** → ordine fisico PG / tag `*_4seek` (precursori di `_ddDbddOrdSetFocus` e `_ddDbddPgPhysOrdFromUserSlot`).
+- Seek in `ddKey`: uso di KEY da indice quando `NdxIncN` è vuoto; ricerca “contiene” su campi carattere dove previsto.
+- Allineamento `FILE_ALI` / contesto indice in ricerca parziale.
+
+### Effetto pratico
+
+- Record trovato in `ddKey` più affidabile su PG.
+- Il browse poteva ancora mostrare la griglia in ordine `__record` fino al commit `fcb8937` (focus griglia + `_ddPgOrdIsSystem`).
+
+## 4c. Commit `fcb8937` - browse ricerca: ordine indice e browse nativo
+
+**Documentazione estesa:** [PGDBE-browse-ricerca-ordine-indice.md](./PGDBE-browse-ricerca-ordine-indice.md) (esempio numerico slot vs `ORDNUMBER`, flusso, test, build).
+
+### Sintesi tecnica
+
+| Concetto | Significato su PG |
+|----------|-------------------|
+| `W_ORDER` / `nIndPos` | Slot **utente** nel dizionario (1 = primo indice scelto in maschera) |
+| `ORDNUMBER()` / `INDEXORD()` | Posizione **fisica** PG: 1=`__record`, 2=`__deleted`, 3=`pkey`, 4+= indici `*_4seek` |
+| Bug classificazione | `"__" $ INDEXKEY` scartava indici utente; fix `_ddPgOrdIsSystem` |
+| Seek vs griglia | Seek poteva usare mapping corretto; griglia no se `ORDSETFOCUS(W_ORDER)` senza conversione |
+
+### File toccati (sorgenti)
+
+| File | Modifica |
+|------|----------|
+| `DDFILE.PRG` | `_ddPgOrdIsSystem`, `_ddDbddOrdSetFocus`, `_ddDbddPgPhysOrdFromUserSlot`, helper tag/campo PG |
+| `DDWIN.PRG` | Focus indice all’apertura ricerca (integrato + EXE) |
+| `DFS.PRG` | `dfS`: slot numerico → ordine fisico prima di `ORDSETFOCUS` |
+| `TBSKIP.PRG` | `tbWaOrdSetFocus`, `_TbBTop` + `dfPgGoTopInIndex`; file ridotto, senza BOM UTF-8 |
+| `TBSETKEY.prg`, `ddkeywin.prg` | `W_ORDER` = slot; `tbWaOrdSetFocus` all’apertura lista |
+| `S2BROWSE.prg`, `S2BRW.prg`, `S2BRWBOX.prg` | Solo `_TbFSkip` / `_TbBTop`; rimossi wire mouse/SQL/`tbPgBrowse*` |
+| `DDKEY.PRG`, `DDUSE.PRG`, `DFSKIP.PRG`, `DFLIBDAT.PRG` | Allineamenti correlati |
+| `_gotutto.base`, `gotutto200-2598.bat` | `aimplib` con path quotati (`VDBSEE1O` lettera O) |
+| `scripts/copy-build-artifacts.bat` | Controllo STALE `VDBSEE1O` vs `VDBSEE1S` |
+| `scripts/copy-to-host.bat` | Wrapper copia rapida (path da `host-paths.bat` locale) |
+| `scripts/host-paths.bat.example` | Template path host (copiare in `host-paths.bat`, gitignored) |
+
+### Rimosso (non reintrodurre)
+
+- `XbasePgBrowseIndexOrder`, `XbasePgBrowseSqlOrder`, funzioni `tbPgBrowse*`, unità `pgBrowseSql.prg`.
+- Motivo: instabilità mouse/scroll e crash `BASE/1012` sul layer custom; con mapping indice il browse PG nativo è sufficiente.
+
+### Build e distribuzione
+
+- Runtime: **`VDBSEE1O.DLL`** (BASE, DDFILE, DDWIN, PGSEEK, ddkeywin, TBSKIP) + **`VDBSEE1S.DLL`** (S2*).
+- Build: `gotutto200-2598.bat`; se STALE solo `VDBSEE1O`: `scripts/rebuild-vdbsee1o-2598.bat`.
+- Copia verso host: **`scripts/copy-to-host.bat`** (path in `scripts/host-paths.bat`, da `host-paths.bat.example`) oppure `copy-build-artifacts.bat` con path espliciti — vedi §14.
+- Host: aggiornare DLL in cartella `EXE` del progetto; **non** richiede modifiche `.prg` applicative per l’ordine indice.
+
+### Configurazione host (`dbstart.ini`)
+
+- **Non** usare `XbasePgBrowseIndexOrder` / `XbasePgBrowseSqlOrder` (rimosse).
+- Opzionale: `XbaseDdWinDebug=YES` → `ddwin_dbg.log`.
+
 ## 5. Commit `1f3439e` - supporto PG aggiuntivo sui listbox
 
 Questo commit estende gli adattamenti su listbox in contesto PostgreSQL, consolidando la parte introdotta nei commit precedenti su browse/navigazione.
@@ -215,6 +322,7 @@ In termini pratici, e' il completamento recente della linea di lavoro "PG su lis
 - `libreria/docs/PGDBE-checklist-riapplicazione.md`
 - `libreria/docs/PGDBE-dfSet-riferimento-rapido.md`
 - `libreria/docs/PGDBE-interventi-libreria.md`
+- `libreria/docs/PGDBE-browse-ricerca-ordine-indice.md` (da `fcb8937` / aggiornamenti 2026-05)
 - `libreria/docs/README.md`
 - `libreria/src/base/DFLIBDAT.PRG`
 
@@ -236,7 +344,9 @@ Questi commit non sono solo "core libreria", ma sono parte integrante della cate
 - `2ac44ba`  
   Riallinea template IDE (`INITPROC.TMP`, `RMAKEX*.TMP`) necessari per coerenza runtime PG lato progetto host.
 - `9d305d5`  
-  Sostituisce script locale con `scripts/copy-build-artifacts.bat` generico.
+  Sostituisce script locale con `scripts/copy-build-artifacts.bat` generico (path sulla riga di comando).
+- *(aggiornamento doc/script 2026-05)*  
+  Aggiunti `copy-to-host.bat` e `host-paths.bat.example`: copia rapida senza path hardcoded nel repo; `host-paths.bat` in `.gitignore`.
 - `3012194`  
   Aggiorna DBF/NTX IDE (`dbseeopt`, `dbseetab`) con campi PostgreSQL in proprieta' progetto.
 - `e79c566`  
@@ -278,18 +388,16 @@ Questi file sono stati riallineati alla variante funzionante di riferimento per 
 
 ## 9. Chiavi `dfSet` collegate
 
-Le modifiche PG introdotte dai commit `fc99184` e `8ea3bbd` possono essere modulate tramite alcune chiavi `dfSet`.
+Le modifiche PG dei commit `fc99184` e `8ea3bbd` si modulano con le chiavi elencate in [PGDBE-dfSet-riferimento-rapido.md](./PGDBE-dfSet-riferimento-rapido.md).
 
-Le principali sono:
+Principali (ancora attive):
 
-- `XbasePgReportTopUseKeyWithQry`
-- `XbasePgReportKeepQueryKeyOpt`
+- `XbasePgReportTopUseKeyWithQry`, `XbasePgReportKeepQueryKeyOpt`
 - `XbaseBrowseFooterTotalsOnPG`
 - `XbaseDbLookEofOnEmptyFreeSeek`
-- `XbasePgDfTopDeferDbgoto0OnBreak`
-- `XbasePgDfSkipWalkPastBreak`
+- `XbasePgDfTopDeferDbgoto0OnBreak`, `XbasePgDfSkipWalkPastBreak`
 
-Il dettaglio operativo e' documentato in `PGDBE-dfSet-riferimento-rapido.md`.
+**Rimosse (maggio 2026, commit `fcb8937`):** `XbasePgBrowseIndexOrder`, `XbasePgBrowseSqlOrder` — l’ordine indice in ricerca PG non è più opt-in: vedi §4c e [PGDBE-browse-ricerca-ordine-indice.md](./PGDBE-browse-ricerca-ordine-indice.md).
 
 ## 10. Mappa rapida file -> commit
 
@@ -298,7 +406,13 @@ Il dettaglio operativo e' documentato in `PGDBE-dfSet-riferimento-rapido.md`.
 | `src/PG/Runtime/*.prg` | `b77f497`, `7e0ffed` |
 | `src/PG/Upsize/*.prg` | `b77f497`, `7e0ffed`, `e55d174` |
 | `src/base/PGSEEK.PRG` | `b77f497` |
-| `src/base/DFS.PRG` | `b77f497`, `a4de29f` |
+| `src/base/DFS.PRG` | `b77f497`, `a4de29f`, `fcb8937` |
+| `src/base/DDFILE.PRG` | `b77f497`, `cb50a65`, `fcb8937` |
+| `src/base/DDWIN.PRG` | `3f3e084`, `fcb8937` |
+| `src/base/DDKEY.PRG` | `cb50a65`, `fcb8937` |
+| `src/base/TBSKIP.PRG` | `fcb8937` |
+| `src/base/TBSETKEY.prg` | `fcb8937` |
+| `src/base/ddkeywin.prg` | `cb50a65`, `fcb8937` |
 | `src/base/DBLOOK.PRG` | `a4de29f` |
 | `src/base/DDUSE.PRG` | `b77f497`, `a7c31d1` |
 | `src/base/DFANY2ST.PRG` | `fc99184` |
@@ -308,16 +422,25 @@ Il dettaglio operativo e' documentato in `PGDBE-dfSet-riferimento-rapido.md`.
 | `src/base/dfupdqry.prg` | `fc99184` |
 | `src/xpp/DFCRWOUT.prg` | `fc99184` |
 | `src/base/DFSKIP.PRG` | `8ea3bbd` |
-| `src/s2/S2BROWSE.prg` | `8ea3bbd` |
-| `src/s2/S2BRW.prg` | `8ea3bbd`, `1f3439e` |
+| `src/s2/S2BROWSE.prg` | `8ea3bbd`, `fcb8937` |
+| `src/s2/S2BRW.prg` | `8ea3bbd`, `1f3439e`, `fcb8937` |
+| `src/s2/S2BRWBOX.prg` | `fcb8937` |
+| `scripts/copy-build-artifacts.bat` | `9d305d5`, `fcb8937` |
+| `scripts/copy-to-host.bat` | wrapper copia host (2026-05) |
+| `scripts/host-paths.bat.example` | template path locali (2026-05) |
+| `src/_gotutto.base` | `fcb8937` |
 | `src/support/TBTOTAL.prg` | `a7c31d1` |
 | `src/xpp/TBTOP.prg` | `a7c31d1` |
+| `libreria/docs/PGDBE-browse-ricerca-ordine-indice.md` | doc `fcb8937` |
 
 ## 11. Uso consigliato di questa documentazione
 
-1. Leggere questo file per la storia tecnica completa.
-2. Usare `PGDBE-dfSet-riferimento-rapido.md` per tuning/configurazione.
-3. Usare `PGDBE-checklist-riapplicazione.md` per audit e riallineamenti post-merge.
+1. Leggere questo file per la storia tecnica completa (commit aprile = aree generali; maggio = ricerca/browse PG in §4a–4c).
+2. Per browse ricerca PG: [PGDBE-browse-ricerca-ordine-indice.md](./PGDBE-browse-ricerca-ordine-indice.md).
+3. Usare `PGDBE-dfSet-riferimento-rapido.md` per tuning/configurazione.
+4. Usare `PGDBE-checklist-riapplicazione.md` per audit e riallineamenti post-merge.
+5. Build 2.00.2598, copia DLL/LIB: [README.md](../../README.md) (root), sezioni *Flusso di build* e *Copia degli artefatti*; dettaglio script in §14 sotto.
+6. Indice documentazione PG: [libreria/docs/README.md](./README.md).
 
 ## 12. EXE standalone DBF->Postgres
 
@@ -336,8 +459,10 @@ Per coprire anche il caso "tool esterno", e' stato introdotto un runner CLI dedi
   - fornisce fallback per messaggi, shell, `dbCfgOpen()` e risoluzione `dbstart.ini`
 - `libreria/src/PG/Upsize/pgUpsizeExe.xpj` + `libreria/src/PG/Upsize/build-pgupsize-exe.bat`
   - target build dedicato per produrre `pgupsize.exe` su output `libreria/output/lib200-2598/rel`
+- `libreria/src/PG/Upsize/pgUpsizeConsole.xpj` + `libreria/src/PG/Upsize/build-pgupsize-console.bat`
+  - produce `pgupsize-console.exe` (`/PM:VIO`: log nella stessa console; adatto a script/IDE)
 - `libreria/src/PG/Upsize/README-upsize-cli.md`
-  - guida cliente per licenza PGDBE esterna, connessione, path INI, dry-run, log ed exit code
+  - guida cliente per licenza PGDBE esterna, connessione, path INI, dry-run, log ed exit code (entrambi gli eseguibili)
 
 Il template `ide/tmp/xbase/INITPROC.TMP` resta responsabile dell'inizializzazione runtime PostgreSQL del progetto generato. La chiamata esplicita alla migrazione puo avvenire da tool standalone oppure da codice applicativo che invoca gli helper sopra.
 
@@ -383,7 +508,7 @@ Dopo la creazione del runtime:
 
 ## 13. Hardening corrente PGUpsize e browse
 
-Lo stato corrente aggiunge protezioni operative non legate a un solo commit storico:
+Protezioni operative cumulative (più commit):
 
 - `pgUpsizeXml.prg`
   - genera il runtime XML con DBE tabella `foxcdx`
@@ -404,5 +529,53 @@ Lo stato corrente aggiunge protezioni operative non legate a un solo commit stor
 - `TBTOTAL.prg` e `TBTOP.prg`
   - verificano che l'oggetto browse abbia un alias valido e selezionabile prima di calcolare totali o muovere top/bottom
   - racchiudono le chiamate browse in `BEGIN SEQUENCE`, cosi un alias gia chiuso non fa collassare la UI
+- **Ordine indice ricerca PG** (`fcb8937`, vedi §4c)
+  - `_ddDbddOrdSetFocus` / `tbWaOrdSetFocus`: slot DBDD → indice fisico `*_4seek`, non `__record`
+  - `_ddPgOrdIsSystem`: non scarta indici utente per presenza di `__record` nell'espressione `INDEXKEY`
+  - browse ricerca: navigazione nativa `S2Browse` + `TBSKIP`, senza layer `tbPgBrowse*`
 
-Queste protezioni sono particolarmente utili durante migrazioni o smoke test su progetti legacy, dove indici locali, DBF e workarea possono non essere nello stato atteso.
+Utile in migrazioni e smoke test su progetti legacy con DBF, CDX e workarea in stati non ideali.
+
+## 14. Script distribuzione artefatti (`scripts/`)
+
+Copia DLL/LIB (e opzionalmente `pgupsize*.exe`) da `libreria/output/<variante>/rel/` verso il **progetto host**. Nessun path di progetto è hardcoded nel repository.
+
+| File | Ruolo |
+|------|--------|
+| `host-paths.bat.example` | Template committato: variabili `VDB_HOST_EXE`, `VDB_HOST_LIB`, opz. `VDB_BUILD_VARIANT` |
+| `host-paths.bat` | **Locale, gitignored** — copia da `.example` e personalizza i path |
+| `copy-to-host.bat` | Copia rapida: legge `host-paths.bat` oppure env `VDB_HOST_EXE` / `VDB_HOST_LIB` |
+| `copy-build-artifacts.bat` | Copia con argomenti: `<variante> <dir-exe> [dir-lib]`; controllo STALE `VDBSEE1O` |
+| `rebuild-vdbsee1o-2598.bat` | Pulizia obj + DYNAMIC solo `VDBSEE1O` (prompt Xbase++ 2.00.2598) |
+| `set-vdbsee-build-env.bat` | PATH/include/lib per rebuild (usato da `rebuild-vdbsee1o-2598.bat`) |
+
+### Setup una tantum (copia rapida)
+
+```bat
+copy scripts\host-paths.bat.example scripts\host-paths.bat
+REM Modifica VDB_HOST_EXE e VDB_HOST_LIB in host-paths.bat
+```
+
+Se `VDB_HOST_LIB` coincide con `VDB_HOST_EXE`, può essere omessa (stessa cartella per runtime e link).
+
+### Flusso tipico dopo modifica libreria
+
+```bat
+build200-2598.bat
+scripts\copy-to-host.bat
+```
+
+Se `copy-to-host` / `copy-build-artifacts` segnala **STALE** `VDBSEE1O`:
+
+```bat
+scripts\rebuild-vdbsee1o-2598.bat
+scripts\copy-to-host.bat
+```
+
+### Cosa viene copiato
+
+- **DLL runtime:** `VDBSEE1O.DLL`, `VDBSEE1S.DLL`, `DBLANG*.DLL` → cartella `VDB_HOST_EXE`
+- **LIB link:** preferenza `rel/omf/*.lib` (`dblang`, `VDBSEE1O`, `VDBSEE1S`) → `VDB_HOST_LIB` (o stessa cartella di EXE)
+- **Upsize:** `pgupsize.exe`, `pgupsize-console.exe` se presenti in `rel/`
+
+Riferimento esteso: [README.md](../../README.md) sezione *Copia degli artefatti*.

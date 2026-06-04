@@ -10,13 +10,16 @@ if "%~1"=="" (
    echo.
    echo Copia DLL runtime + LIB di link ^(import COFF da omf\^).
    echo.
-   echo IMPORTANTE per progetti host ^(es. alcoli Make.xpj^):
+   echo Progetto host tipico ^(cartelle EXE e lib separate^):
    echo   - Runtime: VDBSEE1O.DLL ^(BASE: ddWin, DDFILE, DBLOOK, PG...^) + VDBSEE1S.DLL
    echo   - Link:    omf\dblang.lib, omf\VDBSEE1O.lib, omf\VDBSEE1S.lib
    echo.
-   echo Esempi:
-   echo   %~nx0 lib200-2598 C:\dest\bin
-   echo   %~nx0 lib200-2598 C:\src\alcoli\EXE C:\src\alcoli\lib
+   echo Copia rapida ^(path in scripts\host-paths.bat, vedi host-paths.bat.example^):
+   echo   copy-to-host.bat
+   echo.
+   echo Esempi con path espliciti:
+   echo   %~nx0 lib200-2598 D:\mio-progetto\EXE D:\mio-progetto\lib
+   echo   %~nx0 lib200-2598 D:\mio-progetto\EXE
    exit /b 1
 )
 
@@ -123,7 +126,7 @@ if exist "%SRC%\pgupsize-console.exe" (
 
 echo.
 
-REM --- LIB di link per ALC.exe: omf\ e' la sorgente corretta (COFF / ALINK) ---
+REM --- LIB di link progetto host: omf\ e' la sorgente corretta (COFF / ALINK) ---
 for %%N in ("dblang" "DBLANG" "VDBSEE1O" "VDBSEE1S") do (
    set "LIBSTEM=%%~N"
    set "COPIED=0"

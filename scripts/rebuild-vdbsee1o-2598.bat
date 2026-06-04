@@ -44,6 +44,7 @@ echo.
 echo OK — verifica date DLL:
 dir /T:W "%REL%\VDBSEE1O.DLL" "%REL%\VDBSEE1S.DLL" 2>nul
 echo.
-echo Poi dalla root repo:
-echo   scripts\copy-build-artifacts.bat lib200-2598 C:\src\alcoli\EXE C:\src\alcoli\lib
+echo Poi copia verso il progetto host:
+echo   scripts\copy-to-host.bat
+echo   ^(configura scripts\host-paths.bat da host-paths.bat.example^)
 exit /b 0

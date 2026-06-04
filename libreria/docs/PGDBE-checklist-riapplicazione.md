@@ -33,6 +33,20 @@ Usa questa checklist quando riallinei il fork PG o dopo merge importanti sulla l
 - `TBTOTAL.prg` non calcola totali se l'alias browse non e' disponibile
 - test master/dettaglio 1:n: niente righe perse
 
+### 4b) Browse ricerca PG (`ddWin` / `ddKey` / `fini*`)
+
+Riferimento dettagliato: [PGDBE-browse-ricerca-ordine-indice.md](./PGDBE-browse-ricerca-ordine-indice.md)
+
+- [ ] `DDFILE.PRG`: `_ddPgOrdIsSystem` — indici `*_4seek` / `*_4like` **non** classificati come sistema
+- [ ] `DDWIN.PRG`: su PG, `_ddDbddOrdSetFocus` al posto di `ORDSETFOCUS(slot)`; EXE custom riceve **slot** utente, non `INDEXORD()` fisico
+- [ ] `DFS.PRG`: `dfS` mappa slot numerico con `_ddDbddPgPhysOrdFromUserSlot`
+- [ ] `TBSKIP.PRG`: `tbWaOrdSetFocus`, `_TbBTop` + `dfPgGoTopInIndex`; **assente** codice `tbPgBrowse*`
+- [ ] `S2BROWSE` / `S2BRW` / `S2BRWBOX`: `skipBlock` standard (`_TbFSkip`), nessun wire mouse/SQL PG
+- [ ] `dbstart.ini` host: **senza** `XbasePgBrowseIndexOrder` / `XbasePgBrowseSqlOrder`
+- [ ] Build: `gotutto200-2598.bat` o, se STALE, `scripts/rebuild-vdbsee1o-2598.bat` → `VDBSEE1O.DLL` ≥ data `VDBSEE1S.DLL`
+- [ ] Copia: `scripts/copy-to-host.bat` (o `copy-build-artifacts` con path espliciti) senza errore STALE
+- [ ] Test: ordine griglia, seek, scroll, click mouse (no `BASE/1012`)
+
 ## 5) Configurazione `dfSet`
 
 - verificare chiavi PG rilevanti in `dbstart.ini`
@@ -66,10 +80,18 @@ Usa questa checklist quando riallinei il fork PG o dopo merge importanti sulla l
 - errori di apertura esclusiva tabella non producono migrazione parziale silenziosa
 - nomi tabella target sono validi per PostgreSQL e univoci nel runtime XML
 
-## 8) Sanity finale
+## 8) Distribuzione artefatti verso host
 
-- build libreria completata senza errori
-- build `pgupsize.exe` completata quando il runner standalone e' richiesto
+- [ ] presenti in repo: `scripts/copy-to-host.bat`, `scripts/copy-build-artifacts.bat`, `scripts/rebuild-vdbsee1o-2598.bat`, `scripts/host-paths.bat.example`
+- [ ] `scripts/host-paths.bat` creato da `.example` con `VDB_HOST_EXE` e `VDB_HOST_LIB` corretti (file gitignored), **oppure** stesse variabili in ambiente
+- [ ] `scripts/copy-to-host.bat` completa senza errore STALE (`VDBSEE1O.DLL` ≥ data `VDBSEE1S.DLL` in output build)
+- [ ] progetto host: `EXE` con `VDBSEE1O.DLL` + `VDBSEE1S.DLL`; `lib` con import da `omf\` se cartelle separate
+
+## 9) Sanity finale
+
+- build libreria completata senza errori (`build200-2598.bat` o `gotutto200-2598.bat`)
+- se copia fallisce per STALE: `scripts/rebuild-vdbsee1o-2598.bat` poi `scripts/copy-to-host.bat`
+- build `pgupsize.exe` e/o `pgupsize-console.exe` completata quando il runner standalone e' richiesto
 - test smoke su seek, report, browse
 - test smoke su dry-run PGUpsize con log console (`VDB_PG_UPSIZE_STDOUT=1`)
 - documentazione `libreria/docs` aggiornata e coerente con lo stato codice

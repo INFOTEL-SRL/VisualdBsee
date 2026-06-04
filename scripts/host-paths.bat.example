@@ -1,0 +1,9 @@
+@echo off
+REM Copia questo file in host-paths.bat (stessa cartella) e imposta i path del progetto host.
+REM host-paths.bat e' in .gitignore — non committare percorsi locali.
+
+set "VDB_HOST_EXE=D:\mio-progetto\EXE"
+set "VDB_HOST_LIB=D:\mio-progetto\lib"
+
+REM Opzionale: variante output libreria (default lib200-2598)
+REM set "VDB_BUILD_VARIANT=lib200-2598"

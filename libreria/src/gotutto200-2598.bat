@@ -5,7 +5,7 @@ xppload version
 if not defined XPPREL set "XPPREL="
 strtran _gotutto.base  _gotutto.bat rel=..\output\lib200-2598\rel   setreldate=reldate.exe defines="/d_XBASE200_" cur=%cd%\ lib="<<'XppRt0.lib'+chr(13)+chr(10)+'XppRt1.lib'+chr(13)+chr(10)+'XppUi2.lib'+chr(13)+chr(10)+'xppsys.lib'+chr(13)+chr(10)+'xppdui.lib'>>" xpprel="%XPPREL%"
 
-:: CRWEURO usa VDBSEE1S+1O (DYNAMIC). STATIC (VDBSEE1X) opzionale: /STATIC o /FULL
+:: Progetti host PG: VDBSEE1S+1O (DYNAMIC). STATIC (VDBSEE1X) opzionale: /STATIC o /FULL
 if "%1" == "/DYNAMIC" goto :dynamic_only
 if "%1" == "/STATIC"  goto :static_only
 if "%1" == "/FULL"    goto :with_static

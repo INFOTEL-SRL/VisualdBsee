@@ -28,6 +28,35 @@ I default introdotti dai commit PG privilegiano:
 
 Eventuali override vanno applicati solo se richiesti da compatibilita legacy specifiche.
 
+## Browse ricerca PG — chiavi rimosse (maggio 2026)
+
+Le seguenti chiavi **non esistono più** nel codice e **non** vanno messe in `dbstart.ini`:
+
+| Chiave | Stato |
+|--------|--------|
+| `XbasePgBrowseIndexOrder` | Rimossa con layer `tbPgBrowse*` |
+| `XbasePgBrowseSqlOrder` | Rimossa con `pgBrowseSql.prg` |
+
+L’ordine indice su PGDBE è ottenuto sempre tramite mapping slot DBDD (`_ddDbddOrdSetFocus`, `tbWaOrdSetFocus`, `dfS`) e browse nativo `S2Browse`.
+
+Documentazione completa: [PGDBE-browse-ricerca-ordine-indice.md](./PGDBE-browse-ricerca-ordine-indice.md).
+
+Debug ordine indice (opzionale, non è `dfSet` ma flag runtime): `XbaseDdWinDebug=YES` → `ddwin_dbg.log`.
+
+## Build e copia artefatti (non `dfSet`)
+
+Operazioni fuori da `dbstart.ini`. Riferimenti: [README.md](../../README.md) (*Copia degli artefatti*), [PGDBE-interventi-libreria.md](./PGDBE-interventi-libreria.md) §14, [PGDBE-browse-ricerca-ordine-indice.md](./PGDBE-browse-ricerca-ordine-indice.md) §7.
+
+| Script / file | Uso |
+|---------------|-----|
+| `build200-2598.bat` / `gotutto200-2598.bat` | Build libreria |
+| `scripts/rebuild-vdbsee1o-2598.bat` | Rebuild `VDBSEE1O` se STALE vs `VDBSEE1S` |
+| `scripts/host-paths.bat.example` → `host-paths.bat` | Path locali host (`VDB_HOST_EXE`, `VDB_HOST_LIB`; gitignored) |
+| `scripts/copy-to-host.bat` | Copia rapida dopo build |
+| `scripts/copy-build-artifacts.bat` | Copia con path espliciti in CLI |
+
+Variabili ambiente alternative a `host-paths.bat`: `VDB_HOST_EXE`, `VDB_HOST_LIB`, opz. `VDB_BUILD_VARIANT` (default `lib200-2598`).
+
 ## Esempio configurazione
 
 ```ini

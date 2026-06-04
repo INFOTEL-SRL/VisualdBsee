@@ -127,27 +127,40 @@ La variante `2.00.2598` e' stata introdotta per permettere build locali senza sp
 
 ## Copia degli artefatti
 
-Per copiare DLL, LIB e, se presenti, `pgupsize.exe` e `pgupsize-console.exe` verso un progetto host o una cartella di distribuzione, il repository include lo script:
+Per copiare DLL, LIB e, se presenti, `pgupsize.exe` e `pgupsize-console.exe` verso un progetto host o una cartella di distribuzione:
 
-- `scripts/copy-build-artifacts.bat`
+| Script | Uso |
+|--------|-----|
+| `scripts/copy-to-host.bat` | **Copia rapida** — legge `VDB_HOST_EXE` / `VDB_HOST_LIB` da `scripts/host-paths.bat` (creare da `host-paths.bat.example`; file gitignored) |
+| `scripts/copy-build-artifacts.bat` | Copia con path passati sulla riga di comando |
 
-Uso:
+**Setup una tantum (copia rapida):**
+
+```bat
+copy scripts\host-paths.bat.example scripts\host-paths.bat
+REM Modifica VDB_HOST_EXE e VDB_HOST_LIB in host-paths.bat
+```
+
+**Dopo ogni build:**
+
+```bat
+scripts\copy-to-host.bat
+```
+
+**Senza `host-paths.bat`:** impostare `VDB_HOST_EXE` e `VDB_HOST_LIB` (sessione o sistema), poi `scripts\copy-to-host.bat`.
+
+**Path espliciti** (senza file né env):
 
 ```bat
 scripts\copy-build-artifacts.bat <variante-build> <destinazione-dll> [destinazione-lib]
+scripts\copy-build-artifacts.bat lib200-2598 D:\mio-progetto\EXE D:\mio-progetto\lib
 ```
 
-Esempi:
-
-```bat
-scripts\copy-build-artifacts.bat lib200-2598 C:\dest\bin
-scripts\copy-build-artifacts.bat lib200-2598 C:\dest\exe C:\dest\lib
-scripts\copy-build-artifacts.bat lib200-2598 C:\src\alcoli\EXE C:\src\alcoli\lib
-```
+Documentazione script: [libreria/docs/PGDBE-interventi-libreria.md](./libreria/docs/PGDBE-interventi-libreria.md) §14, [libreria/docs/README.md](./libreria/docs/README.md).
 
 Se la destinazione LIB non viene passata, DLL e LIB vengono copiate nella stessa cartella.
 
-Per progetti host (es. **alcoli** `Make.xpj`: `..\lib\vdbsee1o.lib` + `vdbsee1s.lib`):
+Layout tipico progetto host (cartelle `EXE` e `lib` separate, import `vdbsee1o.lib` + `vdbsee1s.lib`):
 
 - **Runtime** in `EXE\`: `VDBSEE1O.DLL` (moduli `BASE\`: `ddWin`, `DDFILE`, `DBLOOK`, PG…) e `VDBSEE1S.DLL`
 - **Link** in `lib\`: import COFF da `omf\` (`dblang.lib`, `VDBSEE1O.lib`, `VDBSEE1S.lib`)
@@ -158,7 +171,7 @@ Aprire prima il prompt **Alaska Xbase++ 2.00.2598** (serve `xppload` nel PATH), 
 
 ```bat
 scripts\rebuild-vdbsee1o-2598.bat
-scripts\copy-build-artifacts.bat lib200-2598 C:\src\alcoli\EXE C:\src\alcoli\lib
+scripts\copy-to-host.bat
 ```
 
 `rebuild-vdbsee1o-2598.bat` imposta anche `libreria\uti` nel PATH (`strtran.exe`, richiesto da `gotutto200-2598.bat`).
@@ -257,7 +270,8 @@ Questo fork contiene adattamenti specifici per PostgreSQL tramite `PGDBE`, conce
 
 La documentazione dedicata si trova in [libreria/docs/README.md](./libreria/docs/README.md) e comprende:
 
-- panoramica per commit degli interventi PG
+- panoramica per commit degli interventi PG (inclusi script copia in §14 di [PGDBE-interventi-libreria.md](./libreria/docs/PGDBE-interventi-libreria.md))
+- **browse ricerca e ordine indice PG** (`ddWin` / `ddKey`): [libreria/docs/PGDBE-browse-ricerca-ordine-indice.md](./libreria/docs/PGDBE-browse-ricerca-ordine-indice.md)
 - riferimento rapido delle chiavi `dfSet`
 - checklist di verifica o riapplicazione
 - guida operativa CLI: [libreria/src/PG/Upsize/README-upsize-cli.md](./libreria/src/PG/Upsize/README-upsize-cli.md)

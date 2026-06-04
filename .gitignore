@@ -8,6 +8,11 @@
 /libreria/output/lib200-2598/rel/omf/*.exp
 /libreria/output/lib200-832/rel/omf/*.exp
 /libreria/src/log.log
+/libreria/src/log-dynamic.txt
+/libreria/src/static.xpj
+/libreria/src/makelib.bat
+/libreria/output/lib200-2598/rel/log.log
+/ide/Lib200-2598/log.log
 
 # File locali dell'IDE con percorsi/preferenze macchina-specifici
 /ide/BIN/dbsee.ini
@@ -23,3 +28,6 @@
 .claude/
 skills-lock.json
 .cursor/
+
+# Path locali progetto host per copy-to-host.bat
+/scripts/host-paths.bat

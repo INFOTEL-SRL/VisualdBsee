@@ -1,1 +1,1 @@
-FUNCTION dfLibDate(); RETURN ("27/05/2026")
+FUNCTION dfLibDate(); RETURN ("04/06/2026")
