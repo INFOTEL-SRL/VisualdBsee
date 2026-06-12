@@ -1,0 +1,1137 @@
+xpp /M /W /N /ES /Q /NOD /COFF /PRE /DLL:DYNAMIC /iF:\src\VisualdBsee\libreria\src\INCLUDE /iF:\src\VisualdBsee\libreria\src\EXTRA_CH /D_XBASE15_ /D_XBASE16_ /D_XBASE17_ /D_XBASE18_ /D_XBASE182_ /D_XBASE190_ /d_XBASE200_ /oF:\src\VisualdBsee\libreria\output\lib200-2650\rel\obj @C:\Users\mauro\AppData\Local\Temp\5\pbd877.tmp
+File F:\src\VisualdBsee\libreria\SRC\XPP\ARESIZE.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\CL_PDF.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\CONTAINR.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\CRWCO.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\CRWENGIN.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\DBACT.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DBACT2KB.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DBFRAME.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\DBMSGERR.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\DBMSGON.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DBSEEAPP.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DBSUBSET.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfadsreadahead.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFALERT.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfalia2f.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfAppEvn.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfBase64.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfBMPDisable.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfBmpPnt.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFBMPRES.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFBMPTAG.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFCALLST.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfCB2Str.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfChgFNa.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFCOMIX.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFCRW.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfCrwExp.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFCRWOUT.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFCRWPRN.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfcrwrun.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfDacGetDDFromPath.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfDacGetSession.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFDBELOA.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFDBESET.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFDBFCAX.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFDBFCDX.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFDBFEXT.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFDBFNAX.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFDBFNTX.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfdirst.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFDLL.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfErrorCreate.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFEXENAM.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfexp2cr.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfExpCa.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\dffaxcom.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFFILE2W.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFFILECL.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dffilecp.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dffilerw.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dffiletm.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfFltPus.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFFNAMEB.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfFNameNorm.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFFNAMES.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfGetAX.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfgetimg.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfGetOsVer.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfGetOwnerForm.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfGetParentForm.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfGetSlot.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFGETW.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfgetwsz.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfGraAtt.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfHRTimer.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFIMAGE.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfIndDup.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFINDEXT.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFINIT.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfinitfn.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFINITIN.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfIsBDE.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFISLOWE.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFISUPPE.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFJPGRES.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfMacro.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfmailco.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFMEMOEX.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFMENUPO.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfMergeb.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFMOUSEP.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfNdxPos.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfNormFnt.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfontop.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfoptflf.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfOptFlS.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfOptFlt.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfOptFlU.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfosfam.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfPathNorm.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFPAUSE.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFPDFCLS.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFPDFFNT.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFPDFFUN.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfPdfPrs.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFPICTLE.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFPRINTX.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFPRNBOX.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfprncb.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFPRNIMG.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFPRNSTA.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFPROGIN.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfqueryr.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfRelImg.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfrepman.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfRepManSetVar.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfRepOutXml.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFREPTYP.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfRtf.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfScreenCapture.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfSetDefaultPrinter.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFSETEUR.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFSETFLT.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfSetMainWin.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfSetMenuStyle.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfSetVistaUAC.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfStepRecorder.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFSTRCOU.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFSTRNUM.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfstrtra.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfsubset.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFSWAP.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfThreadIsMain.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFTIFRES.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dftimeout.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfTimeSt.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\dftmpidx.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFTVIEW.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfTx2Pdf.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfURLDecode.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfURLEncode.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfUrlParse.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfUserControlData.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfUserControlNew.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfUserControlSet.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFUSRINF.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFUSRMSG.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFUSRSTA.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFWAIT.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFWIN400.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFWINCLP.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfWindows10.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFWINFIL.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFWINHLP.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFWINPRD.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFWINPRE.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFWINPRI.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFWINPRN.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFWINPRS.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfWinXPSetShowFocus.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfXbaseE.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFXBASEI.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFXBASES.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfXbpSetEditable.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfXmlCvt.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFXPRNME.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFXPRNOU.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\DFYESNO.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\dfZip.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\GradientClass.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\GradientProgressBar.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\IE4BUTTN.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\ImplementAutoFill.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\INITCONS.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\NEWGET.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\REGCLASS.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\RESIZECenter.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\SET.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\TBADDCOL.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\TBBRWNEW.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\TBBRWOCL.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\tbBRWOFI.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\tbBRWOIN.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\TBBRWOPT.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\tbBRWOSU.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\TBCONFIG.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\TBDIS.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\TBEND.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\TBGET.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\TBGETCOL.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\TBGETTOP.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\TBINK.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\TBINSCOL.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\TBMOD.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\TBPAGEUP.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\TBPGACTU.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\TBPGGOTO.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\TBPGLOOP.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\TBPGMAX.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\TBPGREFR.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\TBPGSKIP.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\TBPGTOP.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\TBSTAB.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\TBTAG.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\TBTOP.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\TBUP.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\TOOLBAR.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\ToolButton.Prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\ToolClass.Prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\ToolExt.Prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\ToolTip.Prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\VDBProgDlgFunc.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\VDBProgressDialog.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\VDBWait.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\XBPALERT.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\XbpDialogBMPMenu.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\XbpImageMenu.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\XbpInset.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\XBPMULTI.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\XbpPageScroll.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\XBPPI.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\XBPPREVI.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XPP\XbpSpinXP.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\XPP\XBPTTIP.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2APPCOL.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2APPFNT.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\s2array.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2ARRBOX.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2ARRWIN.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2BROWSE.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2BRW.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2BRWBOX.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2BUTTONX.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2CALEND.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2COLORA.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2COLUMN.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\s2Cpu.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\s2crtcre.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2CRWPRI.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2CTRBAS.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2CTRBOX.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2CTRBTN.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2CTRCKB.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2CTRCMB.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2CTRFUN.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2CTRGET.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2CTRL.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2CTRLEX.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2CTRLSB.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2CTRRAD.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2CTRSAY.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2CTRSPN.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2CTRTXT.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2CVTPOS.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2DBEINF.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2DBELOC.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2DBSCLR.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2DEBUG.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2DESKTO.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2DISP.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2DLG.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2DRVTYP.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2EMAIL.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2FORM.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2FORMCU.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2FORMEX.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\s2formmn.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2FRAME.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2FRAMEF.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2GETCON.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\s2GetHILITE.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2GETMEN.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2GETTAS.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2GFRES.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2GSYSME.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2HOTCHA.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\s2htmltext.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2ICON.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2INIT.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2ISNUMB.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2MAIL.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2MAPI.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2MAPIFA.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2MENU.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2MSG.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2MULTIL.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\s2multipg.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2MultiPgX.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2NETSRV.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2OPENRE.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2PDIS.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2PDISCF.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2PDISCL.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2PDISCM.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2PDISCP.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\s2pDISCs.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2PDISCV.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2PDISDP.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2PDISFI.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2PDISMF.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2PDISMM.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2PDISPR.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\s2pdisrf.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\s2PDISRM.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2PDISRP.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\s2pdisrs.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2PDISRV.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2PDISSM.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2PDISWP.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2PICTDE.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2PICTEX.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2PREVWI.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2PRINTE.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2PRJSUP.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2PRNMNU.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2PROGIN.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2PrPSet.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2QUITAP.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2REALTI.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\s2SCROLLDIALOG.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\s2ShadowText.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2SHELLCREATENEWFILE.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2ShGetSpecialFolderPath.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2STACK.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\s2staticX.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2STRING.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2TimeOut.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\s2toolcl2.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\s2toolcls.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2TREEMN.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2TXT.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2TxtBox.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2Visual.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2WAIT.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2WAVE.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2WINCEN.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\S2\S2WINDOW.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2WINPGQ.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\s2wnetgetconnection.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\s2wnetlistnetworkdrives.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2WORKSP.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2XBPBMP.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2XBPHLP.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\s2xbpval.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\s2xls2dbf.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\S2\S2XPPCTR.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DBASKW.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DBINK.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DBMSGW.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\dfADSOrdBagName.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFAXS.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\dfbyte2h.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFCALC.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFCALEND.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFCD.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFCFGPAL.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFCHAROD.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFCHRINC.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFDAC.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFDEC2HE.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFDISK.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFDSKSER.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\dfDTOR.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\dfEvent.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFFILETE.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\dfGetcSt.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\dfGetDir.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFGETPWD.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFGRAPH3.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFHEX2DE.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFHOT.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFISCD.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFISDBF.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFISDIGI.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFISDISK.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFISPRN.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\dfjust.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFLEN.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFLOADRA.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\dflong2h.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFMAKIDX.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFMAXHND.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFMENUAD.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFMENUBL.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFMENUIT.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFMENUSH.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFMSGROL.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\dfMsgTrn.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFNTXPOS.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFNUM2BA.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFNUM2BI.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFNUM2CO.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFPARAM.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\dfPathSe.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFPUSHAL.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\dfRgb2Hs.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFROMBIO.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFSTRCHK.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFSTRINV.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFTIME2S.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\dfuseini.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFVARIE.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFWIN95.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFWIN98.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFWINDIR.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\DFWINNT4.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\dfXbpSetStyle.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\dfxgraph.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\fixsetaf.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\M_SET.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\StatusBox.Prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\StatusLine.Prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\TBGETGOT.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\TBTOTAL.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\SUPPORT\XBPTPI.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\CLIPSUPP\CMFUN.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\CLIPSUPP\DFCLPSUP.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\CLIPSUPP\GETACTIV.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\CLIPSUPP\MAXCOL.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\CLIPSUPP\MAXROW.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XML\dfxmlload.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XML\xmlNode.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XML\xmlNode2.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XML\xmlparser.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\XML\xmlutil.prg successfully compiled.
+
+xppfilt @C:\Users\mauro\AppData\Local\Temp\5\pbd57FF.tmp -q -f:F:\src\VisualdBsee\libreria\output\lib200-2650\rel\VDBSEE1S.def
+Alaska XppFilt Version 2.00.2650
+Copyright (c) Alaska Software 1997-2026. All rights reserved.
+DEF F:\src\VisualdBsee\libreria\output\lib200-2650\rel\VDBSEE1S.def successfully created.
+
+aimplib -q F:\src\VisualdBsee\libreria\output\lib200-2650\rel\VDBSEE1S.def /oF:\src\VisualdBsee\libreria\output\lib200-2650\rel\VDBSEE1S.lib
+Alaska Import Library Utility Version 2.00.2650
+Copyright (c) Alaska Software 1997-2026. All rights reserved.
+LIB F:\src\VisualdBsee\libreria\output\lib200-2650\rel\VDBSEE1S.lib successfully created.
+
+xpp /M /W /N /ES /Q /NOD /COFF /PRE /DLL:DYNAMIC /iF:\src\VisualdBsee\libreria\src\INCLUDE /iF:\src\VisualdBsee\libreria\src\EXTRA_CH /D_XBASE15_ /D_XBASE16_ /D_XBASE17_ /D_XBASE18_ /D_XBASE182_ /D_XBASE190_ /d_XBASE200_ /oF:\src\VisualdBsee\libreria\output\lib200-2650\rel\obj @C:\Users\mauro\AppData\Local\Temp\5\pbd58CB.tmp
+File F:\src\VisualdBsee\libreria\SRC\CFUNC\dfc.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\CDBCOLOR.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DBBOX.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DBCFGCLO.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DBCFGOPE.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DBCFGPAT.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DBDBFPAT.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DBDE.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DBGETW.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DBIO.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DBLOOK.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DBMMRG.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\dbMsgSou.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DBSAY.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DBSCR.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DBSETCUR.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DBSOUERR.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DBTAB2AR.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\dbtabchk.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DBTABCON.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DBTABGET.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\dbTabupd.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DBWAR.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DDBACKUP.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DDCNGRDD.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DDDE.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DDDUP.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DDFILE.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DDFILELO.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DDFILEST.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DDFILSTA.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DDGENDBF.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\ddindex.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DDINDEXA.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DDINDEXF.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DDKEY.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\ddkeywin.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DDNTXSYS.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DDPK.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\ddqry.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DDSEM.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DDUPDDBF.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\ddupdmen.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DDUPDRDD.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DDUSE.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DDWIN.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DDWIT.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfAComp.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFADDMON.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFADDYEA.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFAEMPTY.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFALEN.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFALIAS2.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFALIVEG.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFAMAX.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFAMIN.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfansi.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFANY2ST.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFAPADR.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFARR2ST.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFARRACT.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFARRAPP.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFARRCOL.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFARRFON.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFARROW.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFARRPAT.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFARRPOR.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFARRPRN.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFARRREP.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFARRRES.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFARRSAV.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFARRWIN.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFASDRIV.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFASOPEN.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFAUTOFO.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFBACKGR.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfbar.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFBIN2LI.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFBUFFER.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFCAPSLO.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFCHECKM.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFCHKCF.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFCHKcod.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFCHKDBF.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFCHKDID.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFCHKDIR.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFCHKFNA.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFCHKIVA.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfchkpar.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFCHOSET.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfcleart.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFCODQUA.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFCOL2PR.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFCOLOR.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFCPUID.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFCRDRIV.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFCUR.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfDACConnections.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFDATE.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfDateBO.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfDateDi.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfDateEO.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFDATEFT.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFDATEPA.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFDATPIC.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFDAY.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFDBFHEA.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFDBFREC.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFDECODE.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFDEFAPP.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFDIR.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfdiskar.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFDISKRE.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFDISKST.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFENVSUB.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFERRORS.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfeuro2l.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFEXEPAT.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFEXESIZ.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFEXETYP.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFFAPPEN.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfFFDriv.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFFILE.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfFile2H.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFFILE2P.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFFILEDA.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\dffiledl.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFFILELO.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFFILESI.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFFILETI.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFFILL.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFFINDNA.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFFLOCAT.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfFltGet.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFFLTREP.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFFRACT.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFFREEHN.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFFSKIP.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFftDRIV.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFFTOP.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFFUN2DO.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFGETARR.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfGetBkg.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFGRAPH.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFGRFBAR.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFGRFLEG.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFGRPCRE.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfhash.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFHLP.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFHLPSET.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFHORBAR.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfIndexesSet.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFINIACT.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFINIAPP.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFINICOL.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfininam.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFINIPAT.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFINIPOR.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFINIPRN.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFINIREP.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFINTACT.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFINTAPP.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFINTCOL.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFINTFON.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFINTPAT.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFINTPOR.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFINTPRN.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFINTREP.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFISCALL.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfIsFun.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFISPIRA.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfisxbas.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFISZIP.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfkey2se.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFKEYEMP.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFLASTRE.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFLIBDAT.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\dflit2eu.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfLockInfo.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFLOCKLI.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFLOGIN.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFMAKEIN.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFMAKERE.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFMEMORE.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFMEMOWR.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFMEMSTA.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFMENUAC.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFMENUAS.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFMENUEV.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFMENUSC.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFMGNTOP.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFMODINI.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFMONTH.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFMONTH2.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFMONTHD.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFMOVE.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfmtdeva.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFNAMEUN.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFNET.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFNOMOUS.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFNTOD.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFNULLIF.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFNUM2DA.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFNUM2MO.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfnum2ti.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFNUM2WO.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFNUMDBF.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFOLD.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFORDLIS.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFPACKFI.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFPAGGG.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFPAGREP.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFPATHCH.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfPathTm.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFPATHTR.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFPATPOS.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFPRINT.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFPRNCFG.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFPRNCHK.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfprncon.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFPRNEND.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFPRNFLT.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFPRNFOO.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFPRNHEA.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFPRNINI.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFPRNLAB.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFPRNMEN.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFPRNOUT.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFPRNPAG.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFPRNSET.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfPTT.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFPUSHAC.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFPUSHAR.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFPUSHRE.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFQRYFLT.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFQRYOPT.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFRDDCAN.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFRDDFIL.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFRDDISC.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFRECOUR.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfReportINIPath.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFRESTSC.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFRETCHR.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFRIGHT.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFRND.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFROLC.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFROLR.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFROUND.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFROUNDU.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFS.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFSAYBUT.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFSAYCTR.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFSCANIN.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFSCRGET.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfsec2ti.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFSET.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFSETAPP.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFSETMAI.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfSetRec.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFSHELL.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFSIZE.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFSKIP.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFSPCPRN.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFSTA.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFSTATID.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFSTR2AR.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfStr2As.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFTAB.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFTAB2ST.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFTABDE.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFTABPRI.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFTEMP.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFTIME.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\dftime2n.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFTIMEPA.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFTIMER.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFTIMEVA.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfUncPathIsPrinter.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfupddbf.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFUPDPOI.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfupdqry.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFUPDREP.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfUpdVr.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFUSE.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFUSEFIL.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFUSERCH.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFUSERLE.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFUSERLO.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFUSERNA.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFUSRHEL.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFUSRINI.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFVERBAR.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFVRADDF.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFVRCREA.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFVRGET.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\dfweek.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFWIN.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFWKSCRE.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFYEARHI.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFYEARLO.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFZIPMAD.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFZIPVER.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\INITAPPS.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\INITUSR.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\INITVAR.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\PGSEEK.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\S2TabGetFie.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBARRLEN.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBASKIP.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBATR.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\tbBrwRef.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBCHK.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBCLS.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBCOL.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBCOLWID.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\tbconfiu.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBCTRLAR.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBCTRLHE.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBCTRLPO.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBDEFOPT.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBDELMTD.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBETR.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBEVAL.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBFASTED.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBFASTSE.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBFREEZE.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBGETARR.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\tbGetColFooting.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\tbGetColHeading.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBGETISA.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBGETLSB.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBGETVAR.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBGROW.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBHOTKEY.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBINH.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBINHUPD.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBINVALI.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBIS2PAI.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBISFAST.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBISLOCK.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBISMENU.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\tbismod.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBITEM.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBKEY.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBMAINCT.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBMAXIMI.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBMENU.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBMINIMI.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBMODCEL.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\tbmoudef.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBMOVE.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBOBJ.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\tbon.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBOPTBRW.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBOPTFRM.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBPGLIST.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBPIM.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBPOS.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBPRNLAB.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBPRNWIN.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBRECCNG.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBRESIZE.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBRIGHT.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBROW.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBROWCOU.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBRTR.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBSAV.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBSAYOPT.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBSETKEY.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBSHRINK.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBSIZE.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBSKIP.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBSYS.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\TBSYSFOO.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\TVIEW.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\_DFPRNST.PRG successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\_tbend.prg successfully compiled.
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\__DBFLIS.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\VDB\DFVER.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\VDB\__AUTHOR.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\PG\RUNTIME\pgDacSession.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\PG\RUNTIME\pgVdbIni.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\src\PG\Upsize\pgUpsize.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\src\PG\Upsize\pgUpsizeConn.prg successfully compiled.
+File F:\src\VisualdBsee\libreria\src\PG\Upsize\pgUpsizeXml.prg successfully compiled.
+
+xppfilt @C:\Users\mauro\AppData\Local\Temp\5\pbd976B.tmp -q -f:F:\src\VisualdBsee\libreria\output\lib200-2650\rel\VDBSEE1O.def
+Alaska XppFilt Version 2.00.2650
+Copyright (c) Alaska Software 1997-2026. All rights reserved.
+DEF F:\src\VisualdBsee\libreria\output\lib200-2650\rel\VDBSEE1O.def successfully created.
+
+aimplib -q F:\src\VisualdBsee\libreria\output\lib200-2650\rel\VDBSEE1O.def /oF:\src\VisualdBsee\libreria\output\lib200-2650\rel\VDBSEE1O.lib
+Alaska Import Library Utility Version 2.00.2650
+Copyright (c) Alaska Software 1997-2026. All rights reserved.
+LIB F:\src\VisualdBsee\libreria\output\lib200-2650\rel\VDBSEE1O.lib successfully created.
+
+ALINK @C:\Users\mauro\AppData\Local\Temp\5\pbd9809.tmp
+Alaska 32-Bit Linker Version 2.00.2650
+Copyright (c) Alaska Software 1997-2026. All rights reserved.
+
+
+DLL F:\src\VisualdBsee\libreria\output\lib200-2650\rel\VDBSEE1S.DLL successfully created.
+ALINK @C:\Users\mauro\AppData\Local\Temp\5\pbd99EE.tmp
+Alaska 32-Bit Linker Version 2.00.2650
+Copyright (c) Alaska Software 1997-2026. All rights reserved.
+
+
+DLL F:\src\VisualdBsee\libreria\output\lib200-2650\rel\VDBSEE1O.DLL successfully created.
+Finished at 15:08:54 Processing time 39.38 seconds
+Warning: It is recommended to add the defines INTERMEDIATE_DEBUG=.debug and INTERMEDIATE_RELEASE=.release to the target VDBSEE1S.DLL
+Warning: It is recommended to add the defines INTERMEDIATE_DEBUG=.debug and INTERMEDIATE_RELEASE=.release to the target VDBSEE1O.DLL
+========== Build : 2 succeeded, 0 failed ==========
