@@ -214,7 +214,16 @@ IF (!EMPTY(aLook[LK_SEEK]) .OR. !lFound) .AND. !lEsc  // Positioning
          lFound := (cAlias)->( DBSEEK( aLook[LK_SEEK], .T. ) )
       ENDIF
    ELSEIF !lFound
-      lFound := (cAlias)->( DBSEEK( aLook[LK_SEEK] ) )
+      // PGDBE: DBSEEK("") posiziona sul primo record e torna .T., mentre su DBF
+      // torna .F. Senza questo, il ramo LT_NOTMANDATORY (DBGOTO(0)) non scatta e
+      // il campo eredita un c_conto stale (es. contropartite vuote che prendono il
+      // codice della riga precedente). Forziamo EOF/.F. come i DBF.
+      IF dfPgRddIs( (cAlias)->( RDDNAME() ) )
+         (cAlias)->( DBGOTO( 0 ) )
+         lFound := .F.
+      ELSE
+         lFound := (cAlias)->( DBSEEK( aLook[LK_SEEK] ) )
+      ENDIF
    ENDIF
    IF (cAlias)->(EOF())
       lFound := .F.

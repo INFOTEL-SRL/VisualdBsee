@@ -185,6 +185,10 @@ IF SELECT() > 0 .AND. dfPgRddIs( RDDNAME() )
 
             dfPgSeekGotoMiss( cWa )
 
+            // PGDBE: miss -> .F. come i DBF. Senza questo, riga non verificata
+            // ma lRet .T. (DBSEEK soft/parziale) tornava "trovato" su record sbagliato.
+            lRet := .F.
+
          ENDIF
 
          RETURN lRet
