@@ -21,6 +21,14 @@ LOCAL cF, cU, cInner, lChg, cFld
       RETURN ""
    ENDIF
 
+   // Chiave composta (es. c_anag+c_conto, dtos(data)+cod): nessun singolo campo la
+   // rappresenta. Verify su un solo campo (il primo) darebbe falso negativo -> dfS
+   // tornerebbe .F. su chiave esistente (es. CON_ANA "codice mai utilizzato").
+   // Senza cFld, dfS usa DBSEEK puro come i DBF.
+   IF ( "+" $ cKeyExp )
+      RETURN ""
+   ENDIF
+
    cF := RTRIM( cKeyExp )
 
    IF ( "+" $ cF )
@@ -88,6 +96,12 @@ LOCAL cFld
    cFld := dfPgOrdKeySingleField( cKeyExp )
    IF !EMPTY( cFld )
       RETURN cFld
+   ENDIF
+
+   // Chiave composta: niente verify su singolo campo, ed evita lo scan tabella di
+   // _dfPgOrdUniqueSeekField (il seek concatenato non corrisponde a nessun campo).
+   IF VALTYPE( cKeyExp ) == "C" .AND. ( "+" $ cKeyExp )
+      RETURN ""
    ENDIF
 
    cFld := _dfPgOrdUniqueSeekField( uSeek )
@@ -527,11 +541,16 @@ LOCAL cWa, cSeekU, lMatch
    ENDIF
 
    lRet0 := ( cWa )->( DBSEEK( uSeek, lSeekSoft ) )
-   IF !lRet0 .OR. ( cWa )->( EOF() )
-      dfPgSeekGotoMiss( cWa )
+   // Verifica campo: DBSEEK soft/parziale su PG puo' posizionare su riga non corrispondente.
+   // Senza il confronto si tornava .T. su record sbagliato invece di .F. (come i DBF).
+   IF lRet0 .AND. !( cWa )->( EOF() ) .AND. ;
+      ( dfPgSeekFieldValU( cWa, cField ) == cSeekU )
+      RETURN .T.
    ENDIF
 
-RETURN lRet0
+   dfPgSeekGotoMiss( cWa )
+
+RETURN .F.
 
 *******************************************************************************
 FUNCTION dfPgSeekGotoMiss( cWaPad )

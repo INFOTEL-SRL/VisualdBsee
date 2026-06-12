@@ -1135,3 +1135,46 @@ Finished at 15:08:54 Processing time 39.38 seconds
 Warning: It is recommended to add the defines INTERMEDIATE_DEBUG=.debug and INTERMEDIATE_RELEASE=.release to the target VDBSEE1S.DLL
 Warning: It is recommended to add the defines INTERMEDIATE_DEBUG=.debug and INTERMEDIATE_RELEASE=.release to the target VDBSEE1O.DLL
 ========== Build : 2 succeeded, 0 failed ==========
+xppfilt @C:\Users\mauro\AppData\Local\Temp\8\pbd960.tmp -q -f:F:\src\VisualdBsee\libreria\output\lib200-2650\rel\VDBSEE1S.def
+Alaska XppFilt Version 2.00.2650
+Copyright (c) Alaska Software 1997-2026. All rights reserved.
+DEF F:\src\VisualdBsee\libreria\output\lib200-2650\rel\VDBSEE1S.def successfully created.
+
+aimplib -q F:\src\VisualdBsee\libreria\output\lib200-2650\rel\VDBSEE1S.def /oF:\src\VisualdBsee\libreria\output\lib200-2650\rel\VDBSEE1S.lib
+Alaska Import Library Utility Version 2.00.2650
+Copyright (c) Alaska Software 1997-2026. All rights reserved.
+LIB F:\src\VisualdBsee\libreria\output\lib200-2650\rel\VDBSEE1S.lib successfully created.
+
+xpp /M /W /N /ES /Q /NOD /COFF /PRE /DLL:DYNAMIC /iF:\src\VisualdBsee\libreria\src\INCLUDE /iF:\src\VisualdBsee\libreria\src\EXTRA_CH /D_XBASE15_ /D_XBASE16_ /D_XBASE17_ /D_XBASE18_ /D_XBASE182_ /D_XBASE190_ /d_XBASE200_ /oF:\src\VisualdBsee\libreria\output\lib200-2650\rel\obj @C:\Users\mauro\AppData\Local\Temp\8\pbd1681.tmp
+Visual dBsee The STANDARD CASE for Xbase++ by Albalog Srl
+File F:\src\VisualdBsee\libreria\SRC\BASE\DBLOOK.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFLIBDAT.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\DFS.PRG successfully compiled.
+File F:\src\VisualdBsee\libreria\SRC\BASE\PGSEEK.PRG successfully compiled.
+
+xppfilt @C:\Users\mauro\AppData\Local\Temp\8\pbd1885.tmp -q -f:F:\src\VisualdBsee\libreria\output\lib200-2650\rel\VDBSEE1O.def
+Alaska XppFilt Version 2.00.2650
+Copyright (c) Alaska Software 1997-2026. All rights reserved.
+DEF F:\src\VisualdBsee\libreria\output\lib200-2650\rel\VDBSEE1O.def successfully created.
+
+aimplib -q F:\src\VisualdBsee\libreria\output\lib200-2650\rel\VDBSEE1O.def /oF:\src\VisualdBsee\libreria\output\lib200-2650\rel\VDBSEE1O.lib
+Alaska Import Library Utility Version 2.00.2650
+Copyright (c) Alaska Software 1997-2026. All rights reserved.
+LIB F:\src\VisualdBsee\libreria\output\lib200-2650\rel\VDBSEE1O.lib successfully created.
+
+ALINK @C:\Users\mauro\AppData\Local\Temp\8\pbd246D.tmp
+Alaska 32-Bit Linker Version 2.00.2650
+Copyright (c) Alaska Software 1997-2026. All rights reserved.
+
+
+DLL F:\src\VisualdBsee\libreria\output\lib200-2650\rel\VDBSEE1S.DLL successfully created.
+ALINK @C:\Users\mauro\AppData\Local\Temp\8\pbd26A1.tmp
+Alaska 32-Bit Linker Version 2.00.2650
+Copyright (c) Alaska Software 1997-2026. All rights reserved.
+
+
+DLL F:\src\VisualdBsee\libreria\output\lib200-2650\rel\VDBSEE1O.DLL successfully created.
+Finished at 11:10:13 Processing time 9.64 seconds
+Warning: It is recommended to add the defines INTERMEDIATE_DEBUG=.debug and INTERMEDIATE_RELEASE=.release to the target VDBSEE1S.DLL
+Warning: It is recommended to add the defines INTERMEDIATE_DEBUG=.debug and INTERMEDIATE_RELEASE=.release to the target VDBSEE1O.DLL
+========== Build : 2 succeeded, 0 failed ==========
