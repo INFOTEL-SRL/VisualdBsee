@@ -197,13 +197,17 @@ IF SELECT() > 0 .AND. dfPgRddIs( RDDNAME() )
 
    ENDIF
 
-   // PGDBE: DBSEEK("") fallisce su chiave vuota. Primo record indice = DbGoTop.
+   // PGDBE: chiave vuota = elemento inesistente -> .F. come DBSEEK("") sui DBF.
+   // Mantengo DbGoTop per i browse che aprono su chiave vuota (posizionamento primo
+   // record), ma il valore di ritorno deve essere .F.: altrimenti i guard tipo
+   // `if FIL_DES->(dfS(1,c_conX))` con c_conX vuoto entravano e leggevano il record
+   // sbagliato (descrizione/codice di una riga stale).
    IF EMPTY( cSeekUse )
       nSel := SELECT()
       IF nSel > 0
          ( nSel )->( DbGoTop() )
       ENDIF
-      RETURN .T.
+      RETURN .F.
    ENDIF
 
    // Se cSeekUse valorizzato ma cFld vuoto (chiave indice non dedotta), DBSEEK deve usare
