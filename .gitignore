@@ -21,6 +21,8 @@
 /ide/BIN/dbsee.bak
 /ide/BIN/LOG/
 
+/ide/Lib/
+
 # Trace runtime upsize (generati da esecuzioni locali)
 *.pgtrace.log
 
@@ -31,3 +33,7 @@ skills-lock.json
 
 # Path locali progetto host per copy-to-host.bat
 /scripts/host-paths.bat
+/libreria/src/log-dynamic-2650.txt
+/libreria/src/log-dynamic.txt
+
+

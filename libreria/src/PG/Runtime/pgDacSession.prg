@@ -137,6 +137,14 @@ FUNCTION dfPgGetDacSession()
    ENDIF
 RETURN NIL
 
+*******************************************************************************
+FUNCTION dfPgIsActive()   // .T. se l'applicazione gira in modalita' PostgreSQL
+*******************************************************************************
+// Unico punto di verita' per distinguere PG da DBF: basato sulla sessione
+// PostgreSQL, quindi globale e indipendente dal workarea corrente.
+// Per il driver di una SINGOLA tabella usare invece: alias->( dfPgRddIs( RDDNAME() ) )
+RETURN ( dfPgGetDacSession() != NIL )
+
 //************************************************************************
 //* Chiusura applicazione (doc Alaska DacSession / MDIDEMO): :disconnect()
 //* prima dell'uscita. Chiudere le aree PGDBE applicative, poi disconnect.

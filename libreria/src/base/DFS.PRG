@@ -197,13 +197,22 @@ IF SELECT() > 0 .AND. dfPgRddIs( RDDNAME() )
 
    ENDIF
 
-   // PGDBE: DBSEEK("") fallisce su chiave vuota. Primo record indice = DbGoTop.
+   // PGDBE: chiave vuota -> .F. replicando la semantica DBSEEK sui DBF:
+   // - softseek (lSoft .T.): DBSEEK("",.T.) posiziona sul primo record dell'indice.
+   //   Usato da dfPgGoTopInIndex/browse per il posizionamento in cima (DDFILE.PRG).
+   // - seek normale: DBSEEK("") va a EOF (record fantasma, campi vuoti). Cosi' i BLOCK
+   //   colonna generati "ALIAS->(dfS(1,key)), ALIAS->campo" mostrano vuoto e non il
+   //   primo record della tabella lookup.
    IF EMPTY( cSeekUse )
-      nSel := SELECT()
-      IF nSel > 0
-         ( nSel )->( DbGoTop() )
+      IF VALTYPE( lSoft ) == "L" .AND. lSoft
+         nSel := SELECT()
+         IF nSel > 0
+            ( nSel )->( DbGoTop() )
+         ENDIF
+      ELSE
+         dfPgSeekGotoMiss( cWa )
       ENDIF
-      RETURN .T.
+      RETURN .F.
    ENDIF
 
    // Se cSeekUse valorizzato ma cFld vuoto (chiave indice non dedotta), DBSEEK deve usare

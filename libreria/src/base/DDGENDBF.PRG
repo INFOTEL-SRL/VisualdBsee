@@ -11,9 +11,9 @@
    #xtranslate DBGOTO(<x>) => DBGOTO_XPP(<x>)
 #endif
 
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 FUNCTION ddGenDbf( cFile, cOut )
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 LOCAL aStr, nRec, cDbf, cDriver, cDiskFile, cExt, cActFile, lRet := .T.
 LOCAL aPath,cPath 
 LOCAL oErr, err
@@ -45,6 +45,14 @@ BEGIN SEQUENCE
       cDbf      := ddFileName()              // File
       cDriver   := ddFileDriver()            // RDD
       cExt      := dfDbfExt( cDriver )       // Ext
+      // Tabelle PG non hanno file fisico: nessun check/crea directory/DBF.
+      // Controlla sia il driver esplicito della tabella, sia il default dell'app:
+      // dopo migrazione pgupsize il DBDD puÃ² ancora avere driver DBF ma i dati
+      // sono in PG -> se l'app gira in modalitÃ  PG non servono file fisici.
+      IF dfPgRddIs( cDriver ) .OR. _ddDefaultRddIsPg()
+         dbdd->(DBSKIP(1))
+         LOOP
+      ENDIF
       IF cOut#NIL .AND. cFile#NIL
          cDiskFile := cOut
       ELSE
@@ -81,7 +89,7 @@ BEGIN SEQUENCE
          ENDIF
       ENDIF
       /////////////////////////////////////////////////////////////////
-//Maudp-LucaC 18/05/2011 cDiskFile a volte era gi… con l'estensione altre volte senza ("docprec.dbf" +".dbf")
+//Maudp-LucaC 18/05/2011 cDiskFile a volte era giï¿½ con l'estensione altre volte senza ("docprec.dbf" +".dbf")
 //      IF !dfRddFile( cDiskFile+cExt, cDriver )  // Se non esiste lo creo
       IF !dfRddFile( aPath[1] + aPath[2] + aPath[3] + cExt, cDriver )  // Se non esiste lo creo
          dfUsrMsg( dfStdMsg(MSG_DDGENDBF03) +" " +cDiskFile )
@@ -99,7 +107,7 @@ BEGIN SEQUENCE
          IF !EMPTY(aStr)
 
             // Simone 10/09/2007
-            // mantis 0001497: Disattivazione dell’accesso alla cartella dati mantenendo l’accesso da Extra.
+            // mantis 0001497: Disattivazione dellï¿½accesso alla cartella dati mantenendo lï¿½accesso da Extra.
             // Modifica Luca 07/04/2008
             //IF dfAxsLoaded(cDiskFile)
             IF dfAxsLoaded(cDiskFile,cDriver )

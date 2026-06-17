@@ -20,9 +20,9 @@
    #xtranslate DBGOTO(<x>) => DBGOTO_XPP(<x>)
 #endif
 
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 FUNCTION ddIndex( nMode, bFlt ) // Ricostruzione indici
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 LOCAL cFileOpen, cFileDes, cIndexName, cIndexExp
 LOCAL nIndex        := 0              // Variabile per cicli
 LOCAL aNtxLst := {} ,; // Array con lista indici per selezione
@@ -133,7 +133,7 @@ dfUsrMsg( dfStdMsg(MSG_DDINDEX10) )
 lOldDeleted := SET( _SET_DELETED, .F. )
 
 FOR nIndex := 1 TO LEN(aNtxTag)
-// simone 10/4/08 commentato perchŠ non serve
+// simone 10/4/08 commentato perchï¿½ non serve
    //IF dfINKEY()==K_SPACE    // Tasto barra pausa //FW
    //   TONE(300,1)
    //   dfUsrMsg( dfStdMsg(MSG_DDINDEX09) )
@@ -187,7 +187,7 @@ FOR nIndex := 1 TO LEN(aNtxTag)
       IF !dfAsDriver( cDriver ) .AND. !dfFTDriver( cDriver )
 
          // Simone 07/09/2007
-         // mantis 0001497: Disattivazione dell’accesso alla cartella dati mantenendo l’accesso da Extra.
+         // mantis 0001497: Disattivazione dellï¿½accesso alla cartella dati mantenendo lï¿½accesso da Extra.
          // Se non riesco ad aprire il file passo al prossimo
          IF IsInUse(dfFNameSplit(cFileOpen, 1+2), dfFNameSplit(cFileOpen, 4), dfDbfExt(cDriver), cAlias, cDriver)
             LOOP
@@ -247,6 +247,10 @@ FOR nIndex := 1 TO LEN(aNtxTag)
                  dbFrameBox( dfStdMsg(MSG_DDINDEX11) +cFileOpen +dfStdMsg(MSG_DDINDEX12))
             ENDCASE
 
+            // DBF: PACK fisico classico. Su PGDBE il PACK e' no-op (la rimozione
+            // delle righe __deleted=true avviene a fine reindex in _ddPgPurgeAllDeleted,
+            // perche' qui le tabelle PG sono aperte col driver del DBDD e non sempre
+            // come PGDBE).
             PACK
          ENDIF
       ENDIF
@@ -304,6 +308,13 @@ dfUsrMsg("")
 //
 SET( _SET_DELETED, lOldDeleted )
 
+// PGDBE: equivalente del PACK per i DATI. Nel loop di reindex le tabelle PG
+// vengono aperte col driver del DBDD (spesso ancora DBFCDX dopo l'upsize) e non
+// passano dal ramo PGDBE, quindi il PACK xBase non rimuove le righe __deleted=true.
+// A valle della ricostruzione globale le spurghiamo via SQL scandendo il dizionario.
+IF nMode == IDX_REINDEX .AND. dfSet( AI_INDEXPACK )
+   _ddPgPurgeAllDeleted()
+ENDIF
 
 AEVAL( aDatabase, {|aSub|dbCfgClose(aSub[2])} )
 
@@ -320,9 +331,84 @@ ENDCASE
 
 RETURN .T.
 
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+// PGDBE: equivalente del PACK per i dati. Il comando PACK di xBase non rimuove le
+// righe marcate __deleted=true su PGDBE; qui le elimina fisicamente via DacSession,
+// cosi' la "Ricostruzione indici" globale spurga davvero la tabella come sui DBF.
+// Nome tabella = LOWER(alias) (stessa convenzione dell'upsize/codice applicativo).
+// Errori non bloccanti: un purge fallito non deve interrompere il reindex.
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+STATIC PROCEDURE _ddPgPackDeleted( cAlias )
+LOCAL oS, cTab, cSql, nRows := 0
+
+   IF VALTYPE( cAlias ) != "C" .OR. EMPTY( ALLTRIM( cAlias ) )
+      RETURN
+   ENDIF
+
+   oS := dfPgGetDacSession()
+   IF VALTYPE( oS ) != "O"
+      RETURN
+   ENDIF
+
+   cTab := LOWER( ALLTRIM( cAlias ) )
+   cSql := "DELETE FROM " + cTab + " WHERE COALESCE(__deleted,false)=true"
+
+   BEGIN SEQUENCE
+      oS:executeStatement( cSql, @nRows )
+   END SEQUENCE
+
+RETURN
+
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+// PGDBE: spurgo fisico delle righe __deleted=true su TUTTE le tabelle del
+// dizionario, eseguito a fine "Ricostruzione indici globale". E' l'equivalente
+// del PACK DBF a livello dati: indipendente da indici/apertura/driver del
+// workarea, scandisce il DBDD e lancia una DELETE SQL per ogni tabella.
+// Attivo solo se l'app gira in modalita' PostgreSQL. Errori non bloccanti.
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+STATIC PROCEDURE _ddPgPurgeAllDeleted()
+LOCAL oS, nRec, nCur, cName
+
+   // Solo in modalita' PostgreSQL: su DBF il PACK del loop di reindex basta.
+   IF ! _ddDefaultRddIsPg()
+      RETURN
+   ENDIF
+
+   oS := dfPgGetDacSession()
+   IF VALTYPE( oS ) != "O"
+      RETURN
+   ENDIF
+
+   IF ! dbCfgOpen( "dbdd" )
+      RETURN
+   ENDIF
+
+   nRec := dbdd->( RECNO() )
+
+   dbdd->( DBSEEK( "DBF" ) )
+   WHILE UPPER( dbdd->RecTyp ) == "DBF" .AND. !dbdd->( EOF() )
+      IF dbdd->file_typ == "1"          // tabella logica senza file fisico: salto
+         dbdd->( DBSKIP(1) )
+         LOOP
+      ENDIF
+      // ddFileName() puo' spostare il cursore del dbdd (come in ddGenDbf):
+      // salvo e ripristino la posizione prima del DBSKIP.
+      nCur  := dbdd->( RECNO() )
+      cName := dfFindName( ddFileName() )   // nome base (no path/estensione)
+      dbdd->( DBGOTO( nCur ) )
+      IF !EMPTY( cName )
+         _ddPgPackDeleted( cName )          // DELETE FROM <nome> WHERE __deleted=true
+      ENDIF
+      dbdd->( DBSKIP(1) )
+   ENDDO
+
+   dbdd->( DBGOTO( nRec ) )
+
+RETURN
+
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 STATIC PROCEDURE ddIndexArr( nMode, aNtxLst, aNtxDat, bFlt ) // Scandisce DBDD per ottenere la lista degli indici
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 LOCAL nRecno, cName, cFileName, cPath, cFileOpen, cDriver, lOldDeleted
 LOCAL nRecNum, cOpen, nHnd, cIndexName, cFileDes, cNdxVar, lBatch, nLenNtx
 LOCAL lToReindex, nPos, lCheck, lAll
@@ -410,8 +496,8 @@ WHILE UPPER(dbdd->recTyp)=="DBF" .AND. !dbdd->(EOF())
       LOOP
    ENDIF
 
-   nRecNum := 0     // default Nørecord
-   cOpen   := " "   // blank = aperto / L = Lock gi… in USO in rete
+   nRecNum := 0     // default Nï¿½record
+   cOpen   := " "   // blank = aperto / L = Lock giï¿½ in USO in rete
 
    IF DFISSELECT( dfFindName(cFileName) )
       nRecNum := (dfFindName(cFileName))->(RECCOUNT()) // conto i records
@@ -425,7 +511,7 @@ WHILE UPPER(dbdd->recTyp)=="DBF" .AND. !dbdd->(EOF())
          ELSE
 
             // Simone 07/09/2007
-            // mantis 0001497: Disattivazione dell’accesso alla cartella dati mantenendo l’accesso da Extra.
+            // mantis 0001497: Disattivazione dellï¿½accesso alla cartella dati mantenendo lï¿½accesso da Extra.
             // Se non riesco ad aprire il file passo al prossimo
             IF IsInUse(cPath, cFileName, dfDbfExt(cDriver), ;
                        dfFindName(cFileName), cDriver) .AND. !dfFtDriver( cDriver )
@@ -433,12 +519,12 @@ WHILE UPPER(dbdd->recTyp)=="DBF" .AND. !dbdd->(EOF())
 
             //nHnd := FOPEN( cFileOpen +dfDbfExt(cDriver), FO_READ +FO_EXCLUSIVE )
             //IF nHnd<0 .AND. !dfFtDriver( cDriver )
-               cOpen := "L"            // blank = aperto / U = Gi… in USO in rete
+               cOpen := "L"            // blank = aperto / U = Giï¿½ in USO in rete
                IF nMode == IDX_CHECK .AND. ;
                   dfSet(AI_CHECKMODE) == AI_CHECKMODE_SKIP
                   // Al momento che ne trovo uno aperto evito
-                  // di aprire tutti gli altri perchŠ su windows NT
-                  // Š un'operazione LENTA!
+                  // di aprire tutti gli altri perchï¿½ su windows NT
+                  // ï¿½ un'operazione LENTA!
                   lSkipOpen := .T.
                ENDIF
             ELSE
@@ -506,7 +592,7 @@ WHILE UPPER(dbdd->recTyp)=="DBF" .AND. !dbdd->(EOF())
 
       ENDIF
 
-      AADD( aNtxDat, { dBdd->(RECNO())       ,; //  1 Nørecord dbdd
+      AADD( aNtxDat, { dBdd->(RECNO())       ,; //  1 Nï¿½record dbdd
                        cFileOpen             ,; //  2 Nome file   con Path
                        cDriver               ,; //  3 Driver di generazione
                        cFileDes              ,; //  4 Descrizione del file
@@ -516,7 +602,7 @@ WHILE UPPER(dbdd->recTyp)=="DBF" .AND. !dbdd->(EOF())
                        cOpen                 ,; //  8 Per la rete L = file Lock
               UPPER(ALLTRIM(dbdd->File_typ)) ,; //  9 Tipo di indice Ascend/Descend
                        dbdd->Field_des       ,; // 10 Descrizione indice
- ALLTRIM(UPPER(ddGetSlot(dbdd->Slot,"±",3)))=="U" ,;  // 11 Indice di tipo UNIQUE
+ ALLTRIM(UPPER(ddGetSlot(dbdd->Slot,"ï¿½",3)))=="U" ,;  // 11 Indice di tipo UNIQUE
                        lBatch                ,; // 12 Ricostruzione batch
                        lToReindex            ,; // 13 Se .T. e' da reindicizzare
                        dfSet(AI_INDEXPACK)   ,; // 14 Se .T. e' da packare
@@ -525,7 +611,7 @@ WHILE UPPER(dbdd->recTyp)=="DBF" .AND. !dbdd->(EOF())
       IF nMode==IDX_CHOICE    // Ricostruzione parziale con selezione
          AADD( aNtxLst, cOpen  +" "                 +; // 1 in rete Lock
                         PADR(dBdd->FILE_ALI,9) +" " +; // 2 Nome indice
-                        STR(nRecNum,6)         +" " +; // 3 Nø Records del file
+                        STR(nRecNum,6)         +" " +; // 3 Nï¿½ Records del file
                         ddIndexExp()                 ) // 4 Espressione
       ENDIF
       dbdd->(DBSKIP(1))
@@ -575,9 +661,9 @@ dfUsrInfo( "" ) // Fix per alaska. Rimaneva un messaggio attivo
 
 RETURN
 
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 STATIC FUNCTION ddIndexForm()
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 LOCAL aForm := {}, nMode := 1
 
 ATTACH "00" TO aForm GET AS RADIOBUTTON nMode ;
@@ -599,14 +685,14 @@ ENDIF
 RETURN nMode
 
 // Simone 07/09/2007
-// mantis 0001497: Disattivazione dell’accesso alla cartella dati mantenendo l’accesso da Extra.
-// verifica se una tabella Š in uso
+// mantis 0001497: Disattivazione dellï¿½accesso alla cartella dati mantenendo lï¿½accesso da Extra.
+// verifica se una tabella ï¿½ in uso
 // NOTA: QUESTA FUNZIONE E' PRESENTE IDENTICA ANCHE IN DDINDEXF.PRG
 //       SE SI MODIFICA QUESTA FUNZIONE MODIFICARLA ANCHE IN DDINDEXF.PRG
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 STATIC FUNCTION IsInUse(cPath, cFname, cExt, cAlias, cDriver)
-* ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
-   LOCAL lRet := .T. // default Š in uso
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+   LOCAL lRet := .T. // default ï¿½ in uso
    LOCAL nHnd
    LOCAL nPrev
    LOCAL bErr
@@ -614,7 +700,7 @@ STATIC FUNCTION IsInUse(cPath, cFname, cExt, cAlias, cDriver)
    DEFAULT cAlias TO cFname
 
    IF DFISSELECT(cAlias) 
-      RETURN .T. // Š in uso
+      RETURN .T. // ï¿½ in uso
    ENDIF
 
    //Mantis 1817
@@ -631,7 +717,7 @@ STATIC FUNCTION IsInUse(cPath, cFname, cExt, cAlias, cDriver)
    nHnd := FOPEN( cPath +cFName +cExt,  FO_READ +FO_EXCLUSIVE )
    IF nHnd > 0
       FCLOSE(nHnd)
-      RETURN .F. // non Š in uso
+      RETURN .F. // non ï¿½ in uso
    ENDIF
 
    // se non riesco provo apertura esclusiva tramite RDD, dato che potrei 
@@ -641,7 +727,7 @@ STATIC FUNCTION IsInUse(cPath, cFname, cExt, cAlias, cDriver)
    BEGIN SEQUENCE
       IF cDriver == dfAXSDriver() .OR. dfAXSLoaded( cPath+cFName+cExt )
          IF dfUseFile( cPath+cFName+cExt, cAlias, .T., cDriver, .T., .T.)
-            lRet := .F. // non Š in uso
+            lRet := .F. // non ï¿½ in uso
             CLOSE(cFName)
          ENDIF
       ENDIF
@@ -654,10 +740,10 @@ RETURN lRet
 // fix per errore esistente con Xbase++ aprendo un DBF con campi memo 
 // e senza record con ADS 
 // se apro con ADS e uso DBFNTX e ho caricato anche il Database engine
-// DBFNTX allora controllo se il DBF Š vuoto e ha campi memo
+// DBFNTX allora controllo se il DBF ï¿½ vuoto e ha campi memo
 // ne creo uno vuoto al volo usando ADS
 //
-// NOTA: non Š STATIC FUNCTION perche cosi si pu• utilizzare
+// NOTA: non ï¿½ STATIC FUNCTION perche cosi si puï¿½ utilizzare
 // anche in altre funzioni tipo s2ddIndex()
 
 
@@ -692,7 +778,7 @@ FUNCTION dfADSFixEmptyDbf(cFName, cDriver, cAlias)
       cAlias := SUBSTR( cAlias, RAT(":",cAlias)+1 )
    ENDIF
 
-// Spostato sopra perche in caso di ADS cDriver Š un oggetto e da runtime errore quando si cerca di di fare un <Alltrim()>
+// Spostato sopra perche in caso di ADS cDriver ï¿½ un oggetto e da runtime errore quando si cerca di di fare un <Alltrim()>
 //   IF dfAXSLoaded( cFName )
 //      cDriver := dfAXSDriver()
    //ENDIF
@@ -726,7 +812,7 @@ FUNCTION dfADSFixEmptyDbf(cFName, cDriver, cAlias)
             (cAlias)->(DBCLOSEAREA())
          ENDIF
 
-         // a questo punto il DBF Š chiuso, se ha zero record e
+         // a questo punto il DBF ï¿½ chiuso, se ha zero record e
          // contiene un campo MEMO allora ricreo un DBF vuoto
          IF aStru != NIL .AND. ASCAN(aStru, {|a| a[DBS_TYPE]=="M"}) > 0
             DBCREATE(cFName, aStru, cDriver)
