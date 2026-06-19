@@ -49,7 +49,10 @@ BEGIN SEQUENCE
       // Controlla sia il driver esplicito della tabella, sia il default dell'app:
       // dopo migrazione pgupsize il DBDD può ancora avere driver DBF ma i dati
       // sono in PG -> se l'app gira in modalità PG non servono file fisici.
-      IF dfPgRddIs( cDriver ) .OR. _ddDefaultRddIsPg()
+      // dfPgRuntimeUsePostgres(): l'app è configurata per girare su PG anche se la
+      // sessione non è ancora stata inizializzata (es. sottoprogetto MAGINF che
+      // chiama ddIndex(IDX_CHECK) PRIMA di dfPgSessionInit()) -> nessun file fisico.
+      IF dfPgRddIs( cDriver ) .OR. _ddDefaultRddIsPg() .OR. dfPgRuntimeUsePostgres()
          dbdd->(DBSKIP(1))
          LOOP
       ENDIF

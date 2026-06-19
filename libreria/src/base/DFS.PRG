@@ -140,7 +140,7 @@ IF SELECT() > 0 .AND. dfPgRddIs( RDDNAME() )
 
          ENDIF
 
-         IF !EOF() .AND. dfPgSeekFieldValU( cWa, cFld ) == UPPER( cSeekT ) .AND. !dfPgSeekIsPartialChr( cWa, cFld, cSeekT )
+         IF !EOF() .AND. dfPgSeekFieldValU( cWa, cFld ) == UPPER( cSeekT ) .AND. !dfPgSeekIsPartialChr( cWa, cFld, cSeekT ) .AND. dfPgRowSeekable( cWa )
 
             _dfSPgHtPut( cHkey )
 

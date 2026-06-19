@@ -59,9 +59,13 @@ RETURN .T.
 PROCEDURE _TbBTop( oTbr ) // GoTop
 * ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 tbWaOrdSetFocus( oTbr:W_ALIAS, oTbr:W_ORDER )
-IF dfPgRddIs( ( oTbr:W_ALIAS )->( RDDNAME() ) )
+IF dfPgRddIs( ( oTbr:W_ALIAS )->( RDDNAME() ) ) .AND. oTbr:W_KEY == NIL
+   // PGDBE, browse senza chiave: vai in cima all'indice (dfPgGoTopInIndex salta i morti).
    dfPgGoTopInIndex( SELECT( oTbr:W_ALIAS ) )
 ELSE
+   // Browse con chiave (relazionato) o DBF: posiziona via dfTop sulla chiave.
+   // Su PG dfTop ora salta le righe __deleted (come DBSEEK su DBF), evitando che
+   // il record corrente del browse sia una riga cancellata.
    ( oTbr:W_ALIAS )->( dfTop( oTbr:W_KEY, oTbr:W_FILTER, oTbr:W_BREAK ) )
 ENDIF
 RETURN

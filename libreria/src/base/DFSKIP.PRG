@@ -4,6 +4,7 @@
 //Programmatore  : Baccan Matteo
 //*****************************************************************************
 #INCLUDE "Common.CH"
+#INCLUDE "set.ch"
 
 #ifdef __XPP__
    // simone 5/11/04 per correzione problema DBGOTO(0)
@@ -14,6 +15,22 @@
 // Abiita il LOG
 //#define __LOG__
 //#define __LOG_SKIP__
+
+* ����������������������������������������������������������������������������
+// .T. se la riga corrente va esclusa dalla navigazione del browse:
+//  - fuori dal filtro utente (bFilter), oppure
+//  - record __deleted con SET DELETED ON. Su DBF dbSkip li salta gia' da solo,
+//    quindi DELETED() qui e' sempre .F.; su PGDBE il salto non e' affidabile e
+//    senza questo controllo le righe cancellate comparivano nei browse.
+* ����������������������������������������������������������������������������
+STATIC FUNCTION _dfRowExcluded( nAlias, bFilter )
+   IF ! (nAlias)->( EVAL( bFilter ) )
+      RETURN .T.
+   ENDIF
+   IF SET( _SET_DELETED ) .AND. (nAlias)->( DELETED() )
+      RETURN .T.
+   ENDIF
+RETURN .F.
 
 * ����������������������������������������������������������������������������
 FUNCTION dfSkip( n2Skip, bFilter, bBreak ) // dbSkip
@@ -97,7 +114,7 @@ DO CASE
            // simone 21/1/2010
            // XL 1709
            // salvo e ripristino alias in caso il codeblock lo cambi
-           IF ! (nAlias)->(EVAL( bFilter ))
+           IF _dfRowExcluded( nAlias, bFilter )
               LOOP
            ENDIF
 
@@ -170,7 +187,7 @@ DO CASE
            // simone 21/1/2010
            // XL 1709
            // salvo e ripristino alias in caso il codeblock lo cambi
-           IF !(nAlias)->(Eval( bFilter ))
+           IF _dfRowExcluded( nAlias, bFilter )
               LOOP
            ENDIF
 
@@ -261,7 +278,7 @@ IF !lEof // Solo se non sono a EOF
    // simone 21/1/2010
    // XL 1709
    // salvo e ripristino alias in caso il codeblock lo cambi
-   IF ! (nAlias)->(EVAL( bFilter ))             // Se non sono in filtro
+   IF _dfRowExcluded( nAlias, bFilter )         // Se non sono in filtro (o riga __deleted su PG)
       * // PGDBE: scan filtro illimitato da DBGOTOP blocca UI (es. ddWin+F_FIL su FIL_DES).
       IF bKey == NIL .AND. nAlias > 0 .AND. dfPgRddIs( (nAlias)->( RDDNAME() ) ) .AND. ;
             !( dfSet( "XbasePgDfTopFilterWalk" ) == "NO" )
@@ -294,8 +311,8 @@ IF !lEof // Solo se non sono a EOF
    // simone 21/1/2010
    // XL 1709
    // salvo e ripristino alias in caso il codeblock lo cambi
-   // Se Break o Filtro NON verificato
-   IF (nAlias)->(EVAL( bBreak )) .OR. !(nAlias)->(EVAL( bFilter ))
+   // Se Break o Filtro NON verificato (o riga __deleted su PG con SET DELETED ON)
+   IF (nAlias)->(EVAL( bBreak )) .OR. _dfRowExcluded( nAlias, bFilter )
       // PGDBE: il guard storico (solo con dfSet) evitava DBGOTO(0) quando PG+!EOF+filtro+break
       // erano tutti .T. (VR_BREAK falso positivo su stampe); su filtro .T. e break 1:n, break .T.
       // indica fuori relazione e serve sempre DBGOTO(0) -> default senza dfSet.
@@ -322,12 +339,21 @@ RETURN
 
 STATIC PROCEDURE _dfPgTopSeekFirstFilter( nAlias, bFilter, bBreak )
 LOCAL nMax, nWalk := 0
+LOCAL uMax
 
-nMax := Val( dfSet( "XbasePgDfTopFilterMax" ) )
+uMax := dfSet( "XbasePgDfTopFilterMax" )
+DO CASE
+   CASE ValType( uMax ) == "N"
+      nMax := uMax
+   CASE ValType( uMax ) == "C"
+      nMax := Val( uMax )
+   OTHERWISE
+      nMax := 0
+ENDCASE
 IF nMax < 1
    nMax := 800
 ENDIF
-DO WHILE (nAlias)->( ! EVAL( bFilter ) ) .AND. !(nAlias)->( Eof() ) .AND. nWalk < nMax
+DO WHILE _dfRowExcluded( nAlias, bFilter ) .AND. !(nAlias)->( Eof() ) .AND. nWalk < nMax
    (nAlias)->( DbSkip( 1 ) )
    IF (nAlias)->( EVAL( bBreak ) )
       IF dfPgRddIs( (nAlias)->( RDDNAME() ) ) .AND. ;

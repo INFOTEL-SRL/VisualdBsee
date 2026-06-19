@@ -68,6 +68,10 @@ ENDCASE
 ddIndexArr(nMode,aNtxLst,aNtxDat, bFlt) // CARICA L'ARRAY DEI TAG CON INDICI DA RICOSTRUIRE
 
 IF EMPTY(aNtxDat)
+   // Runtime PG: nessun indice fisico da ricostruire (Menu.prg salta ddIndex del tutto).
+   IF dfPgRuntimeUsePostgres() .OR. _ddDefaultRddIsPg()
+      RETURN .T.
+   ENDIF
    RETURN .F.
 ENDIF
 
@@ -414,6 +418,12 @@ LOCAL nRecNum, cOpen, nHnd, cIndexName, cFileDes, cNdxVar, lBatch, nLenNtx
 LOCAL lToReindex, nPos, lCheck, lAll
 LOCAL lSkipOpen := .F., lGenDBF := .F.
 LOCAL lAdsFix := dfSet("XbaseADSFIXEmptyDbf") == "YES"
+
+// Runtime PG: indici NTX/CDX assenti; skip scansione DBDD (come ddGenDbf).
+// dfPgRuntimeUsePostgres(): sessione PG non ancora init (MAGINF: ddIndex prima di dfPgSessionInit).
+IF dfPgRuntimeUsePostgres() .OR. _ddDefaultRddIsPg()
+   RETURN
+ENDIF
 
 dbdd->(DBSEEK( "DBF" ))
 WHILE UPPER(dbdd->recTyp)=="DBF" .AND. !dbdd->(EOF())

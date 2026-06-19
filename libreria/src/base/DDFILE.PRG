@@ -8,6 +8,7 @@
 #include "dfstd.ch"
 #include "dfset.ch"
 #include "Fileio.ch"
+#include "set.ch"
 
 STATIC _cDdDbddNdxFieldChk := ""
 
@@ -575,12 +576,13 @@ LOCAL cWa, cFld, cKeyU, uFld
 RETURN .T.
 
 STATIC FUNCTION _ddDbddFileAliU()
-LOCAL cFA
+LOCAL cFA, cVarName
 
    cFA := ALLTRIM( dbdd->FILE_ALI )
    IF LEFT( cFA, 1 ) == "@"
-      IF TYPE( SUBSTR( cFA, 2 ) ) == "C"
-         RETURN UPPER( ALLTRIM( &SUBSTR( cFA, 2 ) ) )
+      cVarName := SUBSTR( cFA, 2 )
+      IF TYPE( cVarName ) == "C"
+         RETURN UPPER( ALLTRIM( &cVarName ) )
       ENDIF
    ENDIF
 
@@ -1214,7 +1216,7 @@ RETURN
 
 //* PGDBE: DBGOTOP/DbGoTop = ordine fisico; dfS(slot,"") = primo record nell'indice attivo.
 PROCEDURE dfPgGoTopInIndex( nAlias )
-LOCAL cWa, nSlot, nSav
+LOCAL cWa, nSlot, nSav, nW
 
    IF VALTYPE( nAlias ) != "N" .OR. nAlias < 1
       nAlias := SELECT()
@@ -1238,6 +1240,17 @@ LOCAL cWa, nSlot, nSav
    dfS( nSlot, "", .T. )
    IF ( nAlias )->( EOF() )
       ( nAlias )->( DbGoTop() )
+   ENDIF
+
+   // PGDBE: il primo record in cima all'indice puo' essere __deleted (su DBF DBGOTOP
+   // lo salta gia' con SET DELETED ON). Avanzo al primo vivo, cosi' la riga corrente
+   // del browse non e' mai una cancellata.
+   IF SET( _SET_DELETED )
+      nW := 0
+      DO WHILE !( nAlias )->( EOF() ) .AND. ( nAlias )->( DELETED() ) .AND. nW < 100000
+         ( nAlias )->( DBSKIP( 1 ) )
+         nW++
+      ENDDO
    ENDIF
 RETURN
 

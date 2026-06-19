@@ -2,6 +2,7 @@
 // PGDBE: allineamento seek campo-based (condiviso da DFS.PRG e DBLOOK.PRG).
 // Nessuna macro su ORDKEY: solo nomi campo semplici o PADR(campo,n).
 //*****************************************************************************
+#include "set.ch"
 
 *******************************************************************************
 FUNCTION dfPgRddIs( cRdd )
@@ -11,6 +12,24 @@ FUNCTION dfPgRddIs( cRdd )
    ENDIF
 
 RETURN ( "PGDBE" $ UPPER( RTRIM( cRdd ) ) )
+
+*******************************************************************************
+//* PGDBE: .T. se la riga corrente di cWa e' valida come risultato di seek.
+//* Con SET DELETED ON una riga __deleted NON e' un match valido: replica il
+//* comportamento di DBSEEK sui DBF (che salta i record cancellati). Senza questo
+//* dfS si posizionava sulle righe morte, che comparivano in browse e lookup.
+//* Con SET DELETED OFF non filtra nulla (comportamento invariato).
+*******************************************************************************
+FUNCTION dfPgRowSeekable( cWaPad )
+LOCAL cWa
+   cWa := RTRIM( cWaPad )
+   IF SELECT( cWa ) < 1
+      RETURN .T.
+   ENDIF
+   IF SET( _SET_DELETED ) .AND. ( cWa )->( DELETED() )
+      RETURN .F.
+   ENDIF
+RETURN .T.
 
 *******************************************************************************
 FUNCTION dfPgOrdKeySingleField( cKeyExp )
@@ -434,7 +453,7 @@ LOCAL cWa, cSeekU
 
    cSeekU := UPPER( RTRIM( cSeekRaw ) )
 
-RETURN ( dfPgSeekFieldValU( cWa, cField ) == cSeekU )
+RETURN ( dfPgSeekFieldValU( cWa, cField ) == cSeekU ) .AND. dfPgRowSeekable( cWa )
 
 *******************************************************************************
 FUNCTION dfPgSeekFallbackScan( cWaPad, cField, cSeekRaw )
@@ -483,7 +502,7 @@ LOCAL cWa, cSeek, cU, aStru, i, nW, lHit
    lHit := .F.
 
    IF ( cWa )->( DbSeek( PADR( cSeek, nW ) ) )
-      IF dfPgSeekFieldValU( cWa, cField ) == cU
+      IF dfPgSeekFieldValU( cWa, cField ) == cU .AND. dfPgRowSeekable( cWa )
          lHit := .T.
       ENDIF
    ENDIF
@@ -491,7 +510,7 @@ LOCAL cWa, cSeek, cU, aStru, i, nW, lHit
    IF ! lHit
       ( cWa )->( DbGoTop() )
       DO WHILE !( cWa )->( Eof() )
-         IF dfPgSeekFieldValU( cWa, cField ) == cU
+         IF dfPgSeekFieldValU( cWa, cField ) == cU .AND. dfPgRowSeekable( cWa )
             lHit := .T.
             EXIT
          ENDIF
@@ -530,7 +549,7 @@ LOCAL cWa, cSeekU, lMatch
    cSeekU := UPPER( RTRIM( uSeek ) )
 
    lMatch := lRet0 .AND. !( cWa )->( Eof() ) .AND. ;
-             ( dfPgSeekFieldValU( cWa, cField ) == cSeekU )
+             ( dfPgSeekFieldValU( cWa, cField ) == cSeekU ) .AND. dfPgRowSeekable( cWa )
 
    IF lMatch
       RETURN lRet0
